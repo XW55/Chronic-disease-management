@@ -16,7 +16,7 @@
         "navigationBarTitleCentered": true
       }
     }, {
-      "path": "pages/loading/loading",
+      "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false,
@@ -60,5 +60,51 @@
       "text": "我的"
     }]
   },
+  "subPackages": [{
+    "root": "pagesOrder",
+    "pages": [{
+        "path": "pages/index/index",
+        "style": {
+          "navigationBarTitleText": "挂号",
+          "enablePullDownRefresh": false
+        }
+      },
+      {
+        "path": "pages/doctor/doctor",
+        "style": {
+          "navigationBarTitleText": "预约确认",
+          "enablePullDownRefresh": false
+        }
+      },
+      {
+        "path": "pages/hospitalList/hospitalList",
+        "style": {
+          "navigationBarTitleText": "医院列表",
+          "enablePullDownRefresh": false
+        }
+      }, {
+        "path": "pages/department/department",
+        "style": {
+          "navigationBarTitleText": "选择科室",
+          "enablePullDownRefresh": false
+        }
+
+      }, {
+        "path": "pages/aboutDay/aboutDay",
+        "style": {
+          "navigationBarTitleText": "我的预约",
+          "enablePullDownRefresh": false
+        }
+
+      }, {
+        "path": "pages/detail/detail",
+        "style": {
+          "navigationBarTitleText": "预约详情",
+          "enablePullDownRefresh": false
+        }
+
+      }
+    ]
+  }],
   "uniIdRouter": {}
 }

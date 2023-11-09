@@ -10,9 +10,9 @@
           欢迎登录使用迈雅科技！
         </view>
         <view>
-          <input type="text" placeholder="手机号" class="input-code" v-model="userPhone">
+          <input type="number" placeholder="手机号" class="input-code" v-model.trim="userPhone">
           <view class="input-code">
-            <input type="text" placeholder="验证码" v-model="userPwdPhone" style="width:50%">
+            <input type="number" placeholder="验证码" v-model.trim="userPwdPhone" style="width:50%">
             <view class="phone-code" @tap="getPhonecode">{{codeBtn.codeText}}</view>
           </view>
           <view class="btn1" @tap="login">确认</view>
@@ -448,7 +448,7 @@
 
   .content {
     position: absolute;
-    top: 34%;
+    top: 32%;
     width: 83%;
     left: 8.5%;
     border-radius: 30rpx;

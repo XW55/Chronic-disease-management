@@ -14,18 +14,25 @@
 
 <style lang="scss">
   @import "uview-ui/index.scss";
+  @import url(@/iconfont/iconfont.css);
 
-  .page {
+  page {
     background-color: #f2f4f6;
+  }
+
+  .w95 {
+    width: 95%;
   }
 
   /*每个页面公共css */
   .card {
-    box-shadow: 0rpx 0rpx 10rpx rgba(0, 0, 0, .3);
+    box-shadow: 0rpx 0rpx 5rpx rgba(0, 0, 0, .2);
     background-color: #fff;
-    border-radius: 10rpx;
-    padding: 20rpx;
-    margin: 15rpx auto;
+    border-radius: 20rpx;
+  }
+
+  image {
+    display: block;
   }
 
   .m20 {
