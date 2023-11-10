@@ -397,7 +397,7 @@
   .xy {
     color: #4f544f;
     padding: 20rpx 0 20rpx 65rpx;
-    margin-top: 80rpx;
+    margin-top: 40rpx;
     font-size: 22rpx;
     white-space: nowrap;
 

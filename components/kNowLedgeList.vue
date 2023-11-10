@@ -1,12 +1,12 @@
 <template>
   <view>
-    <view class="box flexBox" v-for="item in 5" :key="item">
+    <view class="box flexBox" v-for="item in 5" :key="item" @click="clickItem(item)">
       <view class="left">
         <view class="">这是一段标题</view>
         <view class="tip">这是内容标签</view>
       </view>
       <view class="right">
-        <image src="" mode=""></image>
+        <image src="../static/knowledge-active.png" mode=""></image>
       </view>
     </view>
   </view>
@@ -16,12 +16,22 @@
   export default {
     name: "kNowLedgeList",
     props: {
-
+      list: {
+        type: Array,
+        default: function() {
+          return []
+        }
+      }
     },
     data() {
       return {
 
       };
+    },
+    methods: {
+      clickItem(val) {
+        this.$emit('clickItem', val)
+      }
     }
   }
 </script>

@@ -13,7 +13,7 @@
 </script>
 
 <style lang="scss">
-  @import "uview-ui/index.scss";
+  @import "@/node_modules/uview-ui/index.scss";
   @import url(@/iconfont/iconfont.css);
 
   page {

@@ -2,7 +2,10 @@
   <view>
     <view class="box m20 card w95">
       <view class="flexBox item" v-for="(item,i) in list" :key="i" @click="clickItem(item.url)">
-        <view>{{item.title}}</view>
+        <view class="flexBox">
+          <view :class="item.icon" class="icon"></view>
+          <view class="">{{item.title}}</view>
+        </view>
         <view class="iconfont icon-youjiantou"></view>
       </view>
     </view>
@@ -47,7 +50,11 @@
     border: transparent;
   }
 
+  .icon {
+    margin-right: 20rpx;
+  }
+
   .iconfont {
-    font-size: 40rpx;
+    font-size: 45rpx;
   }
 </style>

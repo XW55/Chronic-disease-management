@@ -45,19 +45,23 @@
         // 底部列表数据
         list: [{
             title: '我的收藏',
-            url: '',
+            url: '../../myListPage/pages/collect/collect',
+            icon: 'iconfont icon-shoucang'
           },
           {
             title: '提醒管理',
             url: '',
+            icon: 'iconfont icon-xiaoxizhongxin'
           },
           {
             title: '常见问题',
             url: '',
+            icon: 'iconfont icon-changjianwentixiangguanwenti'
           },
           {
             title: '设置',
             url: '',
+            icon: 'iconfont icon-31shezhi'
           },
         ],
       };

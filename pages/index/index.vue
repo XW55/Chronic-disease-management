@@ -1,10 +1,13 @@
 <template>
   <view>
-    <!-- <u-button text="扫码" @click="demo"></u-button> -->
+
   </view>
 </template>
 
 <script>
+  import {
+    login
+  } from '@/request/pagesRequest.js'
   export default {
     data() {
       return {
@@ -15,9 +18,7 @@
 
     },
     methods: {
-      demo() {
 
-      }
     }
   }
 </script>

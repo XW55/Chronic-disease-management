@@ -1,6 +1,9 @@
 // 记录异步请求的次数
 let num = 0;
+// 统一的请求根路径
+const baseUrl = 'http://127.0.0.1';
 const request = (params) => {
+  console.log('接收的参数是', params);
   const header = {
     ...params.header,
   };
@@ -19,8 +22,6 @@ const request = (params) => {
       mask: true,
     });
   }
-  // 统一的请求根路径
-  const baseUrl = '';
   // 返回出去一个 promise
   return new Promise((resolve, reject) => {
     // 网络请求

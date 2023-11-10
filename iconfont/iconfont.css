@@ -13,6 +13,23 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.icon-31shezhi:before {
+  content: "\e601";
+}
+
+.icon-changjianwentixiangguanwenti:before {
+  content: "\e689";
+}
+
+.icon-shoucangxuanzhong:before {
+  content: "\e600";
+}
+
+.icon-shoucang:before {
+  content: "\e8b9";
+}
+
 .icon-juecebaogao:before {
   content: "\e604";
 }
