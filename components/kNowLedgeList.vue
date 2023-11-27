@@ -59,6 +59,7 @@
       .tip {
         background-color: #f5f5f5;
         font-size: 26rpx;
+        border-radius: 10rpx;
         color: #909399;
         padding: 10rpx;
         width: max-content;

@@ -101,7 +101,7 @@
     bottom: 0;
     z-index: 1;
     color: #fff;
-    background-color: #6296fc;
+    background-color: #09f;
     margin-bottom: constant(safe-area-inset-bottom);
     /* 兼容旧版iOS */
     margin-bottom: calc(env(safe-area-inset-bottom));

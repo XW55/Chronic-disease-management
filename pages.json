@@ -61,59 +61,78 @@
     }]
   },
   "subPackages": [{
-    "root": "pagesOrder",
-    "pages": [{
-        "path": "pages/index/index",
-        "style": {
-          "navigationBarTitleText": "挂号",
-          "enablePullDownRefresh": false
-        }
-      },
-      {
-        "path": "pages/doctor/doctor",
-        "style": {
-          "navigationBarTitleText": "预约确认",
-          "enablePullDownRefresh": false
-        }
-      },
-      {
-        "path": "pages/hospitalList/hospitalList",
-        "style": {
-          "navigationBarTitleText": "医院列表",
-          "enablePullDownRefresh": false
-        }
-      }, {
-        "path": "pages/department/department",
-        "style": {
-          "navigationBarTitleText": "选择科室",
-          "enablePullDownRefresh": false
-        }
+      "root": "pagesOrder",
+      "pages": [{
+          "path": "pages/index/index",
+          "style": {
+            "navigationBarTitleText": "挂号",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "pages/doctor/doctor",
+          "style": {
+            "navigationBarTitleText": "预约确认",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "pages/hospitalList/hospitalList",
+          "style": {
+            "navigationBarTitleText": "医院列表",
+            "enablePullDownRefresh": false
+          }
+        }, {
+          "path": "pages/department/department",
+          "style": {
+            "navigationBarTitleText": "选择科室",
+            "enablePullDownRefresh": false
+          }
 
-      }, {
-        "path": "pages/aboutDay/aboutDay",
+        }, {
+          "path": "pages/aboutDay/aboutDay",
+          "style": {
+            "navigationBarTitleText": "我的预约",
+            "enablePullDownRefresh": false
+          }
+
+        }, {
+          "path": "pages/detail/detail",
+          "style": {
+            "navigationBarTitleText": "预约详情",
+            "enablePullDownRefresh": false
+          }
+
+        }
+      ]
+    }, {
+      "root": "myListPage",
+      "pages": [{
+          "path": "pages/collect/collect",
+          "style": {
+            "navigationBarTitleText": "我的收藏",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "pages/medicine/medicine",
+          "style": {
+            "navigationBarTitleText": "服药计划",
+            "enablePullDownRefresh": false
+          }
+        }
+      ]
+    },
+    {
+      "root": "detail",
+      "pages": [{
+        "path": "knowledgeDetail/knowledgeDetail",
         "style": {
-          "navigationBarTitleText": "我的预约",
+          "navigationBarTitleText": "",
           "enablePullDownRefresh": false
         }
-
-      }, {
-        "path": "pages/detail/detail",
-        "style": {
-          "navigationBarTitleText": "预约详情",
-          "enablePullDownRefresh": false
-        }
-
-      }
-    ]
-  }, {
-    "root": "myListPage",
-    "pages": [{
-      "path": "pages/collect/collect",
-      "style": {
-        "navigationBarTitleText": "我的收藏",
-        "enablePullDownRefresh": false
-      }
-    }]
-  }],
+      }]
+    }
+  ],
   "uniIdRouter": {}
 }

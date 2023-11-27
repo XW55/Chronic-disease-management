@@ -18,6 +18,15 @@
 
   page {
     background-color: #f2f4f6;
+    /*每个页面公共css */
+    padding-bottom: constant(safe-area-inset-bottom);
+    /* 兼容旧版iOS */
+    padding-bottom: calc(env(safe-area-inset-bottom));
+  }
+
+  // uniapp 按钮样式穿透
+  /deep/ .u-button__text {
+    font-size: 35rpx !important;
   }
 
   .w95 {
@@ -35,8 +44,16 @@
     display: block;
   }
 
+  .boxSing {
+    box-sizing: border-box;
+  }
+
   .m20 {
     margin: 20rpx auto;
+  }
+
+  .p20 {
+    padding: 20rpx;
   }
 
   .flexBox {

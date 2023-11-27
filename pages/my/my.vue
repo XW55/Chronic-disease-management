@@ -29,7 +29,7 @@
         }, {
           title: '预约挂号',
           icon: 'iconfont icon-yuyueguahao',
-          url: '',
+          url: '/pagesOrder/pages/hospitalList/hospitalList',
           color: '#09f'
         }, {
           title: '病历查看',
@@ -39,7 +39,7 @@
         }, {
           title: '服药计划',
           icon: 'iconfont icon-time',
-          url: '',
+          url: '../../myListPage/pages/medicine/medicine',
           color: '#00b386'
         }],
         // 底部列表数据
@@ -70,15 +70,15 @@
       // 点击每一项的事件处理函数
       clickItem(url) {
         // 先查看是否登录，没有token先去登录页
-        if (uni.getStorageSync('token')) {
-          uni.navigateTo({
-            url
-          })
-        } else {
-          uni.navigateTo({
-            url: '../login/login'
-          })
-        }
+        // if (uni.getStorageSync('token')) {
+        uni.navigateTo({
+          url
+        })
+        // } else {
+        // uni.navigateTo({
+        //   url: '../login/login'
+        // })
+        // }
       }
     }
   }

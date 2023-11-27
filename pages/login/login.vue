@@ -1,74 +1,47 @@
 <template>
   <view class="page">
-    <image src="https://ecg.mindyard.cn:84/uploadPath/index/bg2.png" class="bg"></image>
-    <view class="content">
-      <view class="tab">
-        <view class="titleCenter loginText">
-          登录
-        </view>
-        <view class="titleCenter welcome">
-          欢迎登录使用迈雅科技！
-        </view>
-        <view>
-          <input type="number" placeholder="手机号" class="input-code" v-model.trim="userPhone">
-          <view class="input-code">
-            <input type="number" placeholder="验证码" v-model.trim="userPwdPhone" style="width:50%">
-            <view class="phone-code" @tap="getPhonecode">{{codeBtn.codeText}}</view>
-          </view>
-          <view class="btn1" @tap="login">确认</view>
+    <view class="top"></view>
+    <!-- 手机号登录 -->
+    <view v-if="!showCodeLogin">
+      <view class="title">手机号登录</view>
+      <button class="btn" v-if="show1" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">手机号一键登录 </button>
+      <button class="btn" v-else @click="tip">手机号一键登录 </button>
+      <view class="btn" style="color: #00ca99; background-color: #b5ffed;" @click="showCodeLogin = true">其他手机号/账号登录
+      </view>
+    </view>
 
-          <!-- 微信一键登录 用户勾选时 -->
-          <!--          <button v-if="show1" class="wxBtn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
-            <view style="text-align: center;" @getphonenumber="getPhoneNumber">
-              <view class="wxLogo">
-                <image src="../../static/images/pay.png"></image>
-              </view>
-              <view class="">
-                微信一键登录
-              </view>
-            </view>
-          </button>
-          <button v-else class="wxBtn" @click="tip">
-            <view style="text-align: center;">
-              <view class="wxLogo">
-                <image src="../../static/images/pay.png"></image>
-              </view>
-              <view class="">
-                微信一键登录
-              </view>
-            </view>
-          </button> -->
+    <!-- 验证码登录 -->
+    <view v-else>
+      <view class="title">验证码登录</view>
+      <view class="btn inputBox"> <text class="iconfont icon-shouji"></text> <input type="number" style="width: 90%;"
+          placeholder="请输入手机号" v-model="userPhone" />
+      </view>
+      <view class="btn inputBox"> <text style="font-size: 45rpx;" class="iconfont icon-suozhu"></text> <input
+          type="number" style="width: 380rpx;" placeholder="请输入验证码" v-model="userPwdPhone" /><text class="getCodeBtn"
+          @click="getPhonecode">{{codeBtn.codeText}}</text> </view>
+      <button class="btn" @click="login">登录 </button>
+    </view>
+    <!-- 隐私协议 -->
+    <view class="xy">
+      <checkbox-group @change="checkboxChange">
+        <checkbox value="1" style="transform:scale(1);transform-origin: left center; margin-left: 70rpx;" />
+        <view>我已阅读并同意
+          <navigator url="../xy/xy" style="color: #00ca99">
+            《服务协议》</navigator>
+          与<navigator url="../ys/ys" style="color: #00ca99">
+            《隐私政策》</navigator>
         </view>
-      </view>
-      <view class="xy">
-        <checkbox-group @change="checkboxChange">
-          <checkbox value="1" style="transform:scale(1);transform-origin: left center;" />
-          <view>我已阅读并同意
-            <navigator url="../xy/xy">
-              《服务协议》</navigator>
-            与<navigator url="../ys/ys">
-              《隐私政策》</navigator>
-          </view>
-        </checkbox-group>
-      </view>
-      <!-- #ifdef APP-PLUS -->
-      <view class="switchLoginState">
-        <view class="icon" @click="otherLogin('weixin')">
-          <image src="@/static/images/wx.png"></image>
-        </view>
-      </view>
-      <!-- #endif -->
+      </checkbox-group>
+    </view>
+    <!-- 底部logo -->
+    <view class="title logo">
+      <!-- <image src="../../static/images/logo.png" class="logoImg"></image> -->
+      医护患
     </view>
   </view>
 </template>
 
 <script>
-  // import {
-  //   getUserInfo
-  // } from "@/common/request.js";
-  // import {
-  //   mapMutations
-  // } from 'vuex'
   export default {
     data() {
       return {
@@ -79,6 +52,7 @@
         ty: '',
         smsCode: '',
         uuid: '',
+        showCodeLogin: false,
         show1: false,
         tabCurrentIndex: 0,
         rules: {
@@ -113,10 +87,10 @@
       }
     },
     onLoad(res) {
-      this.getuserNew();
+      // this.getuserNew();
       if (res.flag) {
         uni.showToast({
-          title: '身份认证失败,请先登录',
+          title: '请先登录',
           icon: 'none'
         }, 1000)
       }
@@ -203,12 +177,6 @@
                 var token = res.data.token;
                 // uni.setStorageSync('token', token)
                 vuePro.updateToken(token)
-                getUserInfo(res.data.phone).then(data => {
-                  vuePro.setBarUser({
-                    name: data.data.data.userName,
-                    tel: data.data.data.patientPhone
-                  })
-                })
                 uni.setStorageSync('tel', res.data.phone)
                 uni.setStorageSync('username', res.data.phone)
                 uni.setStorageSync('isDoctor', res.data.IsDoctor)
@@ -393,11 +361,37 @@
   }
 </script>
 
+<style>
+  page {
+    background-color: #fff;
+  }
+</style>
 <style lang="scss" scoped>
+  .top {
+    width: 100%;
+    height: 220rpx;
+  }
+
+  .iconfont {
+    margin-left: 30rpx;
+    color: #00ca99;
+    font-size: 40rpx;
+  }
+
+  .title {
+    font-size: 52rpx;
+    color: #00ca99;
+    font-weight: 700;
+    width: max-content;
+    margin: 0 auto 100rpx;
+    font-family: "PingFang SC";
+  }
+
   .xy {
+    width: 80%;
+    text-align: center;
+    margin: 40rpx auto;
     color: #4f544f;
-    padding: 20rpx 0 20rpx 65rpx;
-    margin-top: 40rpx;
     font-size: 22rpx;
     white-space: nowrap;
 
@@ -417,84 +411,6 @@
     overflow: hidden;
   }
 
-  .wxBtn {
-    background-color: transparent;
-  }
-
-  .wxBtn::after {
-    border: none;
-  }
-
-
-  .wxLogo {
-    margin: 20rpx auto;
-    width: 100rpx;
-    line-height: 135rpx;
-    height: 100rpx;
-    border-radius: 50%;
-    background-color: #f8f8f8;
-
-    image {
-      width: 60rpx;
-      height: 60rpx;
-    }
-
-  }
-
-  .bg {
-    width: 100%;
-    height: 100vh;
-  }
-
-  .content {
-    position: absolute;
-    top: 32%;
-    width: 83%;
-    left: 8.5%;
-    border-radius: 30rpx;
-  }
-
-  .content .tab {
-    background: #fff;
-    padding: 50rpx;
-    border-radius: 30rpx;
-
-    .titleCenter {
-      text-align: center;
-    }
-
-    .loginText {
-      font-size: 42rpx;
-      font-weight: 700;
-    }
-
-    .welcome {
-      font-size: 33rpx;
-      margin: 40rpx 0;
-    }
-  }
-
-  .content .tab .input-code {
-    height: 90rpx;
-    line-height: 90rpx;
-    padding-left: 50rpx;
-    margin-bottom: 20rpx;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f2f5fa;
-    border-radius: 15rpx;
-    font-size: 31rpx;
-  }
-
-  .content .title {
-    height: 75rpx;
-    line-height: 75rpx;
-    background: rgba(255, 255, 255, 0.35);
-    display: flex;
-    width: 95%;
-  }
-
   .text {
     font-size: 28rpx;
     color: #666666;
@@ -504,83 +420,64 @@
     justify-content: center;
   }
 
-  .text navigator {
-    color: rgba(36, 165, 241, 1);
-  }
-
-  .content .title>text {
-    flex: 1;
-    font-size: 28rpx;
-    color: #333333;
-    opacity: 0.78;
-    display: block;
-    position: relative;
-    text-align: center;
-    border-radius: 24rpx 24rpx 24rpx 0;
-    background: rgba(255, 255, 255, 0.35);
-  }
-
-  .content .title>text:nth-of-type(2) {
-    border-radius: 0 24rpx 0 24rpx;
-  }
-
-  .content .title>text.active {
-    color: #24A5F1;
+  .btn {
+    width: 90%;
+    height: 90rpx;
+    background-color: #00ca99;
+    margin: 30rpx auto;
+    border-radius: 40rpx;
     font-size: 32rpx;
-    opacity: 1;
-    background: rgba(255, 255, 255, 1);
-  }
-
-  .content .title>text.active i {
-    width: 28rpx;
-    height: 3rpx;
-    background: #24A5F1;
-    border-radius: 2rpx;
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    margin-left: -14rpx;
-  }
-
-  .phone-code {
-    width: auto;
-    padding: 0 15rpx;
-    height: 60rpx;
-    background: $uni-color-primary;
-    color: #fff;
-    border-radius: 20rpx;
-    font-size: 21rpx;
-    text-align: center;
-    line-height: 60rpx;
-    margin-right: 20rpx;
-  }
-
-  .btn1 {
-    height: 80rpx;
-    background: $uni-color-primary;
-    margin: 30rpx 0;
-    border-radius: 20rpx;
-    font-size: 30rpx;
-    line-height: 75rpx;
+    line-height: 90rpx;
     color: #FFFFFF;
     text-align: center;
   }
 
-  .switchLoginState {
+  .inputBox {
+    border: 1rpx solid #00ca99;
+    background-color: transparent;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    margin-top: 20rpx;
 
-    .icon {
-      width: 100rpx;
-      height: 100rpx;
+    input {
+      color: #000;
+      color: #000;
+      height: 100%;
+      text-align: left;
+      margin-left: 20rpx;
+    }
 
-      image {
-        width: 100%;
-        height: 100%;
-      }
+    .getCodeBtn {
+      width: 200rpx;
+      height: 60rpx;
+      line-height: 55rpx;
+      font-size: 28rpx;
+      text-align: center;
+      padding: 5rpx 10rpx;
+      margin-right: 10rpx;
+      border-radius: 40rpx;
+      background-color: #00ca99;
+      color: #fff;
+    }
+  }
+
+  .logo {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    bottom: 10rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 33rpx;
+    font-weight: 700;
+    color: #000;
+
+    .logoImg {
+      display: block;
+      width: 40rpx;
+      height: 40rpx;
+      margin-right: 15rpx;
+      vertical-align: middle;
     }
   }
 </style>
