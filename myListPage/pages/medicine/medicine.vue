@@ -3,12 +3,17 @@
     <view class="w95 boxSing p20 m20 card container">
       <view class="title">药品信息</view>
       <view class="tip">请仔细核对药品的规格和剂量</view>
-      <view class="">
-        <view class="">
-          药品名
-        </view>
-        <u--input placeholder="请输入药品名" border="surround" clearable v-model="medicineName"></u--input>
+      <view class="flexBox m20">
+        <view style="margin: 0 30rpx 0 0;">药品名</view>
+        <u--input placeholder="请输入药品名" border="none" clearable v-model="medicineName"></u--input>
       </view>
+      <!-- 分割线 -->
+      <u-line color="#ccc"></u-line>
+      <view class="title m20">
+        用法用量
+      </view>
+      <view class="tip">添加用量并按时服药</view>
+
     </view>
 
 

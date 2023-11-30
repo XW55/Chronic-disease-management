@@ -1,8 +1,16 @@
 import request from './index.js';
-// 示例
-export const login = (data) => {
+// 获取验证码
+export const getCode = (data) => {
   return request({
-    url: '/login',
+    url: '/sms/code',
+    method: 'POST',
+    data,
+  });
+};
+// 携带 uuid 和 验证码登录
+export const userLogin = (data) => {
+  return request({
+    url: '/patientLogin',
     method: 'POST',
     data,
   });

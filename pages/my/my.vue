@@ -76,7 +76,7 @@
         })
         // } else {
         // uni.navigateTo({
-        //   url: '../login/login'
+        //   url: '../modif/login/login'
         // })
         // }
       }

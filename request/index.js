@@ -1,7 +1,7 @@
 // 记录异步请求的次数
 let num = 0;
 // 统一的请求根路径
-const baseUrl = 'http://127.0.0.1';
+const baseUrl = 'http://192.168.1.11:8080';
 const request = (params) => {
   console.log('接收的参数是', params);
   const header = {
@@ -11,7 +11,8 @@ const request = (params) => {
   header.Authorization = uni.getStorageSync('token');
   // 判断 url 需要额外的请求头
   if (params.method === 'POST') {
-    header['content-type'] = 'application/json';
+    console.log('这是post请求');
+    header['Content-Type'] = 'application/json';
   }
   // 每次调用该函数就先 ++
   num++;
@@ -31,6 +32,7 @@ const request = (params) => {
       // 根路径拼接上传递过来的路径
       url: baseUrl + params.url,
       header,
+      dataType: params.dataType || 'json',
       success: (result) => {
         resolve(result.data);
       },

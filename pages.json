@@ -16,13 +16,6 @@
         "navigationBarTitleCentered": true
       }
     }, {
-      "path": "pages/login/login",
-      "style": {
-        "navigationBarTitleText": "登录",
-        "enablePullDownRefresh": false,
-        "navigationBarTitleCentered": true
-      }
-    }, {
       "path": "pages/knowledge/knowledge",
       "style": {
         "navigationBarTitleText": "健康知识",
@@ -132,6 +125,25 @@
           "enablePullDownRefresh": false
         }
       }]
+    },
+    {
+      "root": "modif",
+      "pages": [{
+          "path": "login/login",
+          "style": {
+            "navigationBarTitleText": "登录",
+            "enablePullDownRefresh": false,
+            "navigationBarTitleCentered": true
+          }
+        },
+        {
+          "path": "signIn/signIn",
+          "style": {
+            "navigationBarTitleText": "个人信息",
+            "enablePullDownRefresh": false
+          }
+        }
+      ]
     }
   ],
   "uniIdRouter": {}
