@@ -1,9 +1,9 @@
 <template>
   <view>
-    <view class="box flexBox" v-for="item in 5" :key="item" @click="clickItem(item)">
+    <view class="box flexBox" v-for="item in list" :key="item" @click="clickItem(item)">
       <view class="left">
-        <view class="">这是一段标题</view>
-        <view class="tip">这是内容标签</view>
+        <view class="">{{item.articleTitle}}</view>
+        <view class="tip">{{item.articleType}}</view>
       </view>
       <view class="right">
         <image src="../static/knowledge-active.png" mode=""></image>

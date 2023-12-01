@@ -1,27 +1,40 @@
 <template>
   <view>
-
-
-
-
-
-    <!-- 未收藏按钮 点击收藏 -->
-    <view class="collect" v-if="!isCollect" @click="updateCollect(true)">
-      <u-icon class="uIcon" name="star" size="50"></u-icon>
-      <view>收藏</view>
+    <!-- 渲染知识内容 -->
+    <view class="content">
+      <u-parse v-if="content.articleText" :content="content.articleText" :selectable="true"></u-parse>
     </view>
-    <!-- 已收藏 点击取消 -->
-    <view class="collect" v-else @click="updateCollect(false)">
-      <u-icon class="uIcon" name="star-fill" size="50" color="#09f"></u-icon>
-      <view style="color: #09f;">已收藏</view>
+    <!-- 占位 -->
+    <view style="width: 100%;height: 130rpx;"></view>
+    <!-- 底部固定栏 -->
+    <view class="footer boxSing">
+      <view class="flexBox right">
+        <u-icon name="eye" color="#000" size="50"></u-icon>
+        <text>{{content.readNum || 0}}</text>
+      </view>
+      <view class="flexBox right" v-if="content.isCollect === '1' || !content.isCollect" @click="updateCollect(true)">
+        <!-- 未收藏按钮 点击收藏 -->
+        <u-icon name="star" color="#000" size="50"></u-icon>
+        <view>收藏</view>
+      </view>
+      <!-- 已收藏 点击取消 -->
+      <view class="flexBox right" v-else @click="updateCollect(false)">
+        <u-icon name="star-fill" size="50" color="#09f"></u-icon>
+        <view style="color: #09f;">已收藏</view>
+      </view>
+      <view class="tip">{{content.collectNum || 0}}人已收藏</view>
     </view>
+  </view>
+
   </view>
 </template>
 
 <script>
   import {
     getknowDetail,
-    setCollect
+    addCollect,
+    getRead,
+    delCollect
   } from '@/request/request.js'
   export default {
     data() {
@@ -30,61 +43,111 @@
         pageId: '',
         // 内容标题
         title: '',
-        // 这里展示的是是否收藏，若用户已收藏需要在请求数据进行改变状态
-        isCollect: false,
+        // 知识列表对象
+        content: null,
       };
     },
     onLoad(option) {
-      // this.pageId = option.id
-      // this.title = option.title
+      this.pageId = option.id
+      this.title = option.title
+      this.getDetail()
+      this.getReadNum()
+    },
+    onShow() {
+
     },
     // 设置知识专题
     onReady() {
-      // uni.setNavigationBarTitle({
-      //   title: this.title
-      // });
+      uni.setNavigationBarTitle({
+        title: this.title
+      });
     },
     methods: {
       // 根据id请求具体的知识详情
       async getDetail() {
-        // const {
-        //   data: res
-        // } = await getknowDetail({})
+        const res = await getknowDetail(this.pageId)
         // console.log(res);
-        // if (res.code === 200) {
-
-        // }
+        if (res.code === 200) {
+          this.content = res.data
+        }
+      },
+      // 文章的阅读数量
+      async getReadNum() {
+        const res = await getRead({
+          propagandaId: this.pageId
+        })
+        console.log('数量', res);
       },
       // 收藏/取消收藏
-      updateCollect(flag) {
+      async updateCollect(flag) {
         // 进行的是收藏操作
         if (flag) {
-
-          uni.$showMsg('收藏成功', 'success')
+          const res = await addCollect({
+            propagandaId: this.pageId
+          })
+          console.log('用户收藏', res);
+          if (res.code === 200) {
+            this.content.collectNum += 1
+            this.content.isCollect = '0'
+            uni.$showMsg('收藏成功', 'success')
+          }
+          this.$forceUpdate()
         } else {
+          const res = await delCollect({
+            propagandaId: this.pageId
+          })
+          console.log('用户取消收藏', res);
+          if (res.code === 200) {
+            if (this.content.collectNum >= 1) {
+              this.content.collectNum -= 1
+            }
+            this.content.isCollect = '1'
+            uni.$showMsg('您已取消收藏')
 
+          }
+          this.$forceUpdate()
         }
       }
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  .collect {
-    width: 110rpx;
-    height: 110rpx;
+<style>
+  page {
     background-color: #fff;
-    border-radius: 50%;
-    font-size: 26rpx;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    bottom: 100rpx;
-    right: 30rpx;
+  }
+</style>
+<style lang="scss" scoped>
+  .content {
+    padding: 20rpx;
+    text-align: justify;
+    font-size: 32rpx;
+    line-height: 1.8;
+  }
 
-    /deep/ .u-icon__icon {
-      margin: 10rpx 0 5rpx;
-    }
+  /deep/ .u-icon__icon {
+    margin: 0 5rpx;
+  }
+
+  .right {
+    margin-right: 30rpx;
+  }
+
+  .footer {
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    border-top: 1rpx solid #ccc;
+    justify-content: flex-end;
+    position: fixed;
+    bottom: 0;
+    padding: 20rpx 30rpx 40rpx 30rpx;
+  }
+
+  .tip {
+    font-size: 25rpx;
+    color: #333;
+    margin-top: 12rpx;
   }
 </style>

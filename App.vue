@@ -22,6 +22,7 @@
     padding-bottom: constant(safe-area-inset-bottom);
     /* 兼容旧版iOS */
     padding-bottom: calc(env(safe-area-inset-bottom));
+    font-size: 30rpx;
   }
 
   // uniapp 按钮样式穿透
@@ -32,6 +33,15 @@
   .w95 {
     width: 95%;
   }
+
+  .f38 {
+    font-size: 38rpx;
+  }
+
+  .fNormal {
+    font-size: 30rpx;
+  }
+
 
   /*每个页面公共css */
   .card {

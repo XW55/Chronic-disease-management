@@ -1,14 +1,16 @@
 <template>
   <view>
-    <view class="hos_box">
-      <view class="hos_item" v-for="(item, i) in hospitalList" :key="i" @click="gotoDetail(item.hospital.hospitalId)">
-        <view class="hos_item_img">
-          <image :src="item.hospital.img"></image>
+    <view v-for="(item, i) in 5" :key="item">
+      <view class="hos_item flexBox" @click="gotoDetail(item.hospital.hospitalId)">
+        <u-avatar size="120" src="https://cdn.uviewui.com/uview/album/1.jpg" shape="circle"></u-avatar>
+        <view class="tip">
+          <view class="">郑州大学医院<text class="tag">三级</text> </view>
+          <u-gap height="20" bgColor="#fff"></u-gap>
+          <view style="color: #ccc; font-size: 26rpx;">郑州大学医院地址</view>
         </view>
-        <view class="">
-          {{item.hospital.hospitalName}}
-        </view>
+
       </view>
+      <u-line></u-line>
     </view>
     <!-- 我的预约按钮 -->
     <view @click="gotoAbout" class="myAbout">我的预约</view>
@@ -60,35 +62,24 @@
 </script>
 
 <style lang="scss" scoped>
-  page {
-    background-color: #f2f4f6;
+  .hos_item {
+    justify-content: start;
+    padding: 20rpx;
+    background-color: #fff;
   }
 
-  .hos_box {
-    margin: 25rpx;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    flex: 50%;
+  .tip {
+    margin-left: 30rpx;
+  }
 
-    .hos_item {
-      padding: 20rpx 12rpx;
-      width: 42%;
-      background-color: #fff;
-      border-radius: 15rpx;
-      box-shadow: 0rpx 0rpx 8rpx rgba(0, 0, 0, .3);
-
-      .hos_item_img {
-        text-align: center;
-
-        image {
-          width: 80%;
-          height: 245rpx;
-          margin: 20rpx 0;
-        }
-      }
-
-    }
+  .tag {
+    width: max-content;
+    padding: 3rpx 10rpx;
+    border-radius: 5rpx;
+    margin-left: 10rpx;
+    font-size: 25rpx;
+    color: #fff;
+    background-color: #60c98a;
   }
 
   .myAbout {

@@ -50,7 +50,7 @@
           },
           {
             title: '提醒管理',
-            url: '',
+            url: '../../myListPage/pages/remind/remind',
             icon: 'iconfont icon-xiaoxizhongxin'
           },
           {
@@ -70,15 +70,15 @@
       // 点击每一项的事件处理函数
       clickItem(url) {
         // 先查看是否登录，没有token先去登录页
-        // if (uni.getStorageSync('token')) {
-        uni.navigateTo({
-          url
-        })
-        // } else {
-        // uni.navigateTo({
-        //   url: '../modif/login/login'
-        // })
-        // }
+        if (uni.getStorageSync('token')) {
+          uni.navigateTo({
+            url
+          })
+        } else {
+          uni.navigateTo({
+            url: '../../modif/login/login'
+          })
+        }
       }
     }
   }

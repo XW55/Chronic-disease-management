@@ -1,6 +1,7 @@
 <template>
   <view>
     <view>
+      <!-- 挂号日期 两周 -->
       <scroll-view class="scroll-view-wrapper" scroll-x="true" style="background-color: #fff;">
         <view class="dateList">
           <view v-for="(item,index) in dataList" :key="index" class="dateItem" @click="clickDay(item,index)"
@@ -10,7 +11,9 @@
           </view>
         </view>
       </scroll-view>
-
+      <!-- tabBar栏切换 按照职称选择医生、专家 -->
+      <u-tabs :list="list" @click="clickList"></u-tabs>
+      <!-- 可挂号时间段 -->
       <uni-collapse class="doctorList" v-if="!!doctorList.length">
         <uni-collapse-item title-border="none" :border="false" :show-arrow="true" accordion
           v-for="(item,index) in doctorList" :key="index" class="doctorItem">
@@ -76,6 +79,14 @@
         id: '',
         // 是否是修改预约
         appointmentId: '',
+        // tab栏列表
+        list: [{
+          name: '医生列表',
+        }, {
+          name: '专家',
+        }, {
+          name: '按职称选医生'
+        }]
       };
     },
     computed: {
@@ -136,6 +147,11 @@
           uni.$showMsg('获取医生列表失败')
         }
       },
+      // 点击顶部列表
+      clickList(item) {
+        console.log(item);
+      },
+      // 选择诊断时间
       selectTag(status, slotId, planId) {
         console.log(status, slotId, planId);
         if (status) return

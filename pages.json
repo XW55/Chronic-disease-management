@@ -113,6 +113,13 @@
             "navigationBarTitleText": "服药计划",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "pages/remind/remind",
+          "style": {
+            "navigationBarTitleText": "提醒管理",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },

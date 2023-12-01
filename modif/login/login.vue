@@ -171,7 +171,7 @@
               })
             } else {
               uni.redirectTo({
-                url: './signIn/signIn'
+                url: '/modif/signIn/signIn'
               })
             }
 

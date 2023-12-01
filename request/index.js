@@ -3,14 +3,14 @@ let num = 0;
 // 统一的请求根路径
 const baseUrl = 'http://192.168.1.11:8080';
 const request = (params) => {
-  console.log('接收的参数是', params);
+  console.log('请求参数是', params);
   const header = {
     ...params.header,
   };
   // 默认添加token
   header.Authorization = uni.getStorageSync('token');
   // 判断 url 需要额外的请求头
-  if (params.method === 'POST') {
+  if (params.method === 'POST' || params.method === 'PUT') {
     console.log('这是post请求');
     header['Content-Type'] = 'application/json';
   }

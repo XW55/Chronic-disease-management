@@ -18,7 +18,7 @@ export const userLogin = (data) => {
 // 请求tabbar的知识列表 (分页)
 export const getknowList = (data) => {
   return request({
-    url: '',
+    url: '/patientApp/propaganda/getPropagandaList',
     method: 'GET',
     data,
   });
@@ -26,24 +26,50 @@ export const getknowList = (data) => {
 // 根据id请求知识详情
 export const getknowDetail = (data) => {
   return request({
-    url: '',
+    url: `/patientApp/propaganda/getPropagandaById?propagandaId=${data}`,
     method: 'GET',
+  });
+};
+// 文章的阅读量
+export const getRead = (data) => {
+  return request({
+    url: `/patientApp/propaganda/updatePropaganda`,
+    method: 'PUT',
     data,
   });
 };
-// 收藏/取消收藏
-export const setCollect = (data) => {
+// 收藏文章
+export const addCollect = (data) => {
   return request({
-    url: '',
-    method: 'GET',
+    url: '/patientApp/collect/addPatientCollect',
+    method: 'POST',
+    data,
+  });
+};
+// 用户取消收藏
+export const delCollect = (data) => {
+  return request({
+    url: '/patientApp/collect/delByPatientCollect',
+    method: 'DELETE',
     data,
   });
 };
 // 获取用户收藏列表
 export const getCollectList = (data) => {
   return request({
+    url: '/patientApp/collect/getCollectListByPatient',
+    method: 'GET',
+    data,
+  });
+};
+// 获取用户的用药计划（医生设置或用户自定义设置）
+export const getMedicaPlan = (data) => {
+  return request({
     url: '',
     method: 'GET',
     data,
   });
 };
+// 用户打卡，服用次数
+
+//
