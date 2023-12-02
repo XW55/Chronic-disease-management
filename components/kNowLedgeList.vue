@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="box flexBox" v-for="item in list" :key="item" @click="clickItem(item)">
+    <view class="box flexBox" v-for="item in list" :key="item.propagandaId" @click="clickItem(item)">
       <view class="left">
         <view class="">{{item.articleTitle}}</view>
         <view class="tip">{{item.articleType}}</view>

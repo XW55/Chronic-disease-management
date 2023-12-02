@@ -15,6 +15,22 @@ export const userLogin = (data) => {
     data,
   });
 };
+// 用户提交表单
+export const initUserInfo = (data) => {
+  return request({
+    url: '/patient_app/patient/addPatient',
+    method: 'POST',
+    data,
+  });
+};
+// 用户通过身份证查询个人信息
+
+export const getUserInfoByCode = (data) => {
+  return request({
+    url: `/patient_app/patient/getPatientByCode?code=${data}`,
+    method: 'GET',
+  });
+};
 // 请求tabbar的知识列表 (分页)
 export const getknowList = (data) => {
   return request({
@@ -72,4 +88,11 @@ export const getMedicaPlan = (data) => {
 };
 // 用户打卡，服用次数
 
-//
+// 病历得查看
+
+export const getMedicaHis = (data) => {
+  return request({
+    url: `/patient_app/patient/getReportByCode?code=${data}`,
+    method: 'GET',
+  });
+};

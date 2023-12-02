@@ -16,7 +16,7 @@
     <view class="btn inputBox"> <text class="iconfont icon-shouji"></text> <input type="number" style="width: 90%;"
         placeholder="请输入手机号" v-model="userPhone" />
     </view>
-    <view class="btn inputBox"> <text style="font-size: 45rpx;" class="iconfont icon-suozhu"></text> <input
+    <view class="btn inputBox"> <text style="font-size: 45rpx;" class="iconfont icon-yanzhengma"></text> <input
         type="number" style="width: 380rpx;" placeholder="请输入验证码" v-model="userPwdPhone" /><text class="getCodeBtn"
         @click="getPhonecode">{{codeBtn.codeText}}</text> </view>
     <button class="btn" @click="login">登录 </button>
@@ -164,17 +164,10 @@
             uni.$showMsg('登录成功', 'success', 1000)
             uni.setStorageSync('token', res.token)
             uni.setStorageSync('phone', this.userPhone)
-            // 跳转首页或者填写信息
-            if (res.BindingState) {
-              uni.switchTab({
-                url: '/pages/index/index'
-              })
-            } else {
-              uni.redirectTo({
-                url: '/modif/signIn/signIn'
-              })
-            }
-
+            // 跳转首页
+            uni.switchTab({
+              url: '/pages/index/index'
+            })
           }
         }
       },
@@ -185,6 +178,8 @@
 </script>
 
 <style lang="scss" scoped>
+  $main-color: #09f;
+
   .top {
     width: 100%;
     height: 220rpx;
@@ -192,13 +187,13 @@
 
   .iconfont {
     margin-left: 30rpx;
-    color: #09f;
-    font-size: 40rpx;
+    font-size: 45rpx;
+    color: $main-color;
   }
 
   .title {
     font-size: 52rpx;
-    color: #09f;
+    color: $main-color;
     font-weight: 700;
     width: max-content;
     margin: 0 auto 100rpx;
@@ -241,7 +236,7 @@
   .btn {
     width: 90%;
     height: 90rpx;
-    background-color: #09f;
+    background-color: $main-color;
     margin: 30rpx auto;
     border-radius: 40rpx;
     font-size: 32rpx;
@@ -251,8 +246,8 @@
   }
 
   .inputBox {
-    border: 1rpx solid#09f;
-    background-color: transparent;
+    border: 1rpx solid $main-color;
+    background-color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -273,8 +268,8 @@
       text-align: center;
       padding: 5rpx 10rpx;
       margin-right: 10rpx;
-      border-radius: 40rpx;
-      background-color: #09f;
+      border-radius: 25rpx;
+      background-color: $main-color;
       color: #fff;
     }
   }

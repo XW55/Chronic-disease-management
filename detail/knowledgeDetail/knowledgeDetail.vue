@@ -9,17 +9,17 @@
     <!-- 底部固定栏 -->
     <view class="footer boxSing">
       <view class="flexBox right">
-        <u-icon name="eye" color="#000" size="50"></u-icon>
+        <view class="iconfont icon-browse" style="color:#000;"></view>
         <text>{{content.readNum || 0}}</text>
       </view>
       <view class="flexBox right" v-if="content.isCollect === '1' || !content.isCollect" @click="updateCollect(true)">
         <!-- 未收藏按钮 点击收藏 -->
-        <u-icon name="star" color="#000" size="50"></u-icon>
+        <view class="iconfont icon-shoucang" style="color:#000;"></view>
         <view>收藏</view>
       </view>
       <!-- 已收藏 点击取消 -->
       <view class="flexBox right" v-else @click="updateCollect(false)">
-        <u-icon name="star-fill" size="50" color="#09f"></u-icon>
+        <view class="iconfont icon-shoucangxuanzhong" style="color: #09f;"></view>
         <view style="color: #09f;">已收藏</view>
       </view>
       <view class="tip">{{content.collectNum || 0}}人已收藏</view>
@@ -125,8 +125,9 @@
     line-height: 1.8;
   }
 
-  /deep/ .u-icon__icon {
+  .iconfont {
     margin: 0 5rpx;
+    font-size: 50rpx;
   }
 
   .right {

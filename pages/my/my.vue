@@ -34,7 +34,7 @@
         }, {
           title: '病历查看',
           icon: 'iconfont icon-juecebaogao',
-          url: '',
+          url: '../../myListPage/pages/medicineHis/medicineHis',
           color: '#8b5cfd'
         }, {
           title: '服药计划',

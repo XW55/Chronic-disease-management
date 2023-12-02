@@ -120,6 +120,13 @@
             "navigationBarTitleText": "提醒管理",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "pages/medicineHis/medicineHis",
+          "style": {
+            "navigationBarTitleText": "我的病历",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },
