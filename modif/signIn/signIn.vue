@@ -58,7 +58,7 @@
       <u-button color="#f9ae3d" @click="reset" text="重置"></u-button>
       <u-button color="#09f" @click="submit" text="提交"></u-button>
     </view>
-
+    <u-toast ref="uToast"></u-toast>
   </view>
 </template>
 
@@ -270,15 +270,25 @@
           const result = await initUserInfo(obj)
           console.log(result);
           if (result.code === 200) {
-            uni.$showMsg('提交成功')
             uni.setStorageSync('idCard', this.userInfo.idCard)
+            this.$refs.uToast.show({
+              message: '提交成功',
+              type: 'success',
+              position: 'top',
+              duration: 1000,
+
+            })
             uni.redirectTo({
               url: this.url
             })
           }
         }).catch(errors => {
-          console.log(errors);
-          uni.$showMsg('还有信息未填写')
+          this.$refs.uToast.show({
+            message: '还有信息未完善',
+            type: 'warning',
+            position: 'top',
+            duration: 1000
+          })
         })
       },
       // 重置表单

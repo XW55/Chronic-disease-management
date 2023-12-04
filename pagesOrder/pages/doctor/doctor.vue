@@ -178,7 +178,12 @@
                   signType: result.payMap.signType,
                   paySign: result.payMap.paySign,
                   success: function(res) {
-                    uni.$showMsg('支付成功', 'success')
+                    this.$refs.uToast.show({
+                      message: '支付成功',
+                      type: 'success',
+                      position: 'top',
+                      duration: 1000
+                    })
                     setTimeout(() => {
                       uni.navigateTo({
                         url: '../../pages/detail/detail?id=' + ress.data.appointmentId
@@ -187,7 +192,12 @@
 
                   },
                   fail(err) {
-                    uni.$showMsg('您取消了支付', 'error')
+                    this.$refs.uToast.show({
+                      message: '您取消了支付',
+                      type: 'warning',
+                      position: 'top',
+                      duration: 1000
+                    })
                     setTimeout(() => {
                       uni.navigateTo({
                         url: '../../pages/aboutDay/aboutDay'

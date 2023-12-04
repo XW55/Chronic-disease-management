@@ -1,6 +1,7 @@
 <template>
   <view class="page">
     <view class="top"></view>
+    <u-toast ref="uToast"></u-toast>
     <!-- 手机号登录 -->
     <!-- <view v-if="!showCodeLogin">
       <view class="title">手机号登录</view>
@@ -109,9 +110,12 @@
         let bool = true;
         if (!this.rules[key].rule.test(this[key])) {
           //提示信息
-          uni.showToast({
-            title: this.rules[key].msg,
-            icon: 'none'
+
+          this.$refs.uToast.show({
+            message: this.rules[key].msg,
+            type: 'warning',
+            position: 'top',
+            duration: 1000
           })
           //取反
           bool = false;
@@ -148,9 +152,11 @@
       async login() {
         if (this.validate('userPhone') && this.validate('userPwdPhone')) {
           if (this.ty == 0) {
-            uni.showToast({
-              title: "请勾选条款",
-              icon: 'none'
+            this.$refs.uToast.show({
+              message: '请勾选下方条款',
+              type: 'warning',
+              position: 'top',
+              duration: 1000
             })
             return;
           }
@@ -159,14 +165,19 @@
             code: this.userPwdPhone,
             uuid: this.uuid
           })
-          console.log('登录结果', res);
           if (res.code === 200) {
-            uni.$showMsg('登录成功', 'success', 1000)
             uni.setStorageSync('token', res.token)
             uni.setStorageSync('phone', this.userPhone)
-            // 跳转首页
-            uni.switchTab({
-              url: '/pages/index/index'
+            this.$refs.uToast.show({
+              message: '登录成功',
+              type: 'success',
+              position: 'top',
+              duration: 1000,
+              complete() {
+                uni.switchTab({
+                  url: '/pages/index/index'
+                })
+              }
             })
           }
         }

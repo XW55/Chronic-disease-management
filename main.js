@@ -4,15 +4,6 @@ import Vue from 'vue';
 Vue.config.productionTip = false;
 App.mpType = 'app';
 
-// 封装弹框通用提示方法
-uni.$showMsg = (title, icon = 'none', duration = 1000) => {
-  uni.showToast({
-    title,
-    duration,
-    icon,
-  });
-};
-
 try {
   function isPromise(obj) {
     return (
@@ -52,6 +43,7 @@ import uView from 'uview-ui';
 Vue.use(uView);
 // 如此配置即可
 uni.$u.config.unit = 'rpx';
+
 
 // #ifdef VUE3
 import {

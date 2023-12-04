@@ -118,7 +118,12 @@
         } else if (now >= signInStartTime && now < startTime) {
           this.addSign()
         } else {
-          uni.$showMsg('目前未到签到时间')
+          this.$refs.uToast.show({
+            message: '还未到签到时间',
+            type: 'warning',
+            position: 'top',
+            duration: 1000
+          })
         }
       },
       async pay() {
@@ -136,13 +141,23 @@
           signType: result.payMap.signType,
           paySign: result.payMap.paySign,
           success: function(res) {
-            uni.$showMsg('支付成功', 'success')
+            this.$refs.uToast.show({
+              message: '支付成功',
+              type: 'success',
+              position: 'top',
+              duration: 1000
+            })
             setTimeout(() => {
               uni.navigateBack()
             }, 700)
           },
           fail(err) {
-            uni.$showMsg('您取消了支付', 'error')
+            this.$refs.uToast.show({
+              message: '您取消了支付',
+              type: 'warning',
+              position: 'top',
+              duration: 1000
+            })
           }
         })
       },
@@ -155,7 +170,12 @@
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.text = '已签到'
         this.color = '#24d96e'
-        uni.$showMsg('签到成功，您已进入候诊列表')
+        this.$refs.uToast.show({
+          message: '签到成功，已进入候诊列表',
+          type: 'success',
+          position: 'top',
+          duration: 1000
+        })
       },
       async getList() {
         const {

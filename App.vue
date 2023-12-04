@@ -30,6 +30,11 @@
     font-size: 35rpx !important;
   }
 
+  // 对弹出层进行样式穿透
+  /deep/ .u-icon__icon {
+    font-size: 42rpx !important;
+  }
+
   .w95 {
     width: 95%;
   }

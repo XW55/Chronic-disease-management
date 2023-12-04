@@ -33,7 +33,12 @@
           data: res
         } = await uni.$http.get('/hospital/subscribe/list')
         if (res.code === 401) {
-          uni.$showMsg('登录过期，请重新登录')
+          this.$refs.uToast.show({
+            message: '登录过期，请重新登录',
+            type: 'warning',
+            position: 'top',
+            duration: 1000
+          })
           // 跳转登录页
           setTimeout(() => {
             uni.navigateTo({

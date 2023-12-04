@@ -1,5 +1,6 @@
 <template>
   <view>
+    <u-toast ref="uToast"></u-toast>
     <!-- 渲染知识内容 -->
     <view class="content">
       <u-parse v-if="content.articleText" :content="content.articleText" :selectable="true"></u-parse>
@@ -89,7 +90,12 @@
           if (res.code === 200) {
             this.content.collectNum += 1
             this.content.isCollect = '0'
-            uni.$showMsg('收藏成功', 'success')
+            this.$refs.uToast.show({
+              message: '收藏成功',
+              type: 'success',
+              position: 'top',
+              duration: 1000
+            })
           }
           this.$forceUpdate()
         } else {
@@ -102,7 +108,12 @@
               this.content.collectNum -= 1
             }
             this.content.isCollect = '1'
-            uni.$showMsg('您已取消收藏')
+            this.$refs.uToast.show({
+              message: '取消收藏',
+              type: 'warning',
+              position: 'top',
+              duration: 1000
+            })
 
           }
           this.$forceUpdate()
