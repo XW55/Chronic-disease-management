@@ -65,7 +65,7 @@
 <script>
   import {
     formatTimeStamp
-  } from '@/tools/formatTime.js'
+  } from '@/tools/tool.js'
   import {
     initUserInfo,
     getUserInfoByCode

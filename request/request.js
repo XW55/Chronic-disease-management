@@ -89,10 +89,33 @@ export const getMedicaPlan = (data) => {
 // 用户打卡，服用次数
 
 // 病历得查看
-
 export const getMedicaHis = (data) => {
   return request({
     url: `/patient_app/patient/getReportByCode?code=${data}`,
     method: 'GET',
+  });
+};
+// 用户添加用药计划
+export const addMedica = (data) => {
+  return request({
+    url: `/patientApp/pharmacyPlan/addPharmacyPlan`,
+    method: 'POST',
+    data,
+  });
+};
+// 用户根据身份证请求药品计划
+export const getMedica = (data) => {
+  return request({
+    url: `/patientApp/pharmacyPlan/getList`,
+    method: 'GET',
+    data,
+  });
+};
+// 用户根据Id修改药品计划
+export const updateMedica = (data) => {
+  return request({
+    url: `/patientApp/pharmacyPlan/updatePharmacyPlan`,
+    method: 'POST',
+    data,
   });
 };
