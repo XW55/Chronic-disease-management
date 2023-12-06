@@ -119,3 +119,18 @@ export const updateMedica = (data) => {
     data,
   });
 };
+// 根据药品Id删除
+export const deleteMedicine = (data) => {
+  return request({
+    url: `/patientApp/pharmacyPlan/deletePharmacyPlan/${data}`,
+    method: 'DELETE',
+  });
+};
+// 用户吃药打卡
+export const clockInMedicine = (data) => {
+  return request({
+    url: `/patientApp/pharmacyRegister/addPharmacyRegister`,
+    method: 'POST',
+    data,
+  });
+};

@@ -3,9 +3,11 @@
     <u-toast ref="uToast"></u-toast>
     <view class="w95 boxSing p20 m20 card container">
       <!-- 添加药品按钮 -->
-      <view class="add"><text @click="addMedicine">添加药品</text> </view>
+      <view class="add" v-if="!isUpdateMedicine"><text @click="showAdd=true">添加药品</text> </view>
+      <view class="add" v-else><text>修改药品</text> </view>
       <!-- 患者用药列表计划列表 -->
-      <medicineList :list="medicineList" @updateMedicine="updateMedicine" :show-card="false" v-if="!showAdd">
+      <medicineList :list="medicineList" @updateMedicine="updateMedicine" :show-btn="false" :show-card="false"
+        v-if="!showAdd">
       </medicineList>
 
       <!-- 添加用药模块 -->
@@ -54,8 +56,9 @@
         </view>
         <!-- 底部按钮 -->
         <view style="display:flex; justify-content: flex-end;">
-          <view class="flexBox" style="width: 55%; margin: 15rpx;">
+          <view class="flexBox" style="width:75%; margin: 15rpx;">
             <u-button text="取消" size="mini" plain @click="cancel"></u-button>
+            <u-button v-if="medicineId !== ''" text="删除" size="mini" type="error" plain @click="delMedicine"></u-button>
             <u-button text="保存" size="mini" color="#09f" @click="saveMedicine"></u-button>
           </view>
         </view>
@@ -71,6 +74,9 @@
     <u-datetime-picker ref="third" :itemHeight="100" :minHour="16" :show="showThirdTime" mode="time"
       @cancel="showThirdTime = false" @confirm="showThirdTimeConfirm"></u-datetime-picker>
 
+    <!-- 删除的模态弹窗 -->
+    <u-modal :show="showModal" :showCancelButton="true" @cancel="showModal=false" @confirm="confirmDel" :title="title"
+      :content="content"></u-modal>
     <!-- picker选项卡 -->
     <u-picker :show="showPicker" ref="picker" :columns="frequencyList" title="用药频次" :itemHeight="100"
       @cancel="showPicker = false" @confirm="confirm"></u-picker>
@@ -84,7 +90,8 @@
   import {
     addMedica,
     getMedica,
-    updateMedica
+    updateMedica,
+    deleteMedicine
   } from '@/request/request.js'
   import medicineList from '@/components/medicineList.vue'
   import {
@@ -113,6 +120,12 @@
         showAdd: false,
         showPicker: false,
         showPicker1: false,
+        // 展示模态弹窗
+        showModal: false,
+        // 模态弹窗的标题
+        title: '删除用药计划',
+        // 模态弹窗的内容
+        content: '',
         // 打开时间选择器
         showFirstTime: false,
         showSecondTime: false,
@@ -148,9 +161,30 @@
       }
     },
     methods: {
-      // 添加药品
-      addMedicine() {
-        this.showAdd = true
+      // 删除药品
+      delMedicine() {
+        this.content = `您确认删除${this.medicineName}用药吗？`
+        this.showModal = true
+      },
+      // 确定删除按钮
+      async confirmDel() {
+        const vuePro = this
+        const res = await deleteMedicine(this.medicineId)
+        if (res.data) {
+          this.$refs.uToast.show({
+            message: '删除成功',
+            type: 'success',
+            position: 'top',
+            duration: 1000,
+            complete() {
+              vuePro.showModal = false
+              vuePro.medicineList = []
+              vuePro.pageNum = 1
+              vuePro.showAdd = false
+              vuePro.getMedicineList()
+            }
+          })
+        }
       },
       // 查询药品计划
       async getMedicineList() {
@@ -164,7 +198,7 @@
         this.isLoading = true
         const res = await getMedica({
           patientCode: uni.getStorageSync('idCard'),
-          pageSize: 10,
+          pageSize: 5,
           pageNum: this.pageNum
         })
         console.log(res);
@@ -323,6 +357,7 @@
       },
       // 用户保存药品到数据库
       async saveMedicine() {
+        const vuePro = this
         if (this.medicineName === '') {
           return this.$refs.uToast.show({
             message: '请输入药品名称',
@@ -342,7 +377,7 @@
           status: this.trunOnremind ? '1' : '0'
         }
         // 这是修改药品
-        if (this.updateMedicine) {
+        if (this.isUpdateMedicine) {
           console.log('6666');
           obj.pharmacyId = this.medicineId
           const res = await updateMedica(obj)
@@ -351,7 +386,13 @@
               message: '修改成功',
               type: 'success',
               position: 'top',
-              duration: 1500
+              duration: 1500,
+              complete() {
+                vuePro.medicineList = []
+                vuePro.pageNum = 1
+                vuePro.showAdd = false
+                vuePro.getMedicineList()
+              }
             })
           }
         } else { // 新添加药品计划
@@ -363,10 +404,15 @@
               message: '已成功添加该计划',
               type: 'success',
               position: 'top',
-              duration: 1500
+              duration: 1500,
+              complete() {
+                vuePro.medicineList = []
+                vuePro.pageNum = 1
+                vuePro.showAdd = false
+                vuePro.getMedicineList()
+              }
             })
           }
-          // 重新查询列表
         }
 
 
@@ -374,6 +420,12 @@
     },
     // 这里页面上拉触底进行新的数据请求
     onReachBottom() {
+      if (this.medicineList.length >= this.total && this.total !== 0) {
+        return;
+      }
+      if (this.showAdd) {
+        return
+      }
       this.pageNum += 1;
       this.getMedicineList()
     }

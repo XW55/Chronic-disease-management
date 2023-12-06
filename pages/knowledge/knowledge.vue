@@ -38,6 +38,7 @@
         if (this.list.length >= this.total && this.total !== 0) {
           return;
         }
+
         this.isLoading = true
         const res = await getknowList({
           pageSize: this.pageSize,
@@ -59,6 +60,9 @@
     },
     // 这里页面上拉触底进行新的数据请求
     onReachBottom() {
+      if (this.list.length >= this.total && this.total !== 0) {
+        return;
+      }
       console.log('页面触底拉');
       this.pageNum += 1;
       this.getList()
