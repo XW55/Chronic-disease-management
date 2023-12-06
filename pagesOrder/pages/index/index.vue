@@ -1,6 +1,7 @@
 <template>
   <view>
     <view>
+      <u-toast ref="uToast"></u-toast>
       <!-- 挂号日期 两周 -->
       <scroll-view class="scroll-view-wrapper" scroll-x="true" style="background-color: #fff;">
         <view class="dateList">
@@ -12,15 +13,15 @@
         </view>
       </scroll-view>
       <!-- tabBar栏切换 按照职称选择医生、专家 -->
-      <u-tabs :list="list" @click="clickList"></u-tabs>
+      <!-- <u-tabs :list="list" @click="clickList"></u-tabs> -->
       <!-- 可挂号时间段 -->
-      <uni-collapse class="doctorList" v-if="!!doctorList.length">
-        <uni-collapse-item title-border="none" :border="false" :show-arrow="true" accordion
-          v-for="(item,index) in doctorList" :key="index" class="doctorItem">
-          <template v-slot:title>
+      <u-collapse accordion class="doctorList" v-if="!!doctorList.length">
+        <u-collapse-item title="6666" :border="false" v-for="(item,index) in doctorList" :key="index"
+          class="doctorItem">
+          <template slot="title">
             <view class="doctorInfo">
               <view class="doctorImg">
-                <image :src="item.doctor.img" mode="aspectFill"></image>
+                <!-- <image :src="item.doctor.img" mode="aspectFill"></image> -->
               </view>
               <view class="doctorText">
                 <view class="doctorName">
@@ -58,8 +59,8 @@
               </view>
             </view>
           </view>
-        </uni-collapse-item>
-      </uni-collapse>
+        </u-collapse-item>
+      </u-collapse>
       <view class="noDoctor" v-else>
         当天没有医生排班
       </view>
@@ -69,6 +70,12 @@
 </template>
 
 <script>
+  import {
+    getTwoWeek
+  } from '@/tools/tool.js'
+  import {
+    getDoctor
+  } from '@/request/request.js'
   export default {
     data() {
       return {
@@ -80,31 +87,31 @@
         // 是否是修改预约
         appointmentId: '',
         // tab栏列表
-        list: [{
-          name: '医生列表',
-        }, {
-          name: '专家',
-        }, {
-          name: '按职称选医生'
-        }]
+        // list: [{
+        //   name: '医生列表',
+        // }, {
+        //   name: '专家',
+        // }, {
+        //   name: '按职称选医生'
+        // }]
       };
     },
     computed: {
 
     },
     onLoad(options) {
-      // if (options.id) {
-      //   this.id = options.id
-      // }
-      // if (options.appointmentId) {
-      //   this.appointmentId = options.appointmentId
-      // }
-
-      // this.dataList = getTwoWeek()
+      if (options.id) {
+        this.id = options.id
+      }
+      if (options.appointmentId) {
+        this.appointmentId = options.appointmentId
+      }
+      // 初始化挂号日期
+      this.dataList = getTwoWeek()
     },
     onShow() {
-      // this.getDataList();
-      // this.getDoctorList();
+      this.getDataList();
+      this.getDoctorList();
     },
     methods: {
       getTest() {
@@ -131,21 +138,19 @@
           url: '../../../pages/index/index'
         })
       },
-      getDoctorList() {
-        try {
-          getDoctorList({
-            hospitalId: this.id,
-            day: this.getDay
-          }).then(res => {
-            console.log(res);
-            if (res.data.code !== 200) return uni.$showMsg(res.msg)
-            this.doctorList = res.data.data
-          }).catch(err => {
-            uni.$showMsg('获取医生列表失败')
-          })
-        } catch (e) {
-          uni.$showMsg('获取医生列表失败')
-        }
+      async getDoctorList() {
+        const res = await getDoctor({
+          outpatientId: this.id,
+          diagnoseTime: this.getDay
+        })
+        console.log(res.data);
+        if (res.code !== 200) return this.$refs.uToast.show({
+          message: res.msg,
+          type: 'warning',
+          position: 'top',
+          duration: 1000
+        })
+        this.doctorList = res.data
       },
       // 点击顶部列表
       clickList(item) {

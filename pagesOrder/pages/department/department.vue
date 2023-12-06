@@ -10,10 +10,10 @@
       </view>
       <!-- 右侧边栏 -->
       <view class="floor_right">
-        <view class="item" v-for="(activeItem,index) in activeList" :key="index" @click="gotoIndex">
+        <view class="item" v-for="(activeItem,index) in activeList" :key="index" @click="gotoIndex(activeItem.value)">
           <view class="flexBox">
             <view>{{activeItem.label}}</view>
-            <uni-icons type="forward" color="#000" size="26"></uni-icons>
+            <view class="iconfont icon-youjiantou" color="#000" style="font-size: 40rpx;"></view>
           </view>
         </view>
       </view>
@@ -23,10 +23,13 @@
 </template>
 
 <script>
+  import {
+    getDepartment
+  } from '@/request/request.js'
   export default {
     data() {
       return {
-        hotId: '',
+        // hotId: '',
         dePartMentList: [],
         activeList: [],
         screenHeight: '',
@@ -35,16 +38,14 @@
     },
     onLoad(options) {
       // this.hotId = options.id
-      // this.getHeight()
-      // this.getDePartMentList()
+      this.getHeight()
+      this.getDePartMentList()
     },
     methods: {
       async getDePartMentList() {
-        const {
-          data: res
-        } = await uni.$http.get('hospital/subscribe/getHospitalIdFindList?hospitalId=' + this.hotId)
+        const res = await getDepartment()
         if (res.code !== 200) return uni.$showMsg(res.msg)
-        // console.log(res);
+        console.log(res);
         this.dePartMentList = res.data
         this.activeList = res.data[0].children
       },
@@ -65,9 +66,9 @@
         this.active = i
         this.activeList = this.dePartMentList[i].children
       },
-      gotoIndex() {
+      gotoIndex(id) {
         uni.navigateTo({
-          url: '../../pages/index/index?id=' + this.hotId
+          url: '../../pages/index/index?id=' + id
         })
       }
     },

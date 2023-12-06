@@ -32,3 +32,78 @@ export function taleNumber(str) {
     return console.log('未找到数字');
   }
 }
+// 获取本周日期
+export function getThisWeekDates() {
+  // 创建一个 Date 对象
+  const today = new Date();
+
+  // 获取当前日期是星期几（0 表示星期日，1 表示星期一，以此类推）
+  const dayOfWeek = today.getDay();
+
+  // 计算本周的开始日期和结束日期
+  // 本周的开始日期为当前日期减去星期几再加上 1
+  const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - dayOfWeek + 1);
+  // 本周的结束日期为当前日期加上 (6 - 星期几)
+  const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - dayOfWeek + 1));
+  // 格式化起始日期
+  const startYear = startDate.getFullYear();
+  const startMonth = (startDate.getMonth() + 1).toString().padStart(2, '0');
+  const startDateValue = startDate.getDate().toString().padStart(2, '0');
+  const formattedStartDate = `${startYear}-${startMonth}-${startDateValue}`;
+
+  // 格式化结束日期
+  const endYear = endDate.getFullYear();
+  const endMonth = (endDate.getMonth() + 1).toString().padStart(2, '0');
+  const endDateValue = endDate.getDate().toString().padStart(2, '0');
+  const formattedEndDate = `${endYear}-${endMonth}-${endDateValue}`;
+  return {
+    startDate: formattedStartDate,
+    endDate: formattedEndDate,
+  };
+}
+// 获取今天的时间，然后按顺序将七天以{week:'日',day:23,time:'yyyy-mm-nn'}的形式存入dataList,要考虑到月末和年末的情况
+export function getWeek() {
+  const today = new Date(); // 获取今天的日期
+  const date2 = new Date(today);
+  const dateArray = [];
+  for (let i = 0; i < 7; i++) {
+    date2.setDate(today.getDate() + i);
+    const day = date2.getDate();
+    let week = date2.getDay();
+    const everyDay = `${date2.getFullYear()}-${date2.getMonth() + 1}-${date2.getDate()}`;
+    const weekArray = ['日', '一', '二', '三', '四', '五', '六'];
+    week = weekArray[week];
+    dateArray.push({
+      day,
+      week,
+      time: everyDay,
+    }); // 获取未来7天内的日期
+  }
+  return dateArray;
+}
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const week = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
+
+  return {
+    week,
+    day,
+    time: `${year}-${month}-${day}`,
+  };
+}
+
+export function getTwoWeek() {
+  const dataList = [];
+  const today = new Date();
+
+  for (let i = 0; i < 14; i++) {
+    const futureDate = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+    const formattedDate = formatDate(futureDate);
+    dataList.push(formattedDate);
+  }
+
+  return dataList;
+}

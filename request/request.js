@@ -134,3 +134,18 @@ export const clockInMedicine = (data) => {
     data,
   });
 };
+// 获取科室列表
+export const getDepartment = (data) => {
+  return request({
+    url: `/patientApp/patientPlan/getDepartmentTreeList`,
+    method: 'GET',
+  });
+};
+// 根据科室查询医生
+export const getDoctor = (data) => {
+  return request({
+    url: `/patientApp/patientPlan/getDateDocPlanList`,
+    method: 'GET',
+    data,
+  });
+};

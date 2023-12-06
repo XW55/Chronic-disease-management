@@ -1,12 +1,13 @@
 <template>
   <view>
     <view v-for="(item, i) in 5" :key="item">
-      <view class="hos_item flexBox" @click="gotoDetail(item.hospital.hospitalId)">
+      <!-- item.hospital.hospitalId -->
+      <view class="hos_item flexBox" @click="gotoDetail()">
         <u-avatar size="120" src="https://cdn.uviewui.com/uview/album/1.jpg" shape="circle"></u-avatar>
         <view class="tip">
-          <view class="">郑州大学医院<text class="tag">三级</text> </view>
+          <view class="">XXXXXX医院<text class="tag">三级</text> </view>
           <u-gap height="20" bgColor="#fff"></u-gap>
-          <view style="color: #ccc; font-size: 26rpx;">郑州大学医院地址</view>
+          <view style="color: #ccc; font-size: 26rpx;">XXXXXX医院地址</view>
         </view>
 
       </view>
@@ -51,9 +52,10 @@
 
         this.hospitalList = res.rows
       },
-      gotoDetail(id) {
+      gotoDetail() {
         uni.navigateTo({
-          url: '../../pages/department/department?id=' + id
+          // ?id=' + id
+          url: '../../pages/department/department'
         })
       },
       gotoAbout() {
