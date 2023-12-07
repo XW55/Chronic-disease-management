@@ -37,7 +37,9 @@
       };
     },
     // 这里用户取消收藏后不能继续触发请求的函数
-    onLoad() {
+    onShow() {
+      this.list = []
+      this.pageNum = 1
       this.getList()
     },
     methods: {

@@ -4,35 +4,39 @@
       <view class="flexBox" style="margin-bottom:20rpx;" @click="gotoDetail(item.appointmentId)">
         <view class="left">
           <view class="left_box">
-            <image src="../../static/images/d1.png"></image>
+            <!-- <image src="../../static/images/d1.png"></image> -->
+            <view class="icon">
+              <view class="iconfont icon-yisheng" style="font-size: 80rpx;color: #fff;"></view>
+            </view>
+
             <view class="left_box_tip">
               <view style="font-weight: 700;">{{item.doctorName}}</view>
               <view>{{item.doctorProfessional}}</view>
             </view>
           </view>
-          <view>{{item.periodDay}} {{item.periodStart}}-{{item.periodEnd}}</view>
+          <view>{{strToDate(item.periodDay,false)}}</view>
         </view>
         <view class="right">
           <view>{{statusHandler(item.status)}} <text
               style="color: #e77169;margin-left: 15rpx;">{{payStatusHandler(item.payStatus)}}</text></view>
-          <view>{{item.specialName}}</view>
+          <view>{{item.outpatientName}}</view>
           <view>{{item.patientName}}</view>
         </view>
       </view>
       <view class="line" v-if="showBtn"></view>
       <view class="btnBox flexBox" style="justify-content: space-around;" v-if="showBtn">
         <view class="flexItem" @click="updateAbout(item.hospitalId,item.appointmentId)">
-          <uni-icons type="undo" color="#09f" size="24"></uni-icons>
+          <view class="iconfont icon-clock"></view>
           <view style="margin: 0 10rpx;">改约</view>
         </view>
         <view class="flexItem" @click="updateStatus(item.payStatus,item.appointmentId)">
-          <uni-icons type="close" color="#09f" size="24"></uni-icons>
+          <view class="iconfont icon-close" style="font-size: 44rpx;"></view>
           <view style="margin: 0 10rpx; margin-bottom: 5rpx;">取消</view>
         </view>
       </view>
       <view class="line" v-if="showStatus"></view>
       <view class="flexBox showStatus" v-if="showStatus" @click="updateStatus(item.payStatus,item.appointmentId)">
-        <uni-icons type="close" color="#09f" size="24"></uni-icons>
+        <view class="iconfont icon-close" style="font-size: 44rpx;"></view>
         <view style="margin: 0 10rpx; color: #09f; margin-bottom: 5rpx;">取消</view>
       </view>
     </view>
@@ -40,6 +44,9 @@
 </template>
 
 <script>
+  import {
+    strToDate
+  } from '@/tools/tool.js'
   export default {
     props: {
       list: {
@@ -58,6 +65,7 @@
       }
     },
     methods: {
+      strToDate,
       gotoDetail(id) {
         // console.log(id);
         uni.navigateTo({
@@ -139,9 +147,12 @@
     align-items: center;
   }
 
-  /deep/ .uni-icons {
-    vertical-align: middle !important;
+  .iconfont {
+    vertical-align: middle;
+    font-size: 40rpx;
+    color: #09f
   }
+
 
   .card {
     border-radius: 10rpx;
@@ -157,11 +168,15 @@
         display: flex;
         align-items: center;
 
-        image {
-          width: 150rpx;
-          height: 150rpx;
+        .icon {
+          width: 130rpx;
+          height: 130rpx;
+          background-color: #09f;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           margin: 5rpx 35rpx 20rpx 0;
-          display: block;
         }
 
         .left_box_tip {

@@ -16,6 +16,12 @@
         "navigationBarTitleCentered": true
       }
     }, {
+      "path": "pages/records/records",
+      "style": {
+        "navigationBarTitleText": "记录",
+        "navigationBarTitleCentered": true
+      }
+    }, {
       "path": "pages/knowledge/knowledge",
       "style": {
         "navigationBarTitleText": "健康知识",
@@ -41,6 +47,11 @@
       "iconPath": "static/home.png",
       "selectedIconPath": "static/home-active.png",
       "text": "首页"
+    }, {
+      "pagePath": "pages/records/records",
+      "iconPath": "static/my.png",
+      "selectedIconPath": "static/my-active.png",
+      "text": "记录"
     }, {
       "pagePath": "pages/knowledge/knowledge",
       "iconPath": "static/knowledge.png",
@@ -127,6 +138,13 @@
             "navigationBarTitleText": "我的病历",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "pages/bpRecord/bpRecord",
+          "style": {
+            "navigationBarTitleText": "血压自测",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },
@@ -139,6 +157,40 @@
           "enablePullDownRefresh": false
         }
       }]
+    },
+    {
+      "root": "pagebleConnect",
+      "pages": [{
+        "path": "pages/index",
+        "style": {
+          "app-plus": {
+            "navigationBarTitleText": "连接设备",
+            "enablePullDownRefresh": false
+          }
+        }
+      }]
+    },
+    {
+      "root": "pageCheck",
+      "pages": [{
+          "path": "pages/index",
+          "style": {
+            "app-plus": {
+              "navigationBarTitleText": "心电采集",
+              "enablePullDownRefresh": false
+            }
+          }
+        },
+        {
+          "path": "pages/holter",
+          "style": {
+            "app-plus": {
+              "navigationBarTitleText": "",
+              "enablePullDownRefresh": false
+            }
+          }
+        }
+      ]
     },
     {
       "root": "modif",

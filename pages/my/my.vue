@@ -53,13 +53,23 @@
             url: '../../myListPage/pages/remind/remind',
             icon: 'iconfont icon-xiaoxizhongxin'
           },
+          // {
+          //   title: '常见问题',
+          //   url: '',
+          //   icon: 'iconfont icon-changjianwentixiangguanwenti'
+          // },
+          // {
+          //   title: '设置',
+          //   url: '',
+          //   icon: 'iconfont icon-31shezhi'
+          // },
           {
-            title: '常见问题',
-            url: '',
+            title: '血压自测',
+            url: '../../myListPage/pages/bpRecord/bpRecord',
             icon: 'iconfont icon-changjianwentixiangguanwenti'
           },
           {
-            title: '设置',
+            title: '心率检测',
             url: '',
             icon: 'iconfont icon-31shezhi'
           },

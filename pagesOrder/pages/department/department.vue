@@ -77,7 +77,7 @@
 
 <style lang="scss" scoped>
   .item {
-    padding: 21rpx 15rpx;
+    padding: 28rpx 15rpx;
     padding-left: 30rpx;
     background-color: #fff;
     border-bottom: 2rpx solid #e9e9e9;

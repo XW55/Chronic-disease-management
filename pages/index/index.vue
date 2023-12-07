@@ -4,6 +4,7 @@
     <medicineList :list="medicineList" @clockMedicine="clockMedicine"></medicineList>
     <navigator url="../../modif/signIn/signIn">去往信息页</navigator>
     <navigator url="../../modif/login/login">去往登录页</navigator>
+    <!-- <navigator url="../../myListPage/pages/bpRecord/bpRecord">血压自测</navigator> -->
   </view>
 </template>
 

@@ -11,7 +11,7 @@
       </view>
       <view class="row">
         <text class="label">就诊科室：</text>
-        <text class="value">{{obj.specialName || ''}}</text>
+        <text class="value">{{obj.outpatientName || ''}}</text>
       </view>
       <view class="row">
         <text class="label">就诊医生：</text>
@@ -35,7 +35,7 @@
       </view>
       <view class="row line">
         <text class="label">创建时间：</text>
-        <text class="value">{{obj.createTime || ''}}</text>
+        <text class="value">{{strToDate(obj.createTime, true)  || ''}}</text>
       </view>
       <view class="row">
         <text class="label">就诊人：</text>
@@ -43,11 +43,11 @@
       </view>
       <view class="row">
         <text class="label">性别：</text>
-        <text class="value">{{obj.patientSex || ''}}</text>
+        <text class="value">{{obj.patientSex == '1' ? '男' : '女' || ''}}</text>
       </view>
       <view class="row">
-        <text class="label">手机号码：</text>
-        <text class="value">{{obj.patientPhone || ''}}</text>
+        <text class="label">身份证号：</text>
+        <text class="value">{{obj.patientCode || ''}}</text>
       </view>
     </view>
     <view class="btn" v-if="payStatus === '未支付'" style="background-color: #6296fc;" @click="pay">立即支付</view>
@@ -65,6 +65,12 @@
 </template>
 
 <script>
+  import {
+    getPointMentDetail
+  } from '@/request/request.js'
+  import {
+    strToDate
+  } from '@/tools/tool.js'
   export default {
     data() {
       return {
@@ -75,13 +81,14 @@
       };
     },
     onLoad(options) {
-      // if (options.id) {
-      //   this.id = options.id
-      // }
+      if (options.id) {
+        this.id = options.id
+      }
       // this.comfirmSign()
-      // this.getList()
+      this.getList()
     },
     methods: {
+      strToDate,
       gotoIndex() {
         uni.switchTab({
           url: '../../../pages/index/index'
@@ -178,9 +185,8 @@
         })
       },
       async getList() {
-        const {
-          data: res
-        } = await uni.$http.get('/hospital/visitAppointment/' + this.id)
+        const res = await getPointMentDetail(this.id)
+        console.log(res);
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.obj = res.data
       },

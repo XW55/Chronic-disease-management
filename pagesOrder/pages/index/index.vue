@@ -14,14 +14,17 @@
       </scroll-view>
       <!-- tabBar栏切换 按照职称选择医生、专家 -->
       <!-- <u-tabs :list="list" @click="clickList"></u-tabs> -->
-      <!-- 可挂号时间段 -->
+      <!-- 可挂号时间段 app -->
+      <!-- #ifdef APP-PLUS || APP  -->
       <u-collapse accordion class="doctorList" v-if="!!doctorList.length">
-        <u-collapse-item title="6666" :border="false" v-for="(item,index) in doctorList" :key="index"
-          class="doctorItem">
+        <u-collapse-item :border="false" v-for="(item,index) in doctorList" :key="index" class="doctorItem">
           <template slot="title">
             <view class="doctorInfo">
               <view class="doctorImg">
                 <!-- <image :src="item.doctor.img" mode="aspectFill"></image> -->
+                <view class="iconBox">
+                  <view class="iconfont icon-yisheng" style="font-size: 80rpx;color: #fff;"></view>
+                </view>
               </view>
               <view class="doctorText">
                 <view class="doctorName">
@@ -32,8 +35,13 @@
               </view>
               <view class="doctorPrice">
                 <view>挂号费</view>
-                <view>￥{{ getPrice(item.doctor.chargePrice) }}</view>
+                <view>￥{{ getPrice(item.price) }}</view>
               </view>
+              <!-- 标签 -->
+              <view class="tag">
+                <u-tag :text="item.registrationName" size="mini" type="primary"></u-tag>
+              </view>
+
             </view>
           </template>
           <view class="am panel" v-if="!!item.visitTimeMap.am">
@@ -61,6 +69,65 @@
           </view>
         </u-collapse-item>
       </u-collapse>
+      <!-- #endif -->
+
+
+      <!-- 可挂号小程序 -->
+      <uni-collapse class="doctorList" accordion v-if="!!doctorList.length">
+        <uni-collapse-item style="position: relative;" title-border="auto" :show-arrow="true"
+          v-for="(item,index) in doctorList" :key="index" class="doctorItem">
+          <template v-slot:title>
+            <view class="doctorInfo">
+              <view class="doctorImg">
+                <!-- <image :src="item.doctor.img" mode="aspectFill"></image> -->
+                <view class="iconBox">
+                  <view class="iconfont icon-yisheng" style="font-size: 80rpx;color: #fff;"></view>
+                </view>
+              </view>
+              <view class="doctorText">
+                <view class="doctorName">
+                  <view class="name">{{ item.doctor.doctorName }}</view>
+                  <view class="posts">{{ item.doctor.professional }}</view>
+                </view>
+                <view class="doctorTitle">{{ item.doctor.introduction }}</view>
+              </view>
+              <view class="doctorPrice">
+                <view>挂号费</view>
+                <view>￥{{ getPrice(item.price) }}</view>
+              </view>
+              <!-- 标签 -->
+              <view class="wxTag">
+                <u-tag :text="item.registrationName" size="mini" type="primary"></u-tag>
+              </view>
+            </view>
+          </template>
+          <view class="am panel" v-if="!!item.visitTimeMap.am">
+            <view class="title" v-if="item.visitTimeMap.am.length">上午 8:30 - 12:00</view>
+            <!-- <view v-else style="font-size: 38rpx;">当前没有排班了</view> -->
+            <view class="orderList">
+              <view class="orderTag" v-for="(timeTag,timeIndex) in item.visitTimeMap.am" :key="timeTag.slotId"
+                :class="{'disableTag':timeTag.status}" hover-class="selectTag"
+                @click="selectTag(timeTag.status,timeTag.slotId,item.planId)">
+                {{ timeTag.startTime }} - {{ timeTag.endTime }}
+              </view>
+            </view>
+          </view>
+          <view class="pm panel" v-if="!!item.visitTimeMap.pm">
+            <!-- <view class="title">下午 14:00 - 17:30</view> -->
+            <view class="title" v-if="item.visitTimeMap.pm.length">下午 14:00 - 17:30</view>
+            <!-- <view v-else style="font-size: 38rpx;">当前没有排班了</view> -->
+            <view class="orderList">
+              <view class="orderTag" v-for="(timeTag,timeIndex) in item.visitTimeMap.pm" :key="timeTag.slotId"
+                :class="{'disableTag':timeTag.status}" hover-class="selectTag"
+                @click="selectTag(timeTag.status,timeTag.slotId,item.planId)">
+                {{ timeTag.startTime }} - {{ timeTag.endTime }}
+              </view>
+            </view>
+          </view>
+        </uni-collapse-item>
+      </uni-collapse>
+
+
       <view class="noDoctor" v-else>
         当天没有医生排班
       </view>
@@ -76,7 +143,11 @@
   import {
     getDoctor
   } from '@/request/request.js'
+  import uniCollapse from '@/pagesOrder/components/uni-collapse/components/uni-collapse/uni-collapse.vue'
   export default {
+    components: {
+      uniCollapse
+    },
     data() {
       return {
         doctorList: [],
@@ -158,11 +229,10 @@
       },
       // 选择诊断时间
       selectTag(status, slotId, planId) {
-        console.log(status, slotId, planId);
         if (status) return
         // 准备需要的参数
         const obj = {
-          patientPhone: this.barUser.tel,
+          patientCode: uni.getStorageSync('idCard'),
           slotId,
           planId
         }
@@ -191,6 +261,31 @@
     padding: 20rpx;
   }
 
+  .tag {
+    position: absolute;
+    right: 20rpx;
+    top: 25rpx;
+    z-index: 99;
+  }
+
+  .wxTag {
+    position: absolute;
+    right: 10rpx;
+    top: 10rpx;
+    z-index: 99;
+  }
+
+  .iconBox {
+    width: 130rpx;
+    height: 130rpx;
+    background-color: #09f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5rpx 35rpx 20rpx 0;
+  }
+
   .icon {
     background-color: #09f;
     border-radius: 50%;
@@ -216,7 +311,7 @@
     // width: 300rpx;
     margin-right: 10rpx;
     height: 100rpx;
-    border-radius: 30%;
+    border-radius: 20%;
   }
 
   .week {}
@@ -231,6 +326,7 @@
   }
 
   .doctorList {
+    position: relative;
     padding: 20rpx;
     box-sizing: border-box;
     width: 720rpx;
@@ -257,10 +353,10 @@
         gap: 10rpx;
 
         .doctorImg {
-          width: 120rpx;
-          height: 120rpx;
-          border-radius: 50%;
-          overflow: hidden;
+          // width: 120rpx;
+          // height: 120rpx;
+          // border-radius: 50%;
+          // overflow: hidden;
 
           image {
             width: 100%;

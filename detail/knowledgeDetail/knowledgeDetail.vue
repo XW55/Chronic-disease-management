@@ -97,7 +97,6 @@
               duration: 1000
             })
           }
-          this.$forceUpdate()
         } else {
           const res = await delCollect({
             propagandaId: this.pageId
@@ -116,7 +115,6 @@
             })
 
           }
-          this.$forceUpdate()
         }
       }
     }

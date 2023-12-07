@@ -126,6 +126,7 @@
 
       // 获取验证码
       async getPhonecode() {
+        console.log('确实点击了');
         if (!this.codeBtn.codeStatus) return
         // 判断验证码按钮是否可点击
         this.codeBtn.codeStatus = false

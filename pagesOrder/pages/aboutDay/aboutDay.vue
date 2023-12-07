@@ -7,14 +7,13 @@
           <view style="color: #4087eb; margin: 0 15rpx;">
             {{userObj.patientName || ''}}【{{userObj.patientSex || ''}}】{{userObj.patientAge || ''}}岁
           </view>
-          <uni-icons type="forward" color="#000" size="25"></uni-icons>
+          <view class="iconfont icon-youjiantou" style="font-size: 40rpx; color: #000;"></view>
         </view>
       </view>
     </view>
 
-    <uni-segmented-control :current="current" :values="items" style-type="text" active-color="#007aff"
-      @clickItem="onClickItem" />
-    </uni-segmented-control>
+    <u-subsection :current="current" :fontSize="30" :list="items" active-color="#09f" @change="onClickItem" />
+    </u-subsection>
     <view class="content">
       <view v-show="current === 0">
         <scroll-view v-show="list.length !== 0" class="scrollContent scroll-view-wrapper" scroll-y refresher-threshold
@@ -47,6 +46,11 @@
 </template>
 
 <script>
+  import {
+    getAboutList,
+    getUserInfoByCode
+  } from '@/request/request.js'
+
   import list from '../../components/list.vue'
   export default {
     components: {
@@ -70,20 +74,20 @@
       };
     },
     onLoad() {
-      // this.getUser()
+      this.getUser()
     },
     onShow() {
-      // this.list = []
-      // this.pageNum = 1
-      // this.getList()
+      this.list = []
+      this.pageNum = 1
+      this.getList()
     },
     onReady() {
-      // this.getHeight()
+      this.getHeight()
     },
     methods: {
       onClickItem(e) {
-        if (this.current !== e.currentIndex) {
-          this.current = e.currentIndex
+        if (this.current !== e) {
+          this.current = e
           this.list = []
           this.pageNum = 0
           this.total = 0
@@ -91,14 +95,11 @@
         }
       },
       async getUser() {
-        console.log('vuex中的tel', this.barUser.tel);
-        const {
-          data: res
-        } = await uni.$http.get(`/patient/patient/getInfoByPhone/${this.barUser.tel}`)
+        const res = await getUserInfoByCode(uni.getStorageSync('idCard'))
         console.log('111', res);
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.userObj.patientName = res.data.patientName
-        this.userObj.patientSex = res.data.patientSex
+        this.userObj.patientSex = res.data.patientSex == 1 ? '男' : '女'
         this.userObj.patientAge = res.data.patientAge
       },
       // 子元素传递id，父元素删除对应元素
@@ -114,16 +115,14 @@
         if (this.list.length >= this.total && this.total !== 0) {
           return;
         }
-        const {
-          data: res
-        } = await uni.$http.get('/hospital/visitAppointment/list', {
-          patientPhone: this.barUser.tel,
-          status: this.current,
-          pageNum: this.pageNum,
-          pageSize: 5
-        })
+        const
+          res = await getAboutList({
+            patientCode: uni.getStorageSync('idCard'),
+            status: this.current,
+            pageNum: this.pageNum,
+            pageSize: 5
+          })
         if (res.code !== 200) return uni.$showMsg(res.msg)
-        console.log(res);
         this.list.push(...res.rows);
         this.total = res.total;
         this.isLoading = false
@@ -191,14 +190,6 @@
     background-color: #fff;
   }
 
-  /deep/ .segmented-control {
-    height: 90rpx !important;
-    background-color: #ededed;
-  }
-
-  /deep/ .segmented-control__item--text {
-    padding: 18rpx 0 !important;
-  }
 
   .content {
     padding: 0 20rpx 20rpx 20rpx;
@@ -211,34 +202,4 @@
     overflow-y: scroll;
     background-color: #fff;
   }
-</style>
-
-<style>
-  /*每个页面公共css */
-  /* 解决小程序和app滚动条的问题 */
-  /* #ifdef MP-WEIXIN || APP-PLUS */
-  ::-webkit-scrollbar {
-    display: none;
-    width: 0 !important;
-    height: 0 !important;
-    -webkit-appearance: none;
-    background: transparent;
-    color: transparent;
-  }
-
-  /* #endif */
-
-  /* 解决H5 的问题 */
-  /* #ifdef H5 */
-  .scroll-view-wrapper::-webkit-scrollbar {
-    /* 隐藏滚动条，但依旧具备可以滚动的功能 */
-    display: none;
-    width: 0 !important;
-    height: 0 !important;
-    -webkit-appearance: none;
-    background: transparent;
-    color: transparent;
-  }
-
-  /* #endif */
 </style>

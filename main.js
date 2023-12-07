@@ -42,6 +42,14 @@ app.$mount();
 import uView from 'uview-ui';
 Vue.use(uView);
 // 如此配置即可
+// 封装弹框通用提示方法
+uni.$showMsg = (title = '数据请求失败！', icon = 'none', duration = 1000) => {
+  uni.showToast({
+    title,
+    duration,
+    icon,
+  });
+};
 uni.$u.config.unit = 'rpx';
 
 

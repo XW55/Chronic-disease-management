@@ -3,7 +3,7 @@
     <u-toast ref="uToast"></u-toast>
     <view class="w95 boxSing p20 m20 card container">
       <!-- 添加药品按钮 -->
-      <view class="add" v-if="!isUpdateMedicine"><text @click="showAdd=true">添加药品</text> </view>
+      <view class="add" v-if="!isUpdateMedicine"><text @click="openShowAdd">添加药品</text> </view>
       <view class="add" v-else><text>修改药品</text> </view>
       <!-- 患者用药列表计划列表 -->
       <medicineList :list="medicineList" @updateMedicine="updateMedicine" :show-btn="false" :show-card="false"
@@ -161,6 +161,26 @@
       }
     },
     methods: {
+      // 打开用药提醒
+      openShowAdd() {
+        if (this.medicineName) {
+          this.medicineName = ''
+        }
+        if (this.medicineId) {
+          this.medicineId = ''
+        }
+        if (this.frequency !== '每天1次') {
+          this.frequency = '每天1次'
+          this.confirm({
+            value: [
+              this.frequency
+            ]
+          })
+        }
+
+        this.trunOnremind = true
+        this.showAdd = true
+      },
       // 删除药品
       delMedicine() {
         this.content = `您确认删除${this.medicineName}用药吗？`
@@ -390,6 +410,8 @@
               complete() {
                 vuePro.medicineList = []
                 vuePro.pageNum = 1
+                vuePro.total = 0
+                vuePro.isUpdateMedicine = false
                 vuePro.showAdd = false
                 vuePro.getMedicineList()
               }

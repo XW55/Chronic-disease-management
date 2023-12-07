@@ -23,6 +23,22 @@ export function getTime(flag) {
     return `${currentYear}-${currentMonth}-${currentDay}`;
   }
 }
+// 给定的 ISO 8601 格式字符串创建日期对象  返回年月日时分秒 或者年月日
+export function strToDate(str, flag = true) {
+  const date = new Date(str); // 将字符串转换为日期对象
+  const year = date.getFullYear();
+  const month = (`0${date.getMonth() + 1}`).slice(-2); // 获取并补零月份
+  const day = (`0${date.getDate()}`).slice(-2); // 获取并补零日期
+  const hour = (`0${date.getHours()}`).slice(-2); // 获取并补零小时
+  const minute = (`0${date.getMinutes()}`).slice(-2); // 获取并补零分钟
+  const second = (`0${date.getSeconds()}`).slice(-2); // 获取并补零秒数\
+  if (flag) {
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  } else {
+    return `${year}-${month}-${day}`; // 格式化结果为 "YYYY-MM-DD"
+  }
+}
+
 // 正则表达式验证抽取数字
 export function taleNumber(str) {
   const matchResult = str.match(/\d+/);
