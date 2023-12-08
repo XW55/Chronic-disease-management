@@ -70,7 +70,12 @@
           },
           {
             title: '心率检测',
-            url: '',
+            url: '../../pagebleConnect/pages/index',
+            icon: 'iconfont icon-31shezhi'
+          },
+          {
+            title: '心率血压变化趋势图',
+            url: '../../myListPage/pages/figure/figure',
             icon: 'iconfont icon-31shezhi'
           },
         ],
@@ -81,9 +86,15 @@
       clickItem(url) {
         // 先查看是否登录，没有token先去登录页
         if (uni.getStorageSync('token')) {
-          uni.navigateTo({
-            url
-          })
+          if (uni.getStorageSync('idCard')) {
+            uni.navigateTo({
+              url
+            })
+          } else {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
         } else {
           uni.navigateTo({
             url: '../../modif/login/login'

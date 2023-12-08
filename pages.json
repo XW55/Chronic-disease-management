@@ -49,8 +49,8 @@
       "text": "首页"
     }, {
       "pagePath": "pages/records/records",
-      "iconPath": "static/my.png",
-      "selectedIconPath": "static/my-active.png",
+      "iconPath": "static/report.png",
+      "selectedIconPath": "static/report-active.png",
       "text": "记录"
     }, {
       "pagePath": "pages/knowledge/knowledge",
@@ -145,6 +145,20 @@
             "navigationBarTitleText": "血压自测",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "pages/bpResult/bpResult",
+          "style": {
+            "navigationBarTitleText": "血压检测结果",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "pages/figure/figure",
+          "style": {
+            "navigationBarTitleText": "变化趋势图",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },
@@ -163,10 +177,8 @@
       "pages": [{
         "path": "pages/index",
         "style": {
-          "app-plus": {
-            "navigationBarTitleText": "连接设备",
-            "enablePullDownRefresh": false
-          }
+          "navigationBarTitleText": "连接设备",
+          "enablePullDownRefresh": false
         }
       }]
     },
@@ -175,19 +187,37 @@
       "pages": [{
           "path": "pages/index",
           "style": {
-            "app-plus": {
-              "navigationBarTitleText": "心电采集",
-              "enablePullDownRefresh": false
-            }
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false,
+            "navigationStyle": "custom"
           }
         },
         {
           "path": "pages/holter",
           "style": {
-            "app-plus": {
-              "navigationBarTitleText": "",
-              "enablePullDownRefresh": false
-            }
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "ecgResult/pages/detail",
+          "style": {
+            "navigationBarTitleText": "心电分析报告",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "ecgResult/pages/tips",
+          "style": {
+            "navigationBarTitleText": "健康知识",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "ecgResult/pages/whatHRV",
+          "style": {
+            "navigationBarTitleText": "健康知识",
+            "enablePullDownRefresh": false
           }
         }
       ]

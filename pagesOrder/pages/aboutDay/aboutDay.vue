@@ -11,9 +11,14 @@
         </view>
       </view>
     </view>
+    <!-- 分割线 -->
+    <u-line color="#ccc"></u-line>
+    <view class="p20">
+      <u-subsection :current="current" :fontSize="30" mode="subsection" :list="items" active-color="#09f"
+        @change="onClickItem" />
+      </u-subsection>
+    </view>
 
-    <u-subsection :current="current" :fontSize="30" :list="items" active-color="#09f" @change="onClickItem" />
-    </u-subsection>
     <view class="content">
       <view v-show="current === 0">
         <scroll-view v-show="list.length !== 0" class="scrollContent scroll-view-wrapper" scroll-y refresher-threshold
@@ -148,7 +153,7 @@
             let screenHeightPx = res.screenHeight;
             // 计算滚动层的高度
             console.log(res.screenHeight);
-            vuePro.scrollHeight = res.screenHeight - 150
+            vuePro.scrollHeight = res.screenHeight
             let windowWidthPx = res.windowWidth;
             let ratio = 750 / windowWidthPx; // 750 是 UniApp 中 rpx 的基准宽度
             vuePro.screenHeight = parseInt(screenHeightPx * ratio)

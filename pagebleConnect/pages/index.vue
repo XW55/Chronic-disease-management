@@ -15,14 +15,9 @@
         </view>
         <view v-else>
           <image class="default-page" src="../static/null.png" />
-          <view class="default-page-tips">设备列表为空，<br />点击<span class="high-light" @click="reSearch">搜索设备</span>开始搜索
-          </view>
-          <view class="default_page_wenti">
-            <view class="">
-              搜索不到？
-            </view>
-            <view class="text_blod" @click="openSetting">打开设置查看权限</view>
-          </view>
+          <view class="tip">没有找到设备吗？试试重新搜索</view>
+          <view class="btn" @click="reSearch">重新搜索</view>
+          <view class="tip" style="color: #00ca99;" @click="gotoSQ()">前往授权页面</view>
         </view>
       </view>
     </view>
@@ -32,17 +27,16 @@
 			</view> -->
     </view>
     <connecting-animation v-if="statusCode === 1 && deviceList.length === 0" :interval="interval" />
-    <device ref="device" :isShow="isShowConnectingModal" :community="isCommunity" :activeDeviceName="activeDeviceName"
+    <device ref="device" :isShow="isShowConnectingModal" :activeDeviceName="activeDeviceName"
       @closeConnectModal="closeConnectModal" />
-
-
   </view>
 </template>
 
 <script>
   import {
     mapState,
-    mapActions
+    mapActions,
+    mapMutations
   } from "vuex"
   import * as wlTool from "../../tools/wlToolReApp.js"
   import deviceItem from "../../pagebleConnect/components/deviceItem.vue";
@@ -64,12 +58,6 @@
          1 => 搜索中
          2 => 搜索结束
          */
-        setNav: {
-          'isdisPlayNavTitle': true,
-          'navTitle': '设备列表'
-        },
-        // 区分社区版和用户端
-        isCommunity: false,
         statusCode: 0,
         deviceList: [],
         interval: 15,
@@ -114,10 +102,9 @@
         }
       }
     },
-    onLoad(options) {
-      if (options.community) {
-        this.isCommunity = options.community
-      }
+    onLoad() {
+      console.log('store')
+      console.log(this.$store.state)
       uni.setStorageSync('deviceSN', '');
       if (this.bleConnectState) {
         this.isConnected = true
@@ -125,28 +112,33 @@
       } else {
         this.isConnected = false
       }
+      // console.log(wlTool.judgeLocaltion())
+      // TODO 蓝牙连接
       if (!wlTool.judgeLocaltion()) {
-        uni.showModal({
-          title: '您尚未连接，打开蓝牙和位置',
-          content: '打开后点击搜索设备',
-          showCancel: false,
-          success: function(res) {
-            if (res.confirm) {
-              // uni.redirectTo({
-              //   url: '/pages/index/index'
-              // })
-              //   uni.switchTab({
-              //     url:'/pages/index/index'
-              //   })
-              uni.navigateBack()
-              // } else if (res.cancel) {
-              //   console.log('用户点击取消');
-              // }
+        console.log(wlTool.judgeLocaltion())
+        if (false) {
+          uni.showModal({
+            //title: '注意！',
+            content: '请打开蓝牙和位置',
+            showCancel: false,
+            success: function(res) {
+              if (res.confirm) {
+                // uni.redirectTo({
+                //   url: '/pages/index/index'
+                // })
+                //   uni.switchTab({
+                //     url:'/pages/index/index'
+                //   })
+                uni.navigateBack()
+              } else if (res.cancel) {
+                console.log('用户点击取消');
+              }
             }
-          }
-        })
-
+          });
+        }
+        return
       } else {
+        console.log('else if')
         if (this.disabledBottomButton === false) {
           this.disabledBottomButton = true
           this.searchDevice()
@@ -154,8 +146,34 @@
       }
     },
     methods: {
+      ...mapMutations({
+        changeBleConnectStatus: 'changeBleConnectStatus',
+        changeDeviceSNStatus: 'changeDeviceSNStatus'
+      }),
+      gotoSQ() {
+        uni.openSetting({
+          success: function(res) {
+            // 用户在设置页面进行了操作后的回调
+            if (res.authSetting['scope.userInfo']) {
+              if (res.authSetting['scope.bluetooth']) {
+                //console.log('用户已经授权了蓝牙权限');
+              } else {
+                //console.log('用户未授权或拒绝授权蓝牙权限');
+              }
+            }
+          },
+          fail: function(err) {
+            uni.showModal({
+              title: '提示',
+              content: '打开授权页面失败',
+              showCancel: false
+            })
+          }
+        });
+      },
       clickBottomButton() {
         if (!wlTool.judgeLocaltion()) {
+
           return
         } else {
           if (this.disabledBottomButton === false) {
@@ -164,7 +182,6 @@
           }
         }
       },
-
       reSearch(isReSearch) {
         if (isReSearch) {
           this.searchDevice()
@@ -172,34 +189,6 @@
           this.statusCode = 0
         }
         this.isDeviceNotFound = false
-      },
-      // 打开小程序的设置列表
-      openSetting() {
-        uni.openSetting({
-          success: function(res) {
-            // 用户在设置页面进行了操作后的回调
-            if (res.authSetting['scope.bluetooth']) {
-              // 用户允许授权了蓝牙权限
-              console.log('用户已经授权了蓝牙权限');
-            } else {
-              uni.showModal({
-                title: '您未授权蓝牙权限',
-                content: '是否前去授权',
-                success(res) {
-                  if (res.confirm) {
-                    uni.openSetting()
-                  } else {
-                    uni.navigateBack()
-                  }
-                }
-              })
-            }
-          },
-          fail: function(err) {
-            // 打开设置页面失败的回调
-            console.log('打开设置页面失败', err);
-          }
-        });
       },
       selectDevice(item) {
         this.isShowConnectingModal = true
@@ -215,7 +204,7 @@
         this.interval = this.searchTimeCount
         let that = this
         this.deviceList = []
-        wx.closeBluetoothAdapter({
+        uni.closeBluetoothAdapter({
           complete(info1) {
             that.searchDevice1()
           }
@@ -225,7 +214,7 @@
         this.startTimeInterval()
         wlTool.startBluetoothDevicesDiscovery()
         let that = this
-        wx.onBluetoothDeviceFound(function(res) {
+        uni.onBluetoothDeviceFound(function(res) {
           const strName = res.devices[0].localName
           if (strName) {
             let index = strName.indexOf("WL ECG")
@@ -244,7 +233,7 @@
         })
       },
       stopSearchDevice() {
-        wx.stopBluetoothDevicesDiscovery({
+        uni.stopBluetoothDevicesDiscovery({
           complete() {}
         })
       },
@@ -281,6 +270,10 @@
       closeConnectRes() {
         this.isConnected = false
         this.statusCode = 0
+        uni.setStorageSync('deviceSN', '');
+        uni.setStorageSync('deviceId', '');
+        this.changeBleConnectStatus(false);
+        this.changeDeviceSNStatus('');
       }
     },
   };
@@ -293,7 +286,27 @@
     overflow: hidden;
   }
 
+  .tip {
+    padding: 15rpx;
+    width: max-content;
+    margin: 20rpx auto;
+    font-size: 30rpx;
+    color: #c3c3c3;
+  }
+
+  .btn {
+    width: 250rpx;
+    border-radius: 40rpx;
+    background-color: #00ca99;
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+    line-height: 80rpx;
+    height: 80rpx;
+  }
+
   .title-container {
+    margin-bottom: 30rpx;
     height: 48rpx;
     padding: 72rpx 64rpx 48rpx;
   }

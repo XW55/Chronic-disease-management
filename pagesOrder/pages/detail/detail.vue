@@ -1,5 +1,6 @@
 <template>
   <view>
+    <u-toast ref="uToast"></u-toast>
     <!-- <view class="flexBox">
       <view class="btn" style="background-color: #fdb644;">候诊查询</view>
       <view class="btn" style="background-color: #6296fc;" @click="gotoAbout">我的预约</view>
@@ -50,26 +51,30 @@
         <text class="value">{{obj.patientCode || ''}}</text>
       </view>
     </view>
-    <view class="btn" v-if="payStatus === '未支付'" style="background-color: #6296fc;" @click="pay">立即支付</view>
+    <!-- <view class="btn" v-if="payStatus === '未支付'" style="background-color: #6296fc;" @click="pay">立即支付</view> -->
 
     <!-- 签到按钮  -->
-    <view v-if="payStatus==='已支付' && status==='待就诊'">
+    <!-- payStatus==='已支付' && -->
+    <view v-if="status==='待就诊'">
       <view class="sign" :style="{backgroundColor: color}" @click="sureSign">{{text}}</view>
       <view class="tip">
         请您在就诊前20分钟进行签到，签到过后您将会进入候诊列表，即可候诊。
       </view>
     </view>
-    <view class="tip" v-if="payStatus==='未支付'">请您最晚在就诊前20分钟完成支付并且签到才能进入候诊列表</view>
+    <!-- <view class="tip" v-if="payStatus==='未支付'">请您最晚在就诊前20分钟完成支付并且签到才能进入候诊列表</view> -->
     <view class="icon" @click="gotoIndex">首页</view>
   </view>
 </template>
 
 <script>
   import {
-    getPointMentDetail
+    getPointMentDetail,
+    getSignStatus,
+    confirmSign
   } from '@/request/request.js'
   import {
-    strToDate
+    strToDate,
+    getTime
   } from '@/tools/tool.js'
   export default {
     data() {
@@ -84,7 +89,7 @@
       if (options.id) {
         this.id = options.id
       }
-      // this.comfirmSign()
+      this.comfirmSign()
       this.getList()
     },
     methods: {
@@ -99,9 +104,8 @@
         return (price / 100).toFixed(2)
       },
       async comfirmSign() {
-        const {
-          data: res
-        } = await uni.$http.get('/hospital/wait/isWait/' + this.id)
+        const res = await getSignStatus(this.id)
+        console.log('签到状态', res);
         if (res.data) {
           this.text = '已签到'
           this.color = '#24d96e'
@@ -112,25 +116,36 @@
       },
       // 用户确认签到
       sureSign() {
-        // 获取当前时间
-        const now = new Date();
         // 设置签到开始时间和结束时间
-        const startTime = new Date(this.obj.periodDay + ' ' + this.obj.periodStart);
-        const endTime = new Date(this.obj.periodDay + ' ' + this.obj.periodEnd);
-        // 计算签到开始前20分钟的时间
-        const signInStartTime = new Date(startTime.getTime() - 20 * 60 * 1000);
+        const startTime = new Date(this.strToDate(this.obj.periodDay, false) + ' ' + this.obj.periodStart).getTime();
+        const endTime = new Date(this.strToDate(this.obj.periodDay, false) + ' ' + this.obj.periodEnd).getTime();
+        const now = Date.now();
+        const thirtyMinutesBeforeStartTime = new Date(startTime);
+        thirtyMinutesBeforeStartTime.setMinutes(thirtyMinutesBeforeStartTime.getMinutes() - 30);
+        const thirtyMinutesBeforeStartTimeTimestamp = thirtyMinutesBeforeStartTime.getTime();
+
         // 判断当前时间是否在签到开始时间和结束时间之间
+        console.log('现在时间', now);
+        console.log('起始，结束', startTime, endTime);
+
         if (now >= startTime && now <= endTime) {
-          this.addSign()
-        } else if (now >= signInStartTime && now < startTime) {
-          this.addSign()
+          this.addSign();
+        } else if (now >= thirtyMinutesBeforeStartTimeTimestamp && now < startTime) {
+          this.addSign();
+        } else if (now >= endTime) {
+          this.$refs.uToast.show({
+            message: '已超过签到时间',
+            type: 'warning',
+            position: 'top',
+            duration: 1000
+          });
         } else {
           this.$refs.uToast.show({
             message: '还未到签到时间',
             type: 'warning',
             position: 'top',
             duration: 1000
-          })
+          });
         }
       },
       async pay() {
@@ -170,9 +185,7 @@
       },
       // 签到加入候诊列表中的函数
       async addSign() {
-        const {
-          data: res
-        } = await uni.$http.get('/hospital/visitAppointment/visitSignIn?appointmentId=' + this.id)
+        const res = await confirmSign(this.id)
         console.log('加入候诊列表结果', res);
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.text = '已签到'
@@ -270,7 +283,7 @@
     text-align: center;
     line-height: 90rpx;
     font-size: 35rpx;
-    margin: 20rpx auto 0;
+    margin: 20rpx auto 10rpx;
     border-radius: 10rpx;
   }
 

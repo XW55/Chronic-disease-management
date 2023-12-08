@@ -64,6 +64,7 @@
     methods: {
       selectDevice() {
         this.$emit('clickItem', this.item)
+        console.log('clickItem', this.item)
       }
     }
   }
@@ -97,11 +98,11 @@
     justify-content: center;
     align-items: center;
     width: 200rpx;
-    height: 100rpx;
+    height: 80rpx;
     color: #FFF;
     font-size: 38rpx;
-    line-height: 100rpx;
-    background-color: #00D6DC;
+    line-height: 80rpx;
+    background-color: #04cb9b;
     border-radius: 50rpx;
   }
 

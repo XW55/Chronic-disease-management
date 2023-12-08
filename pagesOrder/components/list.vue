@@ -14,7 +14,7 @@
               <view>{{item.doctorProfessional}}</view>
             </view>
           </view>
-          <view>{{strToDate(item.periodDay,false)}}</view>
+          <view>{{strToDate(item.periodDay,false)}} {{item.periodStart}}-{{item.periodEnd}}</view>
         </view>
         <view class="right">
           <view>{{statusHandler(item.status)}} <text
@@ -25,7 +25,8 @@
       </view>
       <view class="line" v-if="showBtn"></view>
       <view class="btnBox flexBox" style="justify-content: space-around;" v-if="showBtn">
-        <view class="flexItem" @click="updateAbout(item.hospitalId,item.appointmentId)">
+        <!-- item.hospitalId, -->
+        <view class="flexItem" @click="updateAbout(item.appointmentId)">
           <view class="iconfont icon-clock"></view>
           <view style="margin: 0 10rpx;">改约</view>
         </view>
@@ -47,6 +48,9 @@
   import {
     strToDate
   } from '@/tools/tool.js'
+  import {
+    delAbout
+  } from '@/request/request.js'
   export default {
     props: {
       list: {
@@ -81,10 +85,8 @@
           success: async function(res) {
             if (res.confirm) {
               if (status === '0') {
-                const {
-                  data: res
-                } = await uni.$http.get('/hospital/visitAppointment/updateStatus?appointmentId=' + id)
-                console.log('555', res);
+                const res = await delAbout(id)
+                console.log('取消的结果', res);
                 if (res.code !== 200) return uni.$showMsg(res.msg)
                 // 通知父组件根据id删除对应的元素
                 vuePro.$emit('delList', id)
@@ -101,7 +103,8 @@
           }
         })
       },
-      async updateAbout(hosId, appointmentId) {
+      // hosId,
+      async updateAbout(appointmentId) {
         const vuePro = this
         uni.showModal({
           title: '提示',
@@ -109,7 +112,8 @@
           success: async function(res) {
             if (res.confirm) {
               uni.redirectTo({
-                url: '../../pages/index/index?id=' + hosId + '&appointmentId=' + appointmentId
+                // id=' + hosId +
+                url: '../../pages/index/index?appointmentId=' + appointmentId
               })
             }
 

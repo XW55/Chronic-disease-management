@@ -12,16 +12,12 @@ export default new Vuex.Store({
     blood,
   },
   state: {
-    isDoctor: false,
     deviceName: '',
     deviceSN: '',
     deviceVersion: '',
     bleConnectState: false,
-    barUser: {
-      name: '',
-      tel: '',
-    },
-    listNum: 0,
+    SocketState: {},
+    SocketStateErr: {},
   },
   // 相当于computed
   getters: {
@@ -31,18 +27,17 @@ export default new Vuex.Store({
   },
   // 相当于methods
   mutations: {
+    SET_SOCKET_STATE(that, info) {
+      that.SocketState = info
+    },
+    setSOCKET_STATEErr(that, info) {
+      that.SocketStateErr = info;
+    },
     GET_IS_DOCTOR: (state) => {
       state.isDoctor = Boolean(uni.getStorageSync('isDoctor'));
     },
     SET_IS_DOCTOR: (state, isDoctor) => {
       state.isDoctor = isDoctor;
-    },
-    SET_BAR_USER: (state, user) => {
-      state.barUser = {
-        name: user.name,
-        tel: user.tel,
-      };
-      console.log('vuex修改', state.barUser);
     },
     ADD_LIST_NUM: (state) => {
       state.listNum++;

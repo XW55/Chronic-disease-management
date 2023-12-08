@@ -71,7 +71,7 @@
         </view>
       </view>
     </view>
-    <view class="btn primary" @click="payShowModel = true">立即支付（￥{{getPrice(list.chargePrice)}}）</view>
+    <!-- <view class="btn primary" @click="payShowModel = true">立即支付（￥{{getPrice(list.chargePrice)}}）</view> -->
     <view class="btn primary" @click="showModal = true">预约保存</view>
     <u-modal :show="showModal" :showCancelButton="true" :title="title" :content='content' @confirm="confirmContent"
       @cancel="showModal = false"></u-modal>
@@ -84,7 +84,8 @@
 <script>
   import {
     addintrument,
-    getPlanMsg
+    getPlanMsg,
+    updateAbout
   } from '@/request/request.js'
   export default {
     data() {
@@ -131,43 +132,27 @@
       async confirmContent() {
         const vuePro = this
         this.showModal = false
-        // if (vuePro.appointmentId) {
-        const res = await addintrument({
-          // appointmentId: this.appointmentId,
-          ...this.params,
-        })
-        if (res.code !== 200) return uni.$showMsg(res.msg)
-
-
-        uni.navigateTo({
-          url: `../../pages/aboutDay/aboutDay`
-        })
-        // } else {
-        // const {
-        //   data: res
-        // } = await uni.$http.post('/hospital/visitAppointment/addAppointment', vuePro.params)
-        // console.log('添加订单结果', res);
-        // if (res.code !== 200) return uni.$showMsg(res.msg)
-        // uni.navigateTo({
-        //   url: `../../pages/aboutDay/aboutDay`
-        // })
-        // }
-        // uni.showModal({
-        //   title: '',
-        //   content: '',
-        //   success: async function(res) {
-        //     if (res.confirm) {
-        //       if (vuePro.appointmentId) {
-        //         const {
-        //           data: result
-        //         } = await uni.$http.put('/hospital/visitAppointment/appUpdateTime', {
-        //           
-        //         })
-        //         
-        //       } 
-        //     }
-        //   }
-        // })
+        if (vuePro.appointmentId) {
+          const res = await updateAbout({
+            appointmentId: vuePro.appointmentId,
+            ...vuePro.params,
+          })
+          console.log('这是改约', res);
+          if (res.code !== 200) return uni.$showMsg(res.msg)
+          uni.navigateTo({
+            url: `../../pages/aboutDay/aboutDay`
+          })
+        } else {
+          const res = await addintrument({
+            appointmentId: this.appointmentId,
+            ...this.params,
+          })
+          console.log('添加订单结果', res);
+          if (res.code !== 200) return uni.$showMsg(res.msg)
+          uni.navigateTo({
+            url: `../../pages/aboutDay/aboutDay`
+          })
+        }
       },
       gotoIndex() {
         uni.switchTab({

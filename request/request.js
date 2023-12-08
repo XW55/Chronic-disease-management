@@ -179,11 +179,55 @@ export const getPointMentDetail = (data) => {
     method: 'GET',
   });
 };
+// 取消预约
+export const delAbout = (data) => {
+  return request({
+    url: `/appPatient/appointment/updateStatus?appointmentId=${data}`,
+    method: 'GET',
+  });
+};
+// 用户改约
+export const updateAbout = (data) => {
+  return request({
+    url: `/appPatient/appointment/appUpdateTime`,
+    method: 'PUT',
+    data,
+  });
+};
+// 查询用户签到状态
+export const getSignStatus = (data) => {
+  return request({
+    url: `/appPatient/appointment/wait/isWait/${data}`,
+    method: 'GET',
+  });
+};
+// 用户签到进入候诊列表
+export const confirmSign = (data) => {
+  return request({
+    url: `/appPatient/appointment/visitSignIn?appointmentId=${data}`,
+    method: 'GET',
+  });
+};
 // 上传血压数据
 export const upLoadBlood = (data) => {
   return request({
     url: `/appPatient/blood`,
     method: 'POST',
+    data,
+  });
+};
+// 请求心电小点
+export const getEcgTotal = (data) => {
+  return request({
+    url: `/appPatient/patient_management/dateList?patientCode=${data}`,
+    method: 'GET',
+  });
+};
+// 请求心电条数
+export const getEcgList = (data) => {
+  return request({
+    url: `/appPatient/patient_management/list`,
+    method: 'GET',
     data,
   });
 };
@@ -199,6 +243,13 @@ export const getBloodList = (data) => {
 export const getBloodTotal = (data) => {
   return request({
     url: `/appPatient/blood/getDateList?patientCode=${data}`,
+    method: 'GET',
+  });
+};
+// 根据id请求血压数据 血压详情
+export const getBloodDetailById = (data) => {
+  return request({
+    url: `/appPatient/blood/${data}`,
     method: 'GET',
   });
 };

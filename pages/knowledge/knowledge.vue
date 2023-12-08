@@ -53,9 +53,22 @@
       },
       // 点击子组件的方法
       clickItemByList(item) {
-        uni.navigateTo({
-          url: '../../detail/knowledgeDetail/knowledgeDetail?id=' + item.propagandaId + '&title=' + item.articleType
-        })
+        if (uni.getStorageSync('token')) {
+          if (uni.getStorageSync('idCard')) {
+            uni.navigateTo({
+              url: '../../detail/knowledgeDetail/knowledgeDetail?id=' + item.propagandaId + '&title=' + item
+                .articleType
+            })
+          } else {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
+        } else {
+          uni.navigateTo({
+            url: '../../modif/login/login'
+          })
+        }
       }
     },
     // 这里页面上拉触底进行新的数据请求

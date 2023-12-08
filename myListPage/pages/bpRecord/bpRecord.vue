@@ -528,7 +528,7 @@
       //卸载时
       onUnload() {
         // 销毁血压计的蓝牙连接
-
+        wlBlood.closeBluetooth()
       },
     }
   }

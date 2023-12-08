@@ -1,5 +1,7 @@
 import App from './App';
 import Vue from 'vue';
+import store from './store/index.js'; // 引入
+import '@/tools/useWebsocket.js'
 // #ifndef VUE3
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -50,6 +52,7 @@ uni.$showMsg = (title = '数据请求失败！', icon = 'none', duration = 1000)
     icon,
   });
 };
+Vue.prototype.$store = store;
 uni.$u.config.unit = 'rpx';
 
 

@@ -1,24 +1,24 @@
 <template>
   <view class="">
-    <!-- 社区版不展示滑块操作 -->
-
-    <!-- <view class="img_box" v-if="isCommunity">
-      <view :options="options" v-for="(item,index) in recordsArr" :key="item.pid">
-        <view class="img_item card" @click="gotoFaceRes(item)">
+    <view class="img_box" v-if="showBlood">
+      <!-- <u-swipe-action style="width: 100%;">
+        <u-swipe-action-item :options="options" v-for="(item,index) in recordsArr" :key="item.bloodId"
+          @click.stop="delBypId(item.bloodId)"> -->
+      <!-- @click.stop="delBypId(item.bloodId)" -->
+      <view style="margin:10rpx 0;" v-for="(item,index) in recordsArr" :key="item.bloodId">
+        <view class="img_item card" @click="gotoFaceRes(item,true)">
           <view class="img_item_content">
-            <view class="">
+            <view class="left">
               <view class="img_item_content_top">
-                <view style="white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;">姓名：{{item.patient.patientName}}</view>
-                <view class="">性别：{{item.patient.patientSex}}</view>
+                <view class="">姓名：{{item.patient.patientName}}</view>
+                <view class="">性别:{{item.patient.patientSex == '1' ? '男' : '女'}}</view>
               </view>
-              <view class="">时间：{{item.createTime}}</view>
+              <view class="">时间：{{strToDate(item.createTime)}}</view>
             </view>
             <view class="icon-list">
-              <text class="iconfont icon-mian" v-if="!!item.faceImg"></text>
-              <text class="iconfont icon-mai" v-if="!!item.patientBlood"></text>
-              <text class="iconfont icon-xin" v-if="!!item.patientManagement"></text>
+              <text class="">高压：{{item.hp}}</text>
+              <text class="">低压：{{item.bp}}</text>
+              <text class="">脉搏：{{item.lp}}</text>
             </view>
             <view class="">
               <u-icon name="arrow-right" size="25"></u-icon>
@@ -26,34 +26,33 @@
           </view>
         </view>
       </view>
-    </view> -->
-    <!-- v-else -->
-    <view class="img_box">
-      <u-swipe-action style="width: 100%;">
-        <u-swipe-action-item :options="options" v-for="(item,index) in recordsArr" :key="item.pid"
-          @click.stop="delBypId(item.pid)">
-          <view class="img_item card" @click="gotoFaceRes(item)">
-            <!-- <image :src="item.frontImg"></image> -->
-            <view class="img_item_content">
-              <view class="">
-                <view class="img_item_content_top">
-                  <view class="">姓名：{{item.patient.patientName}}</view>
-                  <view class="">性别:{{item.patient.patientSex == '1' ? '男' : '女'}}</view>
+      <!-- </u-swipe-action-item>
+      </u-swipe-action> -->
+    </view>
+    <view class="img_box" v-else>
+      <!--      <u-swipe-action style="width: 100%;">
+        <u-swipe-action-item :options="options" v-for="(item,index) in ecgArr" :key="item.pId"
+          @click.stop="delEcgBypId(item.pId)"> -->
+      <!-- @click.stop="delEcgBypId(item.pId)" -->
+      <view style="margin:10rpx 0;" v-for="(item,index) in ecgArr" :key="item.pId">
+        <view class="img_item card" @click="gotoFaceRes(item,false)">
+          <view class="img_item_content" style="padding: 20rpx; font-size: 27rpx;">
+            <view class="left">
+              <view class="img_item_content_top">
+                <view class="">
+                  {{item.intelligentDiagnosis}}
                 </view>
-                <view class="">时间：{{strToDate(item.createTime)}}</view>
               </view>
-              <view class="icon-list">
-                <text class="">高压：{{item.hp}}</text>
-                <text class="">低压：{{item.bp}}</text>
-                <text class="">脉搏：{{item.lp}}</text>
-              </view>
-              <view class="">
-                <u-icon name="arrow-right" size="25"></u-icon>
-              </view>
+              <view class="">时间：{{item.connectionTime}}</view>
+            </view>
+            <view class="">
+              <u-icon name="arrow-right" size="25"></u-icon>
             </view>
           </view>
-        </u-swipe-action-item>
-      </u-swipe-action>
+        </view>
+      </view>
+      <!--        </u-swipe-action-item>
+      </u-swipe-action> -->
     </view>
 
   </view>
@@ -71,10 +70,16 @@
           return []
         }
       },
-      isCommunity: {
+      showBlood: {
         type: Boolean,
-        default: false
-      }
+        default: true
+      },
+      ecgArr: {
+        type: Array,
+        default: function() {
+          return []
+        }
+      },
     },
     data() {
       return {
@@ -89,18 +94,16 @@
     methods: {
       strToDate,
       // 图片详情
-      gotoFaceRes(obj) {
-        if (obj.faceImg) {
-          let faceResFlag = obj.faceImg.frontImgData ? false : true
+      gotoFaceRes(item, flag) {
+        if (flag) {
           uni.navigateTo({
-            url: '/subpkg/pages/recordsResult/recordsResult?id=' + obj.pid + '&noFaceRes=' + faceResFlag
+            url: '../../myListPage/pages/bpResult/bpResult?id=' + item.bloodId
           })
         } else {
           uni.navigateTo({
-            url: '/subpkg/pages/recordsResult/recordsResult?id=' + obj.pid
+            url: '../../pageCheck/ecgResult/pages/detail?id=' + item.pId
           })
         }
-
       },
       // 删除对应的列
       delBypId(id) {
@@ -118,6 +121,26 @@
                 uni.$showMsg('删除成功')
                 // 向父组件发送被删除id进行删除操作
                 vuePro.$emit('delBypId', id)
+              }
+            } else {
+              return
+            }
+          }
+        })
+      },
+      delEcgBypId(id) {
+        const vuePro = this
+        uni.showModal({
+          title: '提示',
+          content: '确定删除吗',
+          success: async function(res) {
+            if (res.confirm) {
+              const res = await
+              console.log(result);
+              if (result.code === 200) {
+                uni.$showMsg('删除成功')
+                // 向父组件发送被删除id进行删除操作
+                vuePro.$emit('delEcgBypId', id)
               }
             } else {
               return
@@ -152,7 +175,14 @@
         justify-content: space-between;
         align-items: center;
         font-size: 30rpx;
-        margin: 20rpx 0;
+
+
+        .left {
+          height: 150rpx;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+        }
 
         .img_item_content_top {
           display: flex;

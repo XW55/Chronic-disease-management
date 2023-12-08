@@ -24,6 +24,9 @@
       medicineList
     },
     onLoad() {
+
+    },
+    onShow() {
       this.getMedicineList()
     },
     methods: {
@@ -38,8 +41,22 @@
           this.medicineList = res.rows
         }
       },
+      loginStatus() {
+        if (uni.getStorageSync('token')) {
+          if (!uni.getStorageSync('idCard')) {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
+        } else {
+          uni.navigateTo({
+            url: '../../modif/login/login'
+          })
+        }
+      },
       // 用药打卡
       async clockMedicine(item) {
+        this.loginStatus()
         if (item.sum >= item.frequency) {
           return this.$refs.uToast.show({
             message: '该药品已打卡完毕',

@@ -16,6 +16,7 @@
     <view class="start-tip" v-if="showBLEDisco">
       <text class="count-down" style="font-size: 40rpx">检测到蓝牙连接已断开，请检查后重试</text>
     </view>
+    <u-toast ref="uToast"></u-toast>
   </view>
 </template>
 
@@ -24,7 +25,6 @@
     requestPostProxySetHead,
     GUID
   } from "@/tools/checkTool.js"
-
   import {
     mapState,
     mapActions,
@@ -87,7 +87,7 @@
         keepScreenOn: true,
       });
       this.phone = options.phone ? options.phone : uni.getStorageSync('phone')
-      this.guid = GUID()
+      this.id = GUID()
       this.initAndConnect();
       this.isCommunity = options.isCommunity == 'yes' ? 1 : 0;
       console.log('this.isCommunity: ', this.isCommunity)
@@ -133,7 +133,6 @@
           url: '/pages/index/index'
         });
       },
-      ...mapMutations('user', ['initECGobj']),
       initAndConnect() {
         this.show321 = false;
         this.num = 0;
@@ -212,21 +211,50 @@
         }
       },
       async uploadData() {
-        let th = this;
+        const vuePro = this
         let newDataObj = {
           data_ecg: gOrigenDataAry16,
           sampleRate_ecg: 250,
-          id: '',
+          id: this.id,
           ecg_type: 'JECGsingleWL',
           recordDate: new Date(),
           deviceSn: wlTool.getDeivceSN(),
-          phone: this.randomPhone ? this.randomPhone : uni.getStorageSync('phone')
+          phone: uni.getStorageSync('phone'),
+          patientCode: uni.getStorageSync('idCard')
         }
-        this.initECGobj(newDataObj)
-        setTimeout(() => {
-          uni.navigateBack()
-        }, 500)
-
+        console.log('上传参数', newDataObj);
+        uni.showLoading({
+          title: '上传中'
+        })
+        uni.request({
+          url: "https://server.mindyard.cn:84/get_jingtai_single_manb",
+          method: 'POST',
+          header: {
+            user: "zzu",
+            password: "zzu123"
+          },
+          data: newDataObj,
+          success(res) {
+            uni.hideLoading()
+            console.log('心电上传结果', res);
+            if (res.data.code == 200) {
+              vuePro.$refs.uToast.show({
+                message: '上传成功',
+                type: 'success',
+                position: 'top',
+                duration: 1000,
+                complete() {
+                  uni.redirectTo({
+                    url: '/pageCheck/ecgResult/pages/detail?id=' + vuePro.guid
+                  })
+                }
+              })
+            }
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
       },
       confirmUpload(data) {
         this.isUploadModal = false
