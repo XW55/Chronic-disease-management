@@ -253,3 +253,28 @@ export const getBloodDetailById = (data) => {
     method: 'GET',
   });
 };
+// 请求问卷调查全部列表
+export const getSurvey = (data) => {
+  return request({
+    url: `/appPatient/questionnaire/patient/getQuestionnairePatient`,
+    method: 'GET',
+    data,
+  });
+};
+// 根据id查询具体问卷
+export const getSurveyDetailById = (data) => {
+  return request({
+    url: `/appPatient/questionnaire/patient/${data}`,
+    method: 'GET',
+    data,
+  });
+};
+
+// 上传问卷信息
+export const upLoadSurvey = (data) => {
+  return request({
+    url: `/appPatient/questionnaire/patient/putQuestionnairePatient`,
+    method: 'PUT',
+    data,
+  });
+};

@@ -73,7 +73,7 @@
 
 
       <!-- 可挂号小程序 -->
-      <uni-collapse class="doctorList" accordion v-if="!!doctorList.length">
+      <uni-collapse class="doctorList" v-if="!!doctorList.length">
         <uni-collapse-item style="position: relative;" title-border="auto" :show-arrow="true"
           v-for="(item,index) in doctorList" :key="index" class="doctorItem">
           <template v-slot:title>
@@ -95,6 +95,8 @@
                 <view>挂号费</view>
                 <view>￥{{ getPrice(item.price) }}</view>
               </view>
+              <!-- 小箭头 -->
+              <u-icon name="arrow-down" size="40"></u-icon>
               <!-- 标签 -->
               <view class="wxTag">
                 <u-tag :text="item.registrationName" size="mini" type="primary"></u-tag>
@@ -144,9 +146,11 @@
     getDoctor
   } from '@/request/request.js'
   import uniCollapse from '@/pagesOrder/components/uni-collapse/components/uni-collapse/uni-collapse.vue'
+  import uniCollapseItem from '@/pagesOrder/components/uni-collapse/components/uni-collapse-item/uni-collapse-item.vue'
   export default {
     components: {
-      uniCollapse
+      uniCollapse,
+      uniCollapseItem
     },
     data() {
       return {

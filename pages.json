@@ -165,12 +165,27 @@
     {
       "root": "detail",
       "pages": [{
-        "path": "knowledgeDetail/knowledgeDetail",
-        "style": {
-          "navigationBarTitleText": "",
-          "enablePullDownRefresh": false
+          "path": "knowledgeDetail/knowledgeDetail",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "survey/survey",
+          "style": {
+            "navigationBarTitleText": "随访问卷列表",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "surveyDetail/surveyDetail",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
         }
-      }]
+      ]
     },
     {
       "root": "pagebleConnect",

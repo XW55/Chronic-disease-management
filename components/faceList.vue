@@ -21,7 +21,7 @@
               <text class="">脉搏：{{item.lp}}</text>
             </view>
             <view class="">
-              <u-icon name="arrow-right" size="25"></u-icon>
+              <u-icon name="arrow-right" size="30"></u-icon>
             </view>
           </view>
         </view>
@@ -46,7 +46,7 @@
               <view class="">时间：{{item.connectionTime}}</view>
             </view>
             <view class="">
-              <u-icon name="arrow-right" size="25"></u-icon>
+              <u-icon name="arrow-right" size="30"></u-icon>
             </view>
           </view>
         </view>

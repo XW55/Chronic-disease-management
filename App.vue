@@ -1,11 +1,25 @@
 <script>
   import {
-    useWebsocket
+    connectWebSocket
   } from '@/tools/useWebsocket.js'
+  import {
+    getUserInfoByCode
+  } from '@/request/request.js'
   export default {
-
     onLaunch: function() {
-      // console.log('App Launch')
+      getUserInfoByCode(uni.getStorageSync('idCard')).then(
+        res => {
+          console.log('app', res);
+          if (res.code === 200) {
+            connectWebSocket(res.data.patientId)
+            this.$socket.onOpen((msg) => {
+              console.log('聊天连接成功');
+            })
+          } else {
+            uni.clearStorageSync()
+          }
+        }
+      )
     },
     onShow: function() {
       // console.log('App Show')
@@ -34,11 +48,6 @@
     font-size: 35rpx !important;
   }
 
-  // 对弹出层进行样式穿透
-  /deep/ .u-icon__icon {
-    font-size: 42rpx !important;
-  }
-
   .w95 {
     width: 95%;
   }
@@ -59,9 +68,6 @@
     border-radius: 20rpx;
   }
 
-  image {
-    display: block;
-  }
 
   .boxSing {
     box-sizing: border-box;
@@ -73,6 +79,10 @@
 
   .p20 {
     padding: 20rpx;
+  }
+
+  /deep/ .u-icon__icon {
+    font-size: 38rpx !important;
   }
 
   .flexBox {

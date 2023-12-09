@@ -1,10 +1,17 @@
 <template>
   <view>
     <u-toast ref="uToast"></u-toast>
+    <!-- 心率和血压采集采集 -->
+    <view class="card m20 flexBox box boxSing">
+      <view class="item" v-for="(item,i) in content" :key="i" @click="clickItem(item.url)">
+        <view :class="item.icon" class="icon" :style="{'background-image': item.color}"></view>
+        <view style="font-size: 32rpx;">{{item.title}}</view>
+      </view>
+    </view>
+
     <medicineList :list="medicineList" @clockMedicine="clockMedicine"></medicineList>
     <navigator url="../../modif/signIn/signIn">去往信息页</navigator>
     <navigator url="../../modif/login/login">去往登录页</navigator>
-    <!-- <navigator url="../../myListPage/pages/bpRecord/bpRecord">血压自测</navigator> -->
   </view>
 </template>
 
@@ -18,6 +25,24 @@
     data() {
       return {
         medicineList: [],
+        content: [{
+            title: '心率检测',
+            icon: 'iconfont icon-iconkpxd',
+            url: '../../pagebleConnect/pages/index',
+            color: 'linear-gradient(to right, #54c7ae, #00ca99)'
+          }, {
+            title: '血压检测',
+            icon: 'iconfont icon-ziyuan',
+            url: '../../myListPage/pages/bpRecord/bpRecord',
+            color: 'linear-gradient(to right, #13bee7, #09f)'
+          },
+          {
+            title: '随访问卷',
+            url: '../../detail/survey/survey',
+            icon: 'iconfont icon-wenjuan',
+            color: 'linear-gradient(to right, #e2b4e9, #c9a6e7)'
+          },
+        ],
       }
     },
     components: {
@@ -44,6 +69,24 @@
       loginStatus() {
         if (uni.getStorageSync('token')) {
           if (!uni.getStorageSync('idCard')) {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
+        } else {
+          uni.navigateTo({
+            url: '../../modif/login/login'
+          })
+        }
+      },
+      clickItem(url) {
+        // 先查看是否登录，没有token先去登录页
+        if (uni.getStorageSync('token')) {
+          if (uni.getStorageSync('idCard')) {
+            uni.navigateTo({
+              url
+            })
+          } else {
             uni.navigateTo({
               url: '../../modif/signIn/signIn'
             })
@@ -90,5 +133,26 @@
 </script>
 
 <style lang="scss" scoped>
+  .box {
+    width: 95%;
+    height: 195rpx;
+    justify-content: space-around;
 
+    .item {
+      padding: 10rpx;
+      display: flex;
+      font-size: 29rpx;
+      flex-direction: column;
+      align-items: center;
+
+      .icon {
+        padding: 20rpx;
+        border-radius: 50%;
+        color: #fff;
+        // background-color: #f2f4f6;
+        font-size: 80rpx;
+        margin-bottom: 10rpx;
+      }
+    }
+  }
 </style>

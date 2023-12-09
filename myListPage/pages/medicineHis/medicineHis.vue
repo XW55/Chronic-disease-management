@@ -36,6 +36,7 @@
     methods: {
       async initMediaHis() {
         const res = await getMedicaHis(uni.getStorageSync('idCard'))
+        console.log(res);
         if (res.code === 200) {
           this.patientName = res.data.patientName;
           this.patientAge = res.data.patientAge;

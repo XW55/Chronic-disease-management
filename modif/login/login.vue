@@ -167,19 +167,30 @@
             uuid: this.uuid
           })
           if (res.code === 200) {
+            console.log(res);
             uni.setStorageSync('token', res.token)
             uni.setStorageSync('phone', this.userPhone)
-            this.$refs.uToast.show({
-              message: '登录成功',
-              type: 'success',
-              position: 'top',
-              duration: 1000,
-              complete() {
-                uni.switchTab({
-                  url: '/pages/index/index'
-                })
-              }
-            })
+            if (res.patientCode) {
+              uni.setStorageSync('idCard', res.patientCode)
+            }
+            if (res.BindingState) {
+              this.$refs.uToast.show({
+                message: '登录成功',
+                type: 'success',
+                position: 'top',
+                duration: 1000,
+                complete() {
+                  uni.switchTab({
+                    url: '/pages/index/index'
+                  })
+                }
+              })
+            } else {
+              uni.navigateTo({
+                url: '/modif/signIn/signIn'
+              })
+            }
+
           }
         }
       },

@@ -17,7 +17,7 @@
     </template>
     <template v-else>
       <!-- 日历组件  -->
-      <calendar :insert="true" :selected="ecgDotsArr" :start-date="startYear" :end-date="endDay" @change="dayChange">
+      <calendar :insert="true" :selected="ecgDotsArr" :start-date="startYear" :end-date="endDay" @change="dayEcgChange">
       </calendar>
       <!-- 列表展示 -->
       <scroll-view class="scroll_content" style="height: 600rpx;" :scroll-y="true">
@@ -45,6 +45,7 @@
         // 日期选择从今天结束
         endDay: '',
         nowDay: '',
+        ecgNowDay: '',
         // 面部记录数组
         recordsArr: [],
         // 显示条数的数组
@@ -62,23 +63,14 @@
       this.startYear = this.getYear()
       this.endDay = this.getDay()
       this.nowDay = this.getDay()
+      this.ecgNowDay = this.getDay()
     },
     onShow() {
-      if (uni.getStorageSync('token')) {
-        if (uni.getStorageSync('idCard')) {
-          // 请求血压数据
-          if (this.current === 0) {
-            this.initBlood()
-          } else {
-            this.initEcg()
-          }
-        } else {
-          uni.navigateTo({
-            url: '../../modif/signIn/signIn'
-          })
-        }
+      // 请求血压数据
+      if (this.current === 0) {
+        this.initBlood()
       } else {
-        this.gotoLogin()
+        this.initEcg()
       }
     },
     components: {
@@ -87,6 +79,8 @@
     },
     methods: {
       onClickItem(e) {
+        this.nowDay = this.getDay()
+        this.ecgNowDay = this.getDay()
         if (this.current !== e) {
           this.current = e
           if (this.current === 0) {
@@ -110,7 +104,7 @@
         // 显示心电条数
         this.ecgDotsArr = []
         // 请求心电小点数组
-
+        this.initEcgDotsArr()
         // 请求心电数据
         this.initEcgArr()
       },
@@ -132,7 +126,7 @@
       },
       // 跳转登录页
       gotoLogin() {
-        uni.$showMsg('请登录后查看列表')
+        uni.$showMsg('请先登录')
         setTimeout(() => {
           uni.navigateTo({
             url: '../../modif/login/login'
@@ -142,9 +136,32 @@
       // 日期发生变化的处理函数
       dayChange(val) {
         if (uni.getStorageSync('token')) {
-          this.nowDay = val.fulldate
-          // 进行数据请求
-          this.initRecordsArr()
+          if (uni.getStorageSync('idCard')) {
+            this.nowDay = val.fulldate
+            // 进行数据请求
+            this.initBlood()
+          } else {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
+
+        } else {
+          this.gotoLogin()
+        }
+      },
+      dayEcgChange(val) {
+        if (uni.getStorageSync('token')) {
+          if (uni.getStorageSync('idCard')) {
+            this.ecgNowDay = val.fulldate
+            // 进行数据请求
+            this.initEcg()
+          } else {
+            uni.navigateTo({
+              url: '../../modif/signIn/signIn'
+            })
+          }
+
         } else {
           this.gotoLogin()
         }
@@ -165,7 +182,7 @@
       async initEcgArr() {
         const res = await getEcgList({
           patientCode: uni.getStorageSync('idCard'),
-          endReportTime: this.nowDay
+          endReportTime: this.ecgNowDay
         })
         console.log('请求心电得结果是', res);
         if (res.code === 200) {

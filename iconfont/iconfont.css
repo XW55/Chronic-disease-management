@@ -14,6 +14,26 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-iconkpxd:before {
+  content: "\e607";
+}
+
+.icon-ziyuan:before {
+  content: "\e653";
+}
+
+.icon-bingli:before {
+  content: "\e629";
+}
+
+.icon-shuju-:before {
+  content: "\e6bb";
+}
+
+.icon-wenjuan:before {
+  content: "\e6df";
+}
+
 
 .icon-clock:before {
   content: "\e631";

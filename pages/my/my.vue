@@ -33,7 +33,7 @@
           color: '#09f'
         }, {
           title: '病历查看',
-          icon: 'iconfont icon-juecebaogao',
+          icon: 'iconfont icon-bingli',
           url: '../../myListPage/pages/medicineHis/medicineHis',
           color: '#8b5cfd'
         }, {
@@ -64,19 +64,9 @@
           //   icon: 'iconfont icon-31shezhi'
           // },
           {
-            title: '血压自测',
-            url: '../../myListPage/pages/bpRecord/bpRecord',
-            icon: 'iconfont icon-changjianwentixiangguanwenti'
-          },
-          {
-            title: '心率检测',
-            url: '../../pagebleConnect/pages/index',
-            icon: 'iconfont icon-31shezhi'
-          },
-          {
             title: '心率血压变化趋势图',
             url: '../../myListPage/pages/figure/figure',
-            icon: 'iconfont icon-31shezhi'
+            icon: 'iconfont icon-shuju-'
           },
         ],
       };
