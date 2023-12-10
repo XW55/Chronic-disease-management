@@ -106,4 +106,16 @@
       }
     }
   }
+
+  .box {
+    text-align: center;
+    margin: 100rpx auto;
+    color: #979797;
+
+    .tip {
+
+      margin: 80rpx 0 80rpx 0;
+      font-size: 35rpx;
+    }
+  }
 </style>
