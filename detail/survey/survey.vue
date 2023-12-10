@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view class="img_box">
+    <view class="img_box" v-if="surveyList.length">
       <view style="margin:10rpx 0;" v-for="(item,index) in surveyList" :key="item.questionnairePatientId">
         <view class="img_item card" @click="gotoDetail(item.questionnairePatientId,item.questionnairePerson.title)">
           <view class="img_item_content" style="padding: 20rpx; font-size: 27rpx;">
@@ -15,6 +15,10 @@
           </view>
         </view>
       </view>
+    </view>
+    <view class="box" v-else>
+      <view class="iconfont icon-wenjuan" style="font-size: 300rpx;"></view>
+      <view class="tip">暂无问卷</view>
     </view>
   </view>
 </template>
