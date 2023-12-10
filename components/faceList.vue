@@ -16,8 +16,8 @@
               <view class="">时间：{{strToDate(item.createTime)}}</view>
             </view>
             <view class="icon-list">
-              <text class="">高压：{{item.hp}}</text>
-              <text class="">低压：{{item.bp}}</text>
+              <text class="">收缩压：{{item.hp}}</text>
+              <text class="">舒张压：{{item.bp}}</text>
               <text class="">脉搏：{{item.lp}}</text>
             </view>
             <view class="">
@@ -40,10 +40,10 @@
             <view class="left">
               <view class="img_item_content_top">
                 <view class="">
-                  {{item.intelligentDiagnosis}}
+                  心电类型：{{item.ecgType}}
                 </view>
               </view>
-              <view class="">时间：{{item.connectionTime}}</view>
+              <view class="">采集时间：{{item.connectionTime}}</view>
             </view>
             <view class="">
               <u-icon name="arrow-right" size="30"></u-icon>
@@ -202,6 +202,6 @@
     justify-content: space-between;
     font-size: 25rpx;
     flex-wrap: wrap;
-    width: 120rpx;
+    width: 150rpx;
   }
 </style>

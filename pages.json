@@ -184,6 +184,27 @@
             "navigationBarTitleText": "",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "medicineHisDetail/medicineHisDetail",
+          "style": {
+            "navigationBarTitleText": "就诊详情",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "chat/chat",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "chatList/chatList",
+          "style": {
+            "navigationBarTitleText": "医生列表",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },

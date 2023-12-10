@@ -12,8 +12,8 @@
     <view class="content_body">
       <view class="bp">
         <view class="bp_left comm">
-          <view class="">高压</view>
-          <view class="">低压</view>
+          <view class="">收缩压</view>
+          <view class="">舒张压</view>
           <view class="">脉搏</view>
         </view>
         <view class="bp_right card comm">

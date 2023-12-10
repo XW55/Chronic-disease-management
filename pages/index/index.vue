@@ -10,8 +10,7 @@
     </view>
 
     <medicineList :list="medicineList" @clockMedicine="clockMedicine"></medicineList>
-    <navigator url="../../modif/signIn/signIn">去往信息页</navigator>
-    <navigator url="../../modif/login/login">去往登录页</navigator>
+
   </view>
 </template>
 

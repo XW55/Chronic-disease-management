@@ -173,24 +173,31 @@
             if (res.patientCode) {
               uni.setStorageSync('idCard', res.patientCode)
             }
-            if (res.BindingState) {
-              this.$refs.uToast.show({
-                message: '登录成功',
-                type: 'success',
-                position: 'top',
-                duration: 1000,
-                complete() {
-                  uni.switchTab({
-                    url: '/pages/index/index'
-                  })
-                }
-              })
-            } else {
-              uni.navigateTo({
-                url: '/modif/signIn/signIn'
-              })
-            }
-
+            // if (res.BindingState) {
+            this.$refs.uToast.show({
+              message: '登录成功',
+              type: 'success',
+              position: 'top',
+              duration: 1000,
+              complete() {
+                uni.switchTab({
+                  url: '/pages/index/index'
+                })
+              }
+            })
+            // } 
+            // else {
+            //   uni.navigateTo({
+            //     url: '/modif/signIn/signIn'
+            //   })
+            // }
+          } else {
+            this.$refs.uToast.show({
+              message: res.msg,
+              type: 'warning',
+              position: 'top',
+              duration: 1000,
+            })
           }
         }
       },

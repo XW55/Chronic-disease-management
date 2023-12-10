@@ -199,6 +199,7 @@
             complete() {
               vuePro.showModal = false
               vuePro.medicineList = []
+              vuePro.isUpdateMedicine = false
               vuePro.pageNum = 1
               vuePro.showAdd = false
               vuePro.getMedicineList()
@@ -418,7 +419,6 @@
             })
           }
         } else { // 新添加药品计划
-          console.log('新增');
           const res = await addMedica(obj)
           console.log('新增', res);
           if (res.data) {
@@ -430,6 +430,7 @@
               complete() {
                 vuePro.medicineList = []
                 vuePro.pageNum = 1
+                vuePro.total = 0
                 vuePro.showAdd = false
                 vuePro.getMedicineList()
               }

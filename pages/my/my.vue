@@ -24,7 +24,7 @@
         content: [{
           title: '我的问诊',
           icon: 'iconfont icon-wenzhen',
-          url: '',
+          url: '/detail/chatList/chatList',
           color: '#ff8631'
         }, {
           title: '预约挂号',
@@ -34,23 +34,23 @@
         }, {
           title: '病历查看',
           icon: 'iconfont icon-bingli',
-          url: '../../myListPage/pages/medicineHis/medicineHis',
+          url: '/myListPage/pages/medicineHis/medicineHis',
           color: '#8b5cfd'
         }, {
           title: '服药计划',
           icon: 'iconfont icon-time',
-          url: '../../myListPage/pages/medicine/medicine',
+          url: '/myListPage/pages/medicine/medicine',
           color: '#00b386'
         }],
         // 底部列表数据
         list: [{
             title: '我的收藏',
-            url: '../../myListPage/pages/collect/collect',
+            url: '/myListPage/pages/collect/collect',
             icon: 'iconfont icon-shoucang'
           },
           {
             title: '提醒管理',
-            url: '../../myListPage/pages/remind/remind',
+            url: '/myListPage/pages/remind/remind',
             icon: 'iconfont icon-xiaoxizhongxin'
           },
           // {
@@ -65,7 +65,7 @@
           // },
           {
             title: '心率血压变化趋势图',
-            url: '../../myListPage/pages/figure/figure',
+            url: '/myListPage/pages/figure/figure',
             icon: 'iconfont icon-shuju-'
           },
         ],

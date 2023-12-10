@@ -11,6 +11,7 @@
         res => {
           console.log('app', res);
           if (res.code === 200) {
+            uni.setStorageSync('userid', res.data.patientId)
             connectWebSocket(res.data.patientId)
             this.$socket.onOpen((msg) => {
               console.log('聊天连接成功');
@@ -58,6 +59,10 @@
 
   .fNormal {
     font-size: 30rpx;
+  }
+
+  /deep/ .u-picker__view__column__item {
+    line-height: 68rpx !important;
   }
 
 

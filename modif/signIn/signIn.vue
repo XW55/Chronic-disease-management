@@ -278,9 +278,10 @@
               duration: 1000,
 
             })
-            uni.redirectTo({
-              url: this.url
-            })
+            uni.navigateBack()
+            // uni.redirectTo({
+            //   url: this.url
+            // })
           }
         }).catch(errors => {
           this.$refs.uToast.show({

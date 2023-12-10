@@ -1,13 +1,13 @@
 <template>
   <view>
-    <view v-for="(item, i) in 5" :key="item">
+    <view v-for="(item, i) in 1" :key="item">
       <!-- item.hospital.hospitalId -->
       <view class="hos_item flexBox" @click="gotoDetail()">
         <u-avatar size="120" src="https://cdn.uviewui.com/uview/album/1.jpg" shape="circle"></u-avatar>
         <view class="tip">
-          <view class="">XXXXXX医院<text class="tag">三级</text> </view>
+          <view class="">福州中医院<text class="tag">三级</text> </view>
           <u-gap height="20" bgColor="#fff"></u-gap>
-          <view style="color: #ccc; font-size: 26rpx;">XXXXXX医院地址</view>
+          <view style="color: #ccc; font-size: 26rpx;">福州中医院地址</view>
         </view>
 
       </view>

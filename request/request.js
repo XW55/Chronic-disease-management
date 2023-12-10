@@ -278,3 +278,34 @@ export const upLoadSurvey = (data) => {
     data,
   });
 };
+// 根据病历id查询详情
+export const getMedicineHisDetail = (data) => {
+  return request({
+    url: `/appPatient/prescription/getPrescription?medicalId=${data}`,
+    method: 'GET',
+  });
+};
+// 查询绑定医生列表
+
+export const getDoctorListChat = (data) => {
+  return request({
+    url: `/appPatient/doctor/getDocList?patientCode=${data}`,
+    method: 'GET',
+  });
+};
+// 获取聊天历史
+export const getChatHis = (data) => {
+  return request({
+    url: `/appPatient/doctor/getMsgHistory`,
+    method: 'GET',
+    data,
+  });
+};
+// 更改已读状态
+export const updateChatStatus = (data) => {
+  return request({
+    url: `/appPatient/doctor/putMsgStatus`,
+    method: 'PUT',
+    data,
+  });
+};

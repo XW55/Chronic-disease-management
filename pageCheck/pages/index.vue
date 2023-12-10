@@ -87,10 +87,9 @@
         keepScreenOn: true,
       });
       this.phone = options.phone ? options.phone : uni.getStorageSync('phone')
-      this.id = GUID()
+      this.guid = GUID()
       this.initAndConnect();
       this.isCommunity = options.isCommunity == 'yes' ? 1 : 0;
-      console.log('this.isCommunity: ', this.isCommunity)
     },
     created() {
       let windowWidth = wx.getSystemInfoSync().windowWidth;
@@ -215,7 +214,7 @@
         let newDataObj = {
           data_ecg: gOrigenDataAry16,
           sampleRate_ecg: 250,
-          id: this.id,
+          id: this.guid,
           ecg_type: 'JECGsingleWL',
           recordDate: new Date(),
           deviceSn: wlTool.getDeivceSN(),
@@ -238,6 +237,7 @@
             uni.hideLoading()
             console.log('心电上传结果', res);
             if (res.data.code == 200) {
+              console.log('传递的id', vuePro.guid);
               vuePro.$refs.uToast.show({
                 message: '上传成功',
                 type: 'success',

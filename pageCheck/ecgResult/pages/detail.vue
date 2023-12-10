@@ -18,7 +18,7 @@
           <view style="padding: 20rpx;" v-if="diagnosisStatus==0|| diagnosisStatus==3 ||diagnosisStatus==2">
             <view class="res">AI分析结果</view>
             <view style="text-align: justify;">
-              心率{{stateData['平均心率']}}次/分钟，{{stateData['预测结果']}}
+              心率{{stateData['平均心率']}}次/分钟
             </view>
           </view>
           <view style="margin-top: 30rpx;">
@@ -196,6 +196,7 @@
     },
     onLoad(option) {
       this.id = option.id
+      console.log('心电id', this.id);
       this.getdetail2()
     },
     methods: {
@@ -329,7 +330,6 @@
           dataType: 'json',
           success: res => {
             console.log("静态单导res,", res)
-            console.log(res.data.ecg_analysis_data);
             this.stateData = res.data.ecg_analysis_data;
             this.mainData = this.arrTrans(1000, res.data.II);
             for (var i in this.mainData) {
