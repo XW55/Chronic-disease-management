@@ -234,7 +234,9 @@
       this.safeHeight = info.safeAreaInsets.bottom
       //设置苹果系统底部黑条安全区高度
       // 如果未读请求更改已读数据
+      console.log(options.status);
       if (options.status == 1) {
+        console.log('未读请求更改已读数据');
         this.updateStatus()
       }
     },

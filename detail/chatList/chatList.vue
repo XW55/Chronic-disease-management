@@ -4,7 +4,7 @@
       <u-list-item v-for="(item, index) in list" :key="index" style="position: relative;">
         <u-badge v-if="item.msgState" :absolute="true" :offset="offset" :isDot="true" type="error"></u-badge>
         <u-cell :title="item.doctorName" :label="item.msg || ''"
-          @click="gotoDetail(item.doctorName,item.doctorId,item.magState)">
+          @click="gotoDetail(item.doctorName,item.doctorId,item.msgState)">
           <u-avatar slot="icon" shape="square" size="95" src="https://cdn.uviewui.com/uview/album/1.jpg"
             customStyle="margin: -3px 5px -3px 0"></u-avatar>
         </u-cell>

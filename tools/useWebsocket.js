@@ -4,7 +4,7 @@ import Socket from '@/tools/socket.js';
 
 export function connectWebSocket(userid) {
   const socket = new Socket({
-    url: `ws://192.168.1.42:8080/websocket/${userid}`,
+    url: `wss://chronic.mindyard.cn/ws/websocket/${userid}`,
     onOpen: (res) => {
       console.log('连接成功');
     },

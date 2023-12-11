@@ -17,7 +17,7 @@
       <view class="item">
         <view class="flexBox">
           <view class="leftText">医院名称</view>
-          <view class="textHandler">XXXXXX医院</view>
+          <view class="textHandler">福州中医院</view>
         </view>
       </view>
 

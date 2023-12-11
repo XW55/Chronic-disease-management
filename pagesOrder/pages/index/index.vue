@@ -218,7 +218,7 @@
           outpatientId: this.id,
           diagnoseTime: this.getDay
         })
-        console.log(res.data);
+        console.log(res);
         if (res.code !== 200) return this.$refs.uToast.show({
           message: res.msg,
           type: 'warning',
@@ -226,10 +226,6 @@
           duration: 1000
         })
         this.doctorList = res.data
-      },
-      // 点击顶部列表
-      clickList(item) {
-        console.log(item);
       },
       // 选择诊断时间
       selectTag(status, slotId, planId) {

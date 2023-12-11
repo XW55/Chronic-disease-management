@@ -151,23 +151,30 @@
         changeDeviceSNStatus: 'changeDeviceSNStatus'
       }),
       gotoSQ() {
+        // 打开小程序的设置列表
         uni.openSetting({
           success: function(res) {
             // 用户在设置页面进行了操作后的回调
-            if (res.authSetting['scope.userInfo']) {
-              if (res.authSetting['scope.bluetooth']) {
-                //console.log('用户已经授权了蓝牙权限');
-              } else {
-                //console.log('用户未授权或拒绝授权蓝牙权限');
-              }
+            if (res.authSetting['scope.bluetooth']) {
+              // 用户允许授权了蓝牙权限
+              console.log('用户已经授权了蓝牙权限');
+            } else {
+              uni.showModal({
+                title: '您未授权蓝牙权限',
+                content: '是否前去授权',
+                success(res) {
+                  if (res.confirm) {
+                    uni.openSetting()
+                  } else {
+                    uni.navigateBack()
+                  }
+                }
+              })
             }
           },
           fail: function(err) {
-            uni.showModal({
-              title: '提示',
-              content: '打开授权页面失败',
-              showCancel: false
-            })
+            // 打开设置页面失败的回调
+            console.log('打开设置页面失败', err);
           }
         });
       },
