@@ -240,6 +240,7 @@
         console.log('未读请求更改已读数据');
         this.updateStatus()
       }
+      this.getHistoryMsg();
     },
     onShow() {
       if (this.msgList) {

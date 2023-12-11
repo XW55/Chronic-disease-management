@@ -47,6 +47,9 @@
     getCode,
     userLogin
   } from '@/request/request.js'
+  import {
+    connectWebSocket
+  } from '@/tools/useWebsocket.js'
   export default {
     data() {
       return {
@@ -170,9 +173,14 @@
             console.log(res);
             uni.setStorageSync('token', res.token)
             uni.setStorageSync('phone', this.userPhone)
+            uni.setStorageSync('userid', res.patientId)
             if (res.patientCode) {
               uni.setStorageSync('idCard', res.patientCode)
             }
+            connectWebSocket(res.patientId)
+            this.$socket.onOpen((msg) => {
+              console.log('聊天连接成功');
+            })
             // if (res.BindingState) {
             this.$refs.uToast.show({
               message: '登录成功',

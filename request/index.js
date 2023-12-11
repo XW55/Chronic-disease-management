@@ -1,7 +1,7 @@
 // 记录异步请求的次数
 let num = 0;
 // 统一的请求根路径
-const baseUrl = 'https://chronic.mindyard.cn/prod-api'
+const baseUrl = 'https://chronic.mindyard.cn/prod-api';
 // const baseUrl = 'http://192.168.1.11:9002';
 const request = (params) => {
   console.log('请求参数是', params);

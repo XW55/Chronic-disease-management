@@ -1,10 +1,10 @@
 <script>
   import {
-    connectWebSocket
-  } from '@/tools/useWebsocket.js'
-  import {
     getUserInfoByCode
   } from '@/request/request.js'
+  import {
+    connectWebSocket
+  } from '@/tools/useWebsocket.js'
   export default {
     onLaunch: function() {
       getUserInfoByCode(uni.getStorageSync('idCard')).then(
@@ -12,7 +12,7 @@
           console.log('app', res);
           if (res.code === 200) {
             uni.setStorageSync('userid', res.data.patientId)
-            connectWebSocket(res.data.patientId)
+            connectWebSocket(res.patientId)
             this.$socket.onOpen((msg) => {
               console.log('聊天连接成功');
             })

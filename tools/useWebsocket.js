@@ -4,16 +4,18 @@ import Socket from '@/tools/socket.js';
 
 export function connectWebSocket(userid) {
   const socket = new Socket({
+
+    // url: `ws://192.168.1.11:9002/websocket/${userid}`,
     url: `wss://chronic.mindyard.cn/ws/websocket/${userid}`,
     onOpen: (res) => {
       console.log('连接成功');
     },
     onClose: (res, sk) => {
-      console.log("关闭成功")
-      console.log(res)
-      //重连
+      console.log('关闭成功');
+      console.log(res);
+      // 重连
       if (res.code == 1000) {
-        //移除jump
+        // 移除jump
       }
       if (res.code != 1000) {
         sk.nrconnect();
