@@ -11,7 +11,7 @@
             <view class="left">
               <view class="img_item_content_top">
                 <view class="">姓名：{{item.patient.patientName}}</view>
-                <view class="">性别:{{item.patient.patientSex == '1' ? '男' : '女'}}</view>
+                <view class="">性别:{{item.patient.patientSex == '1' ? '女' : '男'}}</view>
               </view>
               <view class="">时间：{{strToDate(item.createTime)}}</view>
             </view>

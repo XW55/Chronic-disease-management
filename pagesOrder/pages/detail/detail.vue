@@ -44,7 +44,7 @@
       </view>
       <view class="row">
         <text class="label">性别：</text>
-        <text class="value">{{obj.patientSex == '1' ? '男' : '女' || ''}}</text>
+        <text class="value">{{obj.patientSex == '1' ? '女' : '男' || ''}}</text>
       </view>
       <view class="row">
         <text class="label">身份证号：</text>

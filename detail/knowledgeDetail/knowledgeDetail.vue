@@ -81,6 +81,11 @@
       },
       // 收藏/取消收藏
       async updateCollect(flag) {
+        if (!uni.getStorageSync('idCard')) {
+          uni.navigateTo({
+            url: '../../modif/signIn/signIn'
+          })
+        }
         // 进行的是收藏操作
         if (flag) {
           const res = await addCollect({

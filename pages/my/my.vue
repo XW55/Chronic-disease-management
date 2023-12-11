@@ -58,15 +58,15 @@
           //   url: '',
           //   icon: 'iconfont icon-changjianwentixiangguanwenti'
           // },
-          // {
-          //   title: '设置',
-          //   url: '',
-          //   icon: 'iconfont icon-31shezhi'
-          // },
           {
             title: '心率血压变化趋势图',
             url: '/myListPage/pages/figure/figure',
             icon: 'iconfont icon-shuju-'
+          },
+          {
+            title: '个人信息',
+            url: '/modif/signIn/signIn',
+            icon: 'iconfont icon-31shezhi'
           },
         ],
       };

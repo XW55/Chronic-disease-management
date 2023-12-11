@@ -8,8 +8,16 @@ export function connectWebSocket(userid) {
     onOpen: (res) => {
       console.log('连接成功');
     },
-    onClose: (res) => {
-      console.log('关闭成功');
+    onClose: (res, sk) => {
+      console.log("关闭成功")
+      console.log(res)
+      //重连
+      if (res.code == 1000) {
+        //移除jump
+      }
+      if (res.code != 1000) {
+        sk.nrconnect();
+      }
     },
     onReload: (res) => {
       console.log(`重连成功${res}`);

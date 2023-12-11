@@ -7,7 +7,7 @@
           <view class="leftText">就诊人</view>
           <view class="flexBox">
             <view style="color: #4087eb; margin: 0 15rpx;">
-              {{list.patientName}}【{{list.patientSex == '1' ? '男' : '女'}}】{{list.patientAge}}岁
+              {{list.patientName}}【{{list.patientSex == '1' ? '女' : '男'}}】{{list.patientAge}}岁
             </view>
             <view class="iconfont icon-youjiantou" style="font-size: 40rpx; color: #000;"></view>
           </view>

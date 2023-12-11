@@ -179,6 +179,7 @@
           patientId: this.id,
           doctorId: this.doctorId
         }
+        console.log(msg);
         this.$socket.nsend(JSON.stringify(msg));
 
         this.talkList.push(msg);

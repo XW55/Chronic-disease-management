@@ -6,9 +6,9 @@
     <view class="titleBox card">
       <view class="title">个人信息</view>
       <view class="item">
-        <view>姓名：{{ stateData['姓名']}}</view>
-        <view>年龄：{{ stateData['年龄']}}</view>
-        <view>性别：{{stateData['性别'] == 1 ? '男' : '女' }}</view>
+        <view>姓名：{{ userObj.name}}</view>
+        <view>年龄：{{userObj.age }}</view>
+        <view>性别：{{ userObj.sex == 1 ? '女' : '男'}}</view>
         <view style="width: max-content;">设备号：{{stateData['设备编号']}}</view>
       </view>
     </view>
@@ -174,7 +174,9 @@
   import {
     drawGraph
   } from "../components/drawECG.js"
-
+  import {
+    getUserInfoByCode
+  } from '@/request/request.js'
 
   export default {
     data() {
@@ -191,10 +193,16 @@
         meanHR: "",
         imagePath: '',
         // 心电分析数据
-        stateData: null
+        stateData: null,
+        userObj: {
+          name: '',
+          age: '',
+          sex: ''
+        }
       }
     },
     onLoad(option) {
+      this.getUser()
       this.id = option.id
       console.log('心电id', this.id);
       this.getdetail2()
@@ -314,6 +322,14 @@
           iconsArr[page].push(item);
         });
         return iconsArr;
+      },
+      async getUser() {
+        const res = await getUserInfoByCode(uni.getStorageSync('idCard'))
+        if (res.code === 200) {
+          this.userObj.name = res.data.patientName
+          this.userObj.age = res.data.patientAge
+          this.userObj.sex = res.data.patientSex
+        }
       },
 
       getdetail2() {

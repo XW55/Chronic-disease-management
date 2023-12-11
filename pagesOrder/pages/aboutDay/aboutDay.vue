@@ -104,7 +104,7 @@
         console.log('111', res);
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.userObj.patientName = res.data.patientName
-        this.userObj.patientSex = res.data.patientSex == 1 ? '男' : '女'
+        this.userObj.patientSex = res.data.patientSex == 1 ? '女' : '男'
         this.userObj.patientAge = res.data.patientAge
       },
       // 子元素传递id，父元素删除对应元素

@@ -31,7 +31,7 @@
                   <view class="name">{{ item.doctor.doctorName }}</view>
                   <view class="posts">{{ item.doctor.professional }}</view>
                 </view>
-                <view class="doctorTitle">{{ item.doctor.introduction }}</view>
+                <view class="doctorTitle">{{ item.doctor.applicablePopulation }}</view>
               </view>
               <view class="doctorPrice">
                 <view>挂号费</view>

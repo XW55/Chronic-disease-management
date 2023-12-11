@@ -97,6 +97,7 @@
         .img_item_content_top {
           display: flex;
           justify-content: space-between;
+          width: 120%;
         }
 
         .img_item_container {

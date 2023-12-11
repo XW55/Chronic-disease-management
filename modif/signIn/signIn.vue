@@ -5,20 +5,28 @@
         <u-input placeholder="请输入姓名" v-model="userInfo.name" border="none" />
       </u-form-item>
       <u-form-item :required="true" label="证件号码" borderBottom prop="idCard">
-        <u-input placeholder="请输入身份证号码" type="number" maxlength="18" v-model="userInfo.idCard" border="none" />
+        <u-input placeholder="请输入身份证号码" type="number" maxlength="18" v-model="userInfo.idCard" border="none"
+          @blur="idCardBlur" />
       </u-form-item>
-
-      <u-form-item :required="true" @click="openBirth" label="出生日期" prop="birth" borderBottom>
-        <u--input v-model="userInfo.birth" disabled disabledColor="#ffffff" placeholder="请选择生日" border="none">
-        </u--input>
-        <u-icon slot="right" name="arrow-right"></u-icon>
-      </u-form-item>
-
       <u-form-item :required="true" @click="showSex = true" label="性别" prop="sex" borderBottom>
         <u--input v-model="userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择性别" border="none">
         </u--input>
         <u-icon slot="right" name="arrow-right"></u-icon>
       </u-form-item>
+
+      <!-- <u-form-item :required="true" @click="openBirth" label="出生日期" prop="birth" borderBottom>
+        <u--input v-model="userInfo.birth" disabled disabledColor="#ffffff" placeholder="请选择生日" border="none">
+        </u--input>
+        <u-icon slot="right" name="arrow-right"></u-icon>
+      </u-form-item> -->
+
+      <picker mode="date" :value="userInfo.birth" @change="birthChange">
+        <u-form-item :required="true" label="出生日期" prop="birth" borderBottom>
+          <u--input v-model="userInfo.birth" disabled disabledColor="#ffffff" placeholder="请选择生日" border="none">
+          </u--input>
+          <u-icon slot="right" name="arrow-right"></u-icon>
+        </u-form-item>
+      </picker>
       <picker :value="multiIndex" :range="heightColumns" @change="heightChange">
         <u-form-item :required="true" label="身高" prop="height" borderBottom>
           <u--input v-model="userInfo.height" disabled disabledColor="#ffffff" placeholder="请选择身高" border="none">
@@ -87,6 +95,7 @@
           allergy: '',
           address: ''
         },
+        birthDate: 50,
         multiIndex: 159,
         multiIndex1: 49,
         // 身高数组
@@ -197,15 +206,35 @@
       sexSelect(e) {
         this.userInfo.sex = e.name
       },
-      // 打开日期
-      openBirth() {
-        this.showBirth = true
-        if (this.userInfo.birth) {
-          this.$refs.dateTime.innerValue = new Date(this.userInfo.birth).getTime()
-        } else {
-          this.$refs.dateTime.innerValue = new Date('1970-01-01').getTime()
+      birthChange(e) {
+        console.log(e)
+        this.userInfo.birth = e.detail.value
+      },
+      // 从身份证中抽取出生日期
+      extractBirthDate(idCard) {
+        // 假设idCard是身份证号码字符串
+        var year = idCard.substring(6, 10);
+        var month = idCard.substring(10, 12);
+        var day = idCard.substring(12, 14);
+
+        return year + '-' + month + '-' + day;
+      },
+      // 身份证输入框失去焦点
+      idCardBlur() {
+        // 检测身份证是否合格
+        if (uni.$u.test.idCard(this.userInfo.idCard) && this.userInfo.idCard.length == 18) {
+          this.userInfo.birth = this.extractBirthDate(this.userInfo.idCard)
         }
       },
+      // 打开日期
+      // openBirth() {
+      //   this.showBirth = true
+      //   if (this.userInfo.birth) {
+      //     this.$refs.dateTime.innerValue = new Date(this.userInfo.birth).getTime()
+      //   } else {
+      //     this.$refs.dateTime.innerValue = new Date('1970-01-01').getTime()
+      //   }
+      // },
       // 身高变化
       heightChange(e) {
         this.multiIndex = e.detail.value
@@ -234,7 +263,7 @@
           this.userInfo.weight = res.data.patientWeight + 'kg'
           this.multiIndex1 = Number(res.data.patientWeight - 1)
           this.userInfo.idCard = res.data.patientCode
-          this.userInfo.sex = res.data.patientSex == 1 ? '男' : '女'
+          this.userInfo.sex = res.data.patientSex == 1 ? '女' : '男'
           this.userInfo.allergy = res.data.allergies
           this.userInfo.medical = res.data.patientMedicalHistory
         }
@@ -257,7 +286,7 @@
           // 组织信息用于提交表单
           const obj = {
             patientName: name,
-            patientSex: sex === '男' ? 1 : 0,
+            patientSex: sex === '男' ? 0 : 1,
             patientHeight: parseFloat(height.replace('cm', '')),
             patientWeight: parseFloat(weight.replace('kg', '')),
             birthDay: birth,

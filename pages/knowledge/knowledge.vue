@@ -25,10 +25,19 @@
         isLoading: false,
       };
     },
-    onLoad() {
+    onShow() {
+      this.list = []
+      this.total = 0
+      this.pageNum = 1
       this.getList()
     },
     methods: {
+      clickItemByList(item) {
+        // console.log(item);
+        uni.navigateTo({
+          url: '/detail/knowledgeDetail/knowledgeDetail?id=' + item.propagandaId + '&title=' + item.articleType
+        })
+      },
       // 请求知识列表的方法
       async getList() {
         // 如果正在请求数据，不执行后续逻辑
@@ -49,25 +58,6 @@
           this.list.push(...res.rows);
           this.total = res.total;
           this.isLoading = false
-        }
-      },
-      // 点击子组件的方法
-      clickItemByList(item) {
-        if (uni.getStorageSync('token')) {
-          if (uni.getStorageSync('idCard')) {
-            uni.navigateTo({
-              url: '../../detail/knowledgeDetail/knowledgeDetail?id=' + item.propagandaId + '&title=' + item
-                .articleType
-            })
-          } else {
-            uni.navigateTo({
-              url: '../../modif/signIn/signIn'
-            })
-          }
-        } else {
-          uni.navigateTo({
-            url: '../../modif/login/login'
-          })
         }
       }
     },
