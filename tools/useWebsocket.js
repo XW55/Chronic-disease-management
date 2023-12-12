@@ -23,11 +23,11 @@ export function connectWebSocket(userid) {
     },
     onReload: (res) => {
       console.log(`重连成功${res}`);
-      uni.showToast({
-        title: '聊天服务器连接成功',
-        icon: 'none',
-        duration: 2000,
-      });
+      // uni.showToast({
+      //   title: '聊天服务器连接成功',
+      //   icon: 'none',
+      //   duration: 2000,
+      // });
     },
     onMsg: (msg) => {
       console.log(`收到消息${msg}`);

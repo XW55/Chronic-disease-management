@@ -18,17 +18,14 @@
     data() {
       return {
         list: [],
-        pageSize: 7,
+        pageSize: 10,
         pageNum: 1,
-        total: 0,
-        // 是否正在请求数据 节流阀
-        isLoading: false,
+        // total: 0,
+        // // 是否正在请求数据 节流阀
+        // isLoading: false,
       };
     },
     onShow() {
-      this.list = []
-      this.total = 0
-      this.pageNum = 1
       this.getList()
     },
     methods: {
@@ -40,35 +37,40 @@
       },
       // 请求知识列表的方法
       async getList() {
-        // 如果正在请求数据，不执行后续逻辑
-        if (this.isLoading) {
-          return
-        }
-        if (this.list.length >= this.total && this.total !== 0) {
-          return;
-        }
+        // console.log('走');
+        // // 如果正在请求数据，不执行后续逻辑
+        // if (this.isLoading) {
+        //   return
+        // }
+        // console.log('没加载');
+        // if (this.list.length >= this.total && this.total !== 0) {
+        //   return;
+        // }
+        // console.log('走了啊');
 
-        this.isLoading = true
+        // this.isLoading = true
+
         const res = await getknowList({
           pageSize: this.pageSize,
           pageNum: this.pageNum
         })
         console.log(res);
         if (res.code === 200) {
-          this.list.push(...res.rows);
-          this.total = res.total;
-          this.isLoading = false
+          this.list = res.rows
+          // this.list.push(...res.rows);
+          // this.total = res.total;
+          // this.isLoading = false
         }
       }
     },
     // 这里页面上拉触底进行新的数据请求
     onReachBottom() {
-      if (this.list.length >= this.total && this.total !== 0) {
-        return;
-      }
-      console.log('页面触底拉');
-      this.pageNum += 1;
-      this.getList()
+      // if (this.list.length >= this.total && this.total !== 0) {
+      //   return;
+      // }
+      // console.log('页面触底拉');
+      // this.pageNum += 1;
+      // this.getList()
     }
   }
 </script>
