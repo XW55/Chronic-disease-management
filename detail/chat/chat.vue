@@ -6,10 +6,8 @@
     <view class="box-1" id="list-box">
       <view class="talk-list">
         <view v-for="(item,index) in talkList" :key="index" :id="`msg-${item.id}`">
-          <view class="item flex_col" :class=" item.sender == doctorId || item.senderId == doctorId ? 'pull':'push' ">
+          <view class="item flex_col" :class="item.senderId == doctorId ? 'pull':'push' ">
             <image :src="pic" mode="aspectFill" class="pic"></image>
-            <uni-icons :type=" item.sender == doctorId || item.senderId == doctorId ? 'contact-filled':'contact'"
-              size="92rpx"></uni-icons>
             <view class="content">{{ item.content }}</view>
           </view>
         </view>
@@ -31,10 +29,6 @@
 </template>
 
 <script>
-  import {
-    mapMutations,
-    mapState
-  } from "vuex";
   import {
     getChatHis,
     updateChatStatus
@@ -75,71 +69,54 @@
       }
     },
     computed: {
-      ...mapState('chatStore', ['msgList'])
+
     },
     methods: {
-      //引入SETMSGLIST方法,重命名为setMsgList
-      ...mapMutations({
-        setMsgList: 'chatStore/SETMSGLIST'
-      }),
-      // 获取历史消息
       getHistoryMsg() {
+        const vuePro = this;
         if (!this.ajax.flag) {
-          return; //
+          return;
         }
-        let date = new Date()
-        // yyyy-MM-dd HH:mm:ss,月日时分秒小于10时前面补0
-        let time = date.getFullYear() + '-' + (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) :
-            date.getMonth() + 1) + '-' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) +
-          ' ' + (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' +
-          (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
-          (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
         let get = async () => {
-          this.ajax.flag = false;
+          vuePro.ajax.flag = false;
           let res = await getChatHis({
-            senderId: this.id,
-            receiverId: this.doctorId
-          })
-          console.log("请求来的东西")
-          console.log(res)
-          this.hideLoadTips();
-          if (res.rows.length == 0) {
-            this.hideLoadTips(true);
-            return
+            senderId: vuePro.id,
+            receiverId: vuePro.doctorId,
+            pageNum: vuePro.ajax.page
+          });
+          console.log("请求来的东西");
+          console.log(res);
+          vuePro.hideLoadTips();
+          if (vuePro.talkList.length >= res.total) {
+            return uni.$showMsg('没有更多数据了')
           }
           // 获取待滚动元素选择器，解决插入数据后，滚动条定位时使用
           let selector = '';
-          let data = res.rows.reverse()
-          if (this.ajax.page > 1) {
+          let data = res.rows.reverse();
+          if (vuePro.ajax.page > 1) {
             // 非第一页，则取历史消息数据的第一条信息元素
-            selector = `#msg-${this.talkList[0].id}`;
+            selector = `#msg-${vuePro.talkList[0].id}`;
           } else {
             // 第一页，则取当前消息数据的最后一条信息元素
             selector = `#msg-${data[data.length - 1].id}`;
           }
-          this.talkList = [...data, ...this.talkList];
+          vuePro.talkList = [...data, ...vuePro.talkList];
 
-          this.$nextTick(() => {
+          vuePro.$nextTick(() => {
+            console.log('设置当前滚动的位置');
             // 设置当前滚动的位置
-            this.setPageScrollTo(selector);
-            this.hideLoadTips(true);
-
-            if (data.length < this.ajax.rows) {
-              // 当前消息数据条数小于请求要求条数时，则无更多消息，不再允许请求。
-              // 可在此处编写无更多消息数据时的逻辑
+            vuePro.setPageScrollTo(selector);
+            vuePro.hideLoadTips(true);
+            if (vuePro.talkList.length >= res.total) {
+              return uni.$showMsg('没有更多数据了')
             } else {
-              this.ajax.page++;
-
-              setTimeout(() => {
-                this.ajax.flag = true;
-              }, 200)
+              vuePro.ajax.page++;
+              vuePro.ajax.flag = true;
             }
-
-          })
-        }
+          });
+        };
         get();
       },
-      // 设置页面滚动位置
       setPageScrollTo(selector) {
         let view = uni.createSelectorQuery().in(this).select(selector);
         view.boundingClientRect((res) => {
@@ -209,12 +186,13 @@
         console.log('在对话中收到消息')
         console.log(msg)
         msg = JSON.parse(msg.data)
-        if (msg.senderId == this.id) {
+        if (msg.senderId == this.doctorId) {
           this.talkList.push({
             "id": new Date().getTime(), // 消息的ID
             "content": msg.content, // 消息内容
+            "senderId": msg.senderId,
             "type": 0, // 此为消息类别，设 1 为发出去的消息，0 为收到对方的消息,
-            // "pic": "/static/logo.png" // 头像
+            "pic": "https://cdn.uviewui.com/uview/album/1.jpg" // 头像
           })
           this.$nextTick(() => {
             uni.pageScrollTo({
@@ -243,25 +221,9 @@
       this.getHistoryMsg();
     },
     onShow() {
-      if (this.msgList) {
-        let msgList = JSON.parse(JSON.stringify(this.msgList))
-        msgList[this.id].isRead = true
-        this.setMsgList(msgList)
-        uni.setStorageSync('msgList', msgList)
-      }
+      // this.$socket.eventPatch.onMsg(this.getMsg)
     },
     onUnload() {
-      if (this.msgList) {
-        try {
-          let msgList = JSON.parse(JSON.stringify(this.msgList))
-          msgList[this.id].isRead = true
-          console.log(msgList)
-          this.setMsgList(msgList)
-          uni.setStorageSync('msgList', msgList)
-        } catch (e) {
-          console.log(e)
-        }
-      }
       this.$socket.eventPatch.clearEvent("onMsg", this.getMsg)
     },
   }

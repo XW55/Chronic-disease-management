@@ -18,6 +18,9 @@
   import {
     getDoctorListChat
   } from '@/request/request.js'
+  import {
+    connectWebSocket
+  } from '@/tools/useWebsocket.js'
   export default {
     data() {
       return {
@@ -27,7 +30,7 @@
       };
     },
     onLoad() {
-
+      connectWebSocket(uni.getStorageSync('userid'))
     },
     onShow() {
       this.initList()
