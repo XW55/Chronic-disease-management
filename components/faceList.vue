@@ -40,7 +40,7 @@
             <view class="left">
               <view class="img_item_content_top">
                 <view class="">
-                  心电类型：{{item.ecgType == 'JECGXL'?"身心能量检测":"单导检测"}}
+                  心电类型：{{item.ecgType == 'JECGXL'?"身心能量检测":"心率检测"}}
                 </view>
               </view>
               <view class="">采集时间：{{item.connectionTime}}</view>

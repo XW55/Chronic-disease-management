@@ -3,10 +3,10 @@
     <view class="img_box" v-if="medicalAndPatientVOS.length">
       <view style="margin:10rpx 0;" v-for="(item,index) in medicalAndPatientVOS" :key="item.id">
         <view class="img_item card" @click="gotoDetail(item.id)">
-          <view class="img_item_content" style="padding: 20rpx; font-size: 27rpx;">
+          <view class="img_item_content" style="padding: 20rpx 0;">
             <view class="left">
               <view class="img_item_content_top">
-                <view class="">主诉：{{item.complaint || ''}}</view>
+                <view style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">主诉：{{item.complaint || ''}}</view>
                 <view class="">医生：{{item.doctor || ''}}</view>
               </view>
               <view class="">时间：{{item.diagnosisStartTime || ''}}</view>
@@ -77,13 +77,13 @@
       align-items: center;
 
       .img_item_content {
-        padding: 0 18rpx;
+        // padding: 0 18rpx;
         width: 100%;
-        height: 100%;
+        // height: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 30rpx;
+        // font-size: 30rpx;
 
 
         .left {
@@ -95,9 +95,10 @@
         }
 
         .img_item_content_top {
-          display: flex;
-          justify-content: space-between;
-          width: 120%;
+          // display: flex;
+          // justify-content: space-between;
+          // width: 120%;
+          overflow: hidden;
         }
 
         .img_item_container {
