@@ -40,7 +40,7 @@
             <view class="left">
               <view class="img_item_content_top">
                 <view class="">
-                  心电类型：{{item.ecgType}}
+                  心电类型：{{item.ecgType == 'JECGXL'?"身心能量检测":"单导检测"}}
                 </view>
               </view>
               <view class="">采集时间：{{item.connectionTime}}</view>
@@ -93,19 +93,24 @@
     },
     methods: {
       strToDate,
-      // 图片详情
       gotoFaceRes(item, flag) {
         if (flag) {
           uni.navigateTo({
-            url: '../../myListPage/pages/bpResult/bpResult?id=' + item.bloodId
+            url: '/myListPage/pages/bpResult/bpResult?id=' + item.bloodId
           })
         } else {
-          uni.navigateTo({
-            url: '../../pageCheck/ecgResult/pages/detail?id=' + item.pId
-          })
+          if(item.ecgType == "JECGXL"){
+            uni.navigateTo({
+              url: '/pageCheck/ecgResult/pages/detail_xinli?pid=' + item.pId
+            })
+          }else if(item.ecgType  == "JECGsingleWL"){
+            uni.navigateTo({
+              url: '/pageCheck/ecgResult/pages/detail?id=' + item.pId
+            })
+          }
+          
         }
       },
-      // 删除对应的列
       delBypId(id) {
         const vuePro = this
         uni.showModal({
@@ -119,7 +124,6 @@
               console.log(result);
               if (result.code === 200) {
                 uni.$showMsg('删除成功')
-                // 向父组件发送被删除id进行删除操作
                 vuePro.$emit('delBypId', id)
               }
             } else {
@@ -139,7 +143,6 @@
               console.log(result);
               if (result.code === 200) {
                 uni.$showMsg('删除成功')
-                // 向父组件发送被删除id进行删除操作
                 vuePro.$emit('delEcgBypId', id)
               }
             } else {

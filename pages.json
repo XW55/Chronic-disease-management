@@ -243,17 +243,48 @@
           }
         },
         {
+          "path": "ecgResult/pages/detail_xinli",
+          "style": {
+            "navigationBarTitleText": "身心能量检测报告",
+            "enablePullDownRefresh": false,
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#DCFFF2"
+          }
+        },
+        {
+          "path": "ecgResult/pages/whatBMI",
+          "style": {
+            "navigationBarTitleText": "身心能量检测报告",
+            "enablePullDownRefresh": false,
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#DCFFF2"
+          }
+        },
+        {
+          "path": "ecgResult/pages/xinlizhishujieshi",
+          "style": {
+            "navigationBarTitleText": "心力解读",
+            "enablePullDownRefresh": false,
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#fff"
+          }
+        },
+        {
           "path": "ecgResult/pages/tips",
           "style": {
             "navigationBarTitleText": "健康知识",
-            "enablePullDownRefresh": false
+            "enablePullDownRefresh": false,
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#fff"
           }
         },
         {
           "path": "ecgResult/pages/whatHRV",
           "style": {
             "navigationBarTitleText": "健康知识",
-            "enablePullDownRefresh": false
+            "enablePullDownRefresh": false,
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#fff"
           }
         }
       ]

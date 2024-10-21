@@ -1,11 +1,16 @@
 import vueStore from '@/store/index.js';
 
+let serviceId = '00001810-0000-1000-8000-00805F9B34FB';
+let readCharacteristicId = '00002A35-0000-1000-8000-00805F9B34FB';
+let writeCharacteristicId = '00002A52-0000-1000-8000-00805F9B34FB';
+let searchState = {value: false};
 module.exports = {
   initialize,
   linkBle,
   closeBluetooth,
-  getLastData,
+  getLastData
 };
+let bleConnectFunction = null
 
 function swap(data) {
   const a = data[0];
@@ -61,42 +66,9 @@ function dataProcessing(data) {
   };
 }
 
-function wlConnectBle(deviceId) {
-
-}
-
-function onlyConnect(deviceId, callback) {
-  uni.createBLEConnection({
-    deviceId,
-    success(res) {
-      console.log('连接成功');
-      callback({
-        errCode: 0,
-        errMsg: '连接成功',
-      });
-    },
-    fail(res) {
-      console.log('连接失败');
-      callback({
-        errCode: 10000,
-        errMsg: '连接失败',
-      });
-    },
-  });
-}
-
-/**
- * 获取蓝牙设备所有服务(service)
- * @param callback
- */
 function openBluetoothAdapter(callback) {
   uni.openBluetoothAdapter({
     success(res) {
-      uni.onBLEConnectionStateChange((res) => {
-        console.log('监听蓝牙连接情况正常', res);
-        // 监听蓝牙连接情况
-        // store.commit('changeBleConnectStatus', res.connected)
-      });
       callback({
         errCode: 0,
       });
@@ -165,13 +137,15 @@ function judgeLocaltion(noLinkCallback) {
 }
 
 function closeBluetooth(callback) {
+  searchState = {value: false};
+  vueStore.commit('blood/resetData')
   uni.stopBluetoothDevicesDiscovery({
     success(res) {
       console.log('关闭蓝牙搜索成功', res);
       uni.closeBluetoothAdapter({
         success(res) {
-          console.log('关闭蓝牙模块成功');
-          console.log('销毁蓝牙结束');
+          console.log('关闭蓝牙模块成功')
+          console.log('销毁蓝牙结束')
           if (callback) {
             callback();
           }
@@ -183,23 +157,25 @@ function closeBluetooth(callback) {
     },
     fail(res1) {
       console.log('关闭蓝牙搜索失败', res1);
-    },
-  });
+    }
+  })
 }
 
 function initialize(callback) {
+  bleConnectFunction = callback
+  searchState = {value: false}
   if (judgeLocaltion(callback)) {
-    link(callback);
+    link();
   }
 }
 
-function link(callback) {
+function link() {
   openBluetoothAdapter((res) => {
     if (res.errCode === 0) {
-      callback(0x06);
-      getBleList(callback);
+      bleConnectFunction(0x06)
+      getBleList();
     } else {
-      callback(0x02, res);
+      bleConnectFunction(0x02, res);
     }
   });
 }
@@ -215,20 +191,26 @@ function judgementBle(callback) {
   });
 }
 
-function getBleList(callback) {
-  console.log('开始获取蓝牙列表');
+let linkLock = false;
+function getBleList() {
+  console.log('开始获取蓝牙列表')
   uni.startBluetoothDevicesDiscovery({
     allowDuplicatesKey: true,
     success(res) {
-      console.log('开始获取蓝牙列表成功，开始监听蓝牙设备');
+      console.log('开始获取蓝牙列表成功，开始监听蓝牙设备')
       uni.onBluetoothDeviceFound((res) => {
-        if (res.devices[0].name) {
-          console.log(res.devices[0].name);
+        if (res.devices[0].name.indexOf('FSRKB') !== -1) {
+          console.log('获取fsrkb')
+          console.log(res)
+        }
+        if (!!res.devices[0].name) {
+          console.log(res.devices[0].name)
         }
         if (res.devices[0].name.indexOf('Yuwell') !== -1) {
           // 获取蓝牙列表成功
-          console.log('获取鱼跃蓝牙设备成功');
-          linkBle(res.devices[0].deviceId, callback);
+          console.log('获取鱼跃蓝牙设备成功')
+          console.log(res.RSSI)
+          linkBle(res.devices[0].deviceId);
         }
       });
     },
@@ -240,65 +222,105 @@ function getBleList(callback) {
   });
 }
 
-function linkBle(deviceId, callback) {
+function linkBle(deviceId) {
+  if (linkLock) return
+  linkLock = true;
   uni.stopBluetoothDevicesDiscovery({
     success: (res) => {
-      console.log('关闭蓝牙搜索');
-      console.log('开始连接设备');
-      const time = new Date();
+      console.log('关闭蓝牙搜索-stop')
+      console.log('开始连接设备-stop')
+      let time = new Date()
       uni.createBLEConnection({
         deviceId,
         timeout: 10000,
         success: (res) => {
-          const time2 = new Date();
-          const time3 = time2 - time;
-          console.log('连接设备成功,耗时', time3);
+          let time2 = new Date()
+          let time3 = time2 - time
+          console.log('连接设备成功,耗时', time3)
+          linkLock = false;
           vueStore.commit('blood/changeDeviceId', deviceId);
-          callback(0x03);
           // 关闭蓝牙搜索
           // uni.stopBluetoothDevicesDiscovery({
           //   success: (res2) => {
-          getfeatures(deviceId, callback);
+          getfeatures(deviceId);
           // },
           // });
         },
-        fail: (err) => {},
+        fail: (err) => {
+          console.log('连接失败:')
+          console.log(err)
+          bleConnectAgain(deviceId)
+        },
+        complete: () => {
+          console.log("连接结束")
+        }
       });
-    },
-  });
+    }
+  })
+}
+
+let num = 0
+
+function bleConnectAgain(deviceId) {
+  if (num >= 5) {
+    linkLock = false;
+    getBleList()
+  } else {
+    num++
+    uni.createBLEConnection({
+      deviceId,
+      timeout: 10000,
+      success: (res) => {
+        num = 0;
+        console.log('连接设备成功,次数' + num)
+        linkLock = false;
+        vueStore.commit('blood/changeDeviceId', deviceId);
+        getfeatures(deviceId);
+      },
+      fail: (err) => {
+        console.log('连接失败:')
+        console.log(err)
+        bleConnectAgain()
+      },
+      complete: () => {
+        console.log("连接结束"+num)
+      }
+    });
+  }
 }
 
 const bloodUuid = [];
 const batteryUuid = [];
 const characterId = [];
 
-function getfeatures(deviceId, callback) {
-  console.log('开始获取蓝牙特征值');
+function getfeatures(deviceId) {
+  console.log('开始获取蓝牙特征值')
   uni.getBLEDeviceServices({
     deviceId,
     success: (res) => {
-      console.log('获取蓝牙特征值成功');
+      console.log('获取蓝牙特征值成功')
       res.services.forEach((item, index) => {
         if (item.uuid.indexOf('1810') === 4) {
           bloodUuid.push(item.uuid);
           vueStore.commit('blood/changeServiceId', item.uuid);
-          getChartId(deviceId, item.uuid, callback);
+          getChartId(deviceId, item.uuid);
         }
         if (item.uuid.indexOf('180f') === 4) {
-          batteryUuid.push(item.uuid);
+          // batteryUuid.push(item.uuid);
+          //电池电量
         }
       });
     },
   });
 }
 
-function getChartId(deviceId, serviceId, callback) {
-  console.log('开始获取蓝牙服务码');
+function getChartId(deviceId, serviceId) {
+  console.log('开始获取蓝牙服务码')
   uni.getBLEDeviceCharacteristics({
     deviceId,
     serviceId,
     success: (res) => {
-      console.log('获取蓝牙服务码成功');
+      console.log('获取蓝牙服务码成功')
       res.characteristics.forEach((item, index) => {
         if (item.uuid.indexOf('2A52') !== -1) {
           vueStore.commit('blood/changeRACPCharacteristicId', item.uuid);
@@ -306,33 +328,35 @@ function getChartId(deviceId, serviceId, callback) {
         if (item.uuid.indexOf('2A35')) {
           characterId.push(item.uuid);
           vueStore.commit('blood/changeBPMCharacteristicId', item.uuid);
-          getBloodData(deviceId, serviceId, item.uuid, callback);
+          getBloodData(deviceId, serviceId, item.uuid);
         }
       });
     },
   });
 }
 
-function getBloodData(deviceId, serviceId, characterId, callback) {
+function getBloodData(deviceId, serviceId, characterId) {
   uni.notifyBLECharacteristicValueChange({
     deviceId,
     serviceId,
     characteristicId: characterId,
     state: true,
     success: (res) => {
-      listenBle(callback, deviceId);
+      bleConnectFunction(0x03);
+      searchState = {value: true};
+      listenBle(deviceId)
       uni.onBLECharacteristicValueChange((res) => {
-        console.log('监听蓝牙数据');
-        console.log(res);
+        console.log('监听蓝牙数据')
+        console.log(res)
         if (res.characteristicId.indexOf('2A35') !== -1) {
           const hex = arrayBuffer2Hex(res.value);
-          console.log('hex');
-          console.log(hex);
-          const time = new Date();
-          callback(0x01, {
+          console.log('hex')
+          console.log(hex)
+          let time = new Date()
+          bleConnectFunction(0x01, {
             data: dataProcessing(hex),
             callback: getBleList,
-            time,
+            time: time
           });
         }
       });
@@ -340,66 +364,76 @@ function getBloodData(deviceId, serviceId, characterId, callback) {
   });
 }
 
-function listenBle(callback, deviceId) {
-  // 监听蓝牙连接状态
+function listenBle(deviceId) {
+  //监听蓝牙连接状态
   uni.onBLEConnectionStateChange((res) => {
-    console.log('蓝牙状态发生改变');
-    console.log(res);
-    if (!res.connected) {
-      vueStore.commit('blood/resetData');
-      callback(0x04);
-      console.log('重新获取蓝牙列表');
-      uni.startBluetoothDevicesDiscovery({
-        allowDuplicatesKey: true,
-        success(res) {
-          console.log('开始获取蓝牙列表成功，开始监听蓝牙设备');
-          uni.onBluetoothDeviceFound((res) => {
-            if (res.devices[0].name) {
-              console.log(res.devices[0].name);
-            }
-            if (res.devices[0].deviceId === deviceId) {
-              // 获取蓝牙列表成功
-              console.log('获取蓝牙设备成功');
-              linkBleToo(res.devices[0].deviceId, callback);
-            }
-          });
-        },
-        fail(res1) {
-          console.log('获取蓝牙设备失败2', res1);
-          // 获取蓝牙列表失败
-          // store.commit('changeBleList', [])
-        },
-      });
+    console.log('蓝牙状态发生改变')
+    console.log(res)
+    if (() => {
+      return searchState.value
+    }) {
+      if (!res.connected) {
+        vueStore.commit('blood/resetData');
+        bleConnectFunction(0x04)
+        console.log('重新获取蓝牙列表')
+        uni.startBluetoothDevicesDiscovery({
+          allowDuplicatesKey: true,
+          success(res) {
+            console.log('开始获取蓝牙列表成功，开始监听蓝牙设备')
+            uni.onBluetoothDeviceFound((res) => {
+              if (!!res.devices[0].name) {
+                console.log(res.devices[0].name)
+              }
+              if (res.devices[0].deviceId === deviceId) {
+                // 获取蓝牙列表成功
+                console.log('获取蓝牙设备成功')
+                linkBleToo(res.devices[0].deviceId);
+              }
+            });
+          },
+          fail(res1) {
+            console.log('获取蓝牙设备失败2', res1);
+            getBleList();
+          },
+        });
+      }
     }
-  });
+  })
 }
 
-function linkBleToo(deviceId, callback) {
+function linkBleToo(deviceId) {
+  if (linkLock) return
+  linkLock = true;
   uni.stopBluetoothDevicesDiscovery({
     success: (res) => {
-      console.log('关闭蓝牙搜索');
-      console.log('开始连接设备');
-      const time = new Date();
+      console.log('关闭蓝牙搜索-linkbletoo')
+      console.log('开始连接设备-linkbletoo')
+      let time = new Date()
       uni.createBLEConnection({
         deviceId,
         timeout: 10000,
         success: (res) => {
-          const time2 = new Date();
-          const time3 = time2 - time;
-          console.log('连接设备成功,耗时', time3);
+          linkLock = false;
+          let time2 = new Date()
+          let time3 = time2 - time
+          console.log('连接设备成功,耗时', time3)
           vueStore.commit('blood/changeDeviceId', deviceId);
-          callback(0x05);
+          bleConnectFunction(0x05);
           // 关闭蓝牙搜索
           // uni.stopBluetoothDevicesDiscovery({
           //   success: (res2) => {
-          getfeatures(deviceId, callback);
+          getfeatures(deviceId);
           // },
           // });
         },
-        fail: (err) => {},
+        fail: (err) => {
+          console.log("连接失败，开始重试-too:")
+          console.log(err)
+          bleConnectAgain(deviceId)
+        },
       });
-    },
-  });
+    }
+  })
 }
 
 function arrayBuffer2Hex(buffer) {
@@ -413,28 +447,26 @@ function arrayBuffer2Hex(buffer) {
 }
 
 function getLastData(str) {
-  console.log('开始发送数据');
+  console.log('开始发送数据')
   uni.writeBLECharacteristicValue({
     deviceId: vueStore.state.blood.deviceId,
     serviceId: vueStore.state.blood.serviceId,
     characteristicId: vueStore.state.blood.RACPCharacteristicId,
     value: string2buffer('0106'),
     success: (res) => {
-      console.log('发送成功');
-      uni.$showMsg('数据获取成功', 'success');
-      console.log(res);
+      console.log('发送成功')
+      console.log(res)
     },
     fail: (err) => {
-      console.log('发送失败');
-      // uni.$showMsg('数据获取失败', 'error');
-      console.log(err);
-    },
-  });
+      console.log('发送失败')
+      console.log(err)
+    }
+  })
 }
 
 function string2buffer(str) {
-  const typedArray = new Uint8Array(str.match(/[\da-f]{2}/gi).map((h) => {
-    return parseInt(h, 16);
-  }));
-  return typedArray.buffer;
+  let typedArray = new Uint8Array(str.match(/[\da-f]{2}/gi).map(function (h) {
+    return parseInt(h, 16)
+  }))
+  return typedArray.buffer
 }

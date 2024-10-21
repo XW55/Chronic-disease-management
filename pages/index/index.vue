@@ -40,7 +40,12 @@
             url: '../../detail/survey/survey',
             icon: 'iconfont icon-wenjuan',
             color: 'linear-gradient(to right, #e2b4e9, #c9a6e7)'
-          },
+          },{
+            title: '身心能量检测',
+            icon: 'iconfont icon-iconkpxd',
+            url: '../../pagebleConnect/pages/index?item=60',
+            color: 'linear-gradient(to right, #54c7ae, #00ca99)'
+          }
         ],
       }
     },

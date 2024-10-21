@@ -7,20 +7,7 @@
   } from '@/tools/useWebsocket.js'
   export default {
     onLaunch: function() {
-      getUserInfoByCode(uni.getStorageSync('idCard')).then(
-        res => {
-          console.log('app', res);
-          if (res.code === 200) {
-            uni.setStorageSync('userid', res.data.patientId)
-            connectWebSocket(res.data.patientId)
-            this.$socket.onOpen((msg) => {
-              console.log('聊天连接成功');
-            })
-          } else {
-            uni.clearStorageSync()
-          }
-        }
-      )
+
     },
     onShow: function() {
       // console.log('App Show')

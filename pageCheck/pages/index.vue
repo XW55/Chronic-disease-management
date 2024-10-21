@@ -86,6 +86,10 @@
       wx.setKeepScreenOn({
         keepScreenOn: true,
       });
+      if(options.shijian){
+        this.totalTime = options.shijian
+      }
+      
       this.phone = options.phone ? options.phone : uni.getStorageSync('phone')
       this.guid = GUID()
       this.initAndConnect();
@@ -177,7 +181,12 @@
             //console.log('tric:',this.num)
           } else {
             wlTool.setCallBack(null, null, 50)
-            this.uploadData()
+            if(this.totalTime == 60){
+              this.uploadData60()
+            }else{
+              this.uploadData()
+            }
+            
           }
         }
         this.$refs.wlecgcheckref.drawHR(resultObj)
@@ -226,7 +235,8 @@
           title: '上传中'
         })
         uni.request({
-          url: "https://server.mindyard.cn:84/get_jingtai_single_manb",
+          // url: "https://server.mindyard.cn:84/get_jingtai_single_manb",
+           url: "https://screen.mindyard.cn/test/get_jingtai_single_manb",
           method: 'POST',
           header: {
             user: "zzu",
@@ -249,6 +259,65 @@
                   })
                 }
               })
+            }else if(res.data.code == 202){
+              console.log("返回202");
+            }
+          },
+          fail(err) {
+            console.log(err);
+          }
+        })
+      },
+      async uploadData60() {
+        const vuePro = this
+        let newDataObj = {
+          data_ecg: gOrigenDataAry16.slice(0, 15000),
+          deviceSn:  uni.getStorageSync('deviceSN'),
+          ecg_type: 'JECGXL',
+          id: this.guid,
+          phone: uni.getStorageSync('phone'),
+          recordDate: new Date(),
+          sampleRate_ecg: 250,
+         patientCode: uni.getStorageSync('idCard')
+          
+        }
+        console.log('上传参数', newDataObj);
+        uni.showLoading({
+          title: '上传中'
+        })
+        uni.request({
+          // url: "https://server.mindyard.cn:84/get_jingtai_single_manb",
+          // url: "https://server.mindyard.cn:84/get_jingtai_emo",
+          url: "https://screen.mindyard.cn/test/get_jingtai_single_manb_emo",
+          method: 'POST',
+          header: {
+            user: "zzu",
+            password: "zzu123"
+          },
+          data: newDataObj,
+          success(res) {
+            uni.hideLoading()
+            console.log('心力能量上传结果', res);
+            if (res.data.code == 200) {
+              console.log('传递的id', vuePro.guid);
+              vuePro.$refs.uToast.show({
+                message: '上传成功',
+                type: 'success',
+                position: 'top',
+                duration: 1000,
+                complete() {
+
+                  let urll = "/pageCheck/ecgResult/pages/detail_xinli?id="+uni.getStorageSync('phone')+"&pid=" +vuePro.guid;
+                  uni.redirectTo({
+                    url: urll
+                  })
+                }
+              })
+            }else if(res.data.code == 202){
+              console.log("返回202");
+            }else{
+              console.log("返回的其他结果");
+              console.log(res);
             }
           },
           fail(err) {

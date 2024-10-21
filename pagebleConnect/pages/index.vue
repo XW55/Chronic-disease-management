@@ -70,7 +70,9 @@
           localName: ''
         },
         disabledBottomButton: false,
-        searchTimeCount: 20
+        searchTimeCount: 20,
+        // 时间
+        shijian:'',
       };
     },
     computed: {
@@ -102,7 +104,11 @@
         }
       }
     },
-    onLoad() {
+    onLoad(options) {
+      // console.log(options.item);
+      if(options.item){
+        this.shijian = options.item
+      }
       console.log('store')
       console.log(this.$store.state)
       uni.setStorageSync('deviceSN', '');
@@ -200,7 +206,11 @@
       selectDevice(item) {
         this.isShowConnectingModal = true
         this.activeDeviceName = item.localName
-        this.$refs.device.selectDevice(item)
+        if(this.shijian){
+          this.$refs.device.selectDevice(item,this.shijian)
+        }else{
+          this.$refs.device.selectDevice(item)
+        }
         this.endSearch()
       },
       closeConnectModal() {

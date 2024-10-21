@@ -1,5 +1,5 @@
 {
-    "name" : "Chronic disease management",
+    "name" : "心中医AI",
     "appid" : "__UNI__E8C1EF9",
     "description" : "",
     "versionName" : "1.0.0",
@@ -50,11 +50,12 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxa83372c43849ee93",
+        "appid" : "wxeb48d8c68ea5a025",
         "lazyCodeLoading" : "requiredComponents",
         "setting" : {
             "urlCheck" : false,
-            "es6" : true
+            "es6" : true,
+            "minified" : true
         },
         "usingComponents" : true
     },

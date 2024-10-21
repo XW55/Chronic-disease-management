@@ -1,5 +1,6 @@
 import App from './App';
 import Vue from 'vue';
+import urlApi from '@/common/request_url.js';
 import store from './store/index.js'; // 引入
 import '@/tools/useWebsocket.js'
 // #ifndef VUE3
@@ -54,6 +55,8 @@ uni.$showMsg = (title = '数据请求失败！', icon = 'none', duration = 1000)
 };
 Vue.prototype.$store = store;
 uni.$u.config.unit = 'rpx';
+Vue.prototype.$apiurl = urlApi;
+// $http.baseUrl = urlApi;
 
 
 // #ifdef VUE3

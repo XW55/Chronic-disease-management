@@ -55,6 +55,7 @@
         // 1 失败
         statusCode: 0,
         connectingLog: [],
+        shijian:''
       }
     },
     computed: {
@@ -83,9 +84,16 @@
         if (this.community) {
           uni.navigateBack()
         } else {
-          uni.redirectTo({
-            url: '../../pageCheck/pages/index'
-          })
+          if(this.shijian){
+            uni.redirectTo({
+              url: '../../pageCheck/pages/index?shijian='+this.shijian
+            })
+          }else{
+            uni.redirectTo({
+              url: '../../pageCheck/pages/index'
+            })
+          }
+          
         }
 
       },
@@ -120,7 +128,10 @@
           this.connectingLog.push("第" + times + "次连接")
         }
       },
-      selectDevice(item) {
+      selectDevice(item,shijian = '') {
+        if(shijian){
+          this.shijian = shijian
+        }
         uni.setStorageSync("deviceId", item.deviceId);
         uni.setStorageSync("deviceName", item.localName);
         this.connectingLog.push("开始连接" + item.localName)
