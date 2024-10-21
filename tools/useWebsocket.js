@@ -36,17 +36,17 @@ export function connectWebSocket(userid) {
     },
     onError: (err) => {
       console.log(`错误${err}`);
-      uni.showModal({
-        title: '提示',
-        content: '连接聊天服务器失败，是否尝试重连？',
-        success(res) {
-          if (res.confirm) {
-            socket.reconnect();
-          } else if (res.cancel) {
-            console.log('用户点击取消');
-          }
-        },
-      });
+      // uni.showModal({
+      //   title: '提示',
+      //   content: '连接聊天服务器失败，是否尝试重连？',
+      //   success(res) {
+      //     if (res.confirm) {
+      //       socket.reconnect();
+      //     } else if (res.cancel) {
+      //       console.log('用户点击取消');
+      //     }
+      //   },
+      // });
     },
   });
   socket.eventPatch.onOpen((msg, sk) => {
