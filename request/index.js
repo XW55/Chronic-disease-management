@@ -35,7 +35,18 @@ const request = (params) => {
       header,
       dataType: params.dataType || 'json',
       success: (result) => {
-        resolve(result.data);
+        console.log("拦截器中的值");
+        // 判断是否是401错误
+        if (result.data.code === 401) {
+          // 如果返回 401，跳转到登录页面
+          uni.removeStorageSync('token'); // 清除存储的 token
+          uni.navigateTo({
+            url: '/modif/login/login' // 跳转到登录页面
+          });
+          reject(new Error('未授权，请登录'));
+        } else {
+          resolve(result.data);
+        }
       },
       fail: (err) => {
         reject(err);
