@@ -475,7 +475,7 @@
     position: relative;
   }
 
-  /deep/ .u-button--mini {
+  ::v-deep .u-button--mini {
     margin: 15rpx;
     padding: 30rpx 65rpx !important;
   }
@@ -492,7 +492,7 @@
     font-size: 28rpx;
   }
 
-  /deep/ .u-input__content__field-wrapper__field {
+  ::v-deep .u-input__content__field-wrapper__field {
     background-color: #f2f4f6;
     padding: 20rpx;
     padding-right: 70rpx;

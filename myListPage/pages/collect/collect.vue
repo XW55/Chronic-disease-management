@@ -98,7 +98,7 @@
       font-size: 35rpx;
     }
 
-    /deep/ .u-button {
+    ::v-deep .u-button {
       width: 60%;
       height: 80rpx;
       border-radius: 25rpx;

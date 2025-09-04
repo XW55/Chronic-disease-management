@@ -116,18 +116,18 @@
   }
 
 
-  /deep/ .u-textarea {
+  ::v-deep .u-textarea {
     padding: 0 !important;
   }
 
-  /deep/ .u-textarea__field {
+  ::v-deep .u-textarea__field {
     height: 50px !important;
     background-color: #f2f4f6;
     border-radius: 15rpx;
     padding: 20rpx;
   }
 
-  /deep/ .u-icon__icon--warning {
+  ::v-deep .u-icon__icon--warning {
     font-size: 38rpx !important;
   }
 </style>

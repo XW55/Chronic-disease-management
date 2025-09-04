@@ -228,28 +228,28 @@
     overflow: scroll;
   }
 
-  /deep/ .u-subsection--subsection {
+  ::v-deep .u-subsection--subsection {
     height: 70rpx !important;
   }
 
-  /deep/ .u-subsection__bar {
+  ::v-deep .u-subsection__bar {
     height: 70rpx !important;
     border-radius: 20rpx !important;
   }
 
-  /deep/ .u-subsection__item {
+  ::v-deep .u-subsection__item {
     border: #fff !important;
   }
 
-  /deep/ .u-swipe-action-item__right__button {
+  ::v-deep .u-swipe-action-item__right__button {
     border-radius: 20rpx !important;
   }
 
-  /deep/ .u-swipe-action-item__content {
+  ::v-deep .u-swipe-action-item__content {
     border-radius: 20rpx;
   }
 
-  /deep/ .u-swipe-action-item {
+  ::v-deep .u-swipe-action-item {
     margin: 15rpx auto;
   }
 </style>

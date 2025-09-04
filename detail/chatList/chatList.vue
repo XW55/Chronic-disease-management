@@ -58,7 +58,7 @@
   }
 </style>
 <style lang="scss" scoped>
-  /deep/ .u-list-item {
+  ::v-deep .u-list-item {
     position: relative;
   }
 </style>

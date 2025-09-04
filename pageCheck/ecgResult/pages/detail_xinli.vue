@@ -748,7 +748,7 @@ $main-color: #06cc9c;
     }
   }
 
-  /deep/ .uni-easyinput {
+  ::v-deep .uni-easyinput {
     margin-top: 25rpx;
   }
 }
@@ -1365,7 +1365,7 @@ $main-color: #06cc9c;
 }
 
 // 弹窗中的值选中状态
-/deep/ .uni-tag--primary {
+::v-deep .uni-tag--primary {
   background-color: #00ca99 !important;
   border-color: #00ca99 !important;
   color: #fff !important;
@@ -1379,26 +1379,26 @@ $main-color: #06cc9c;
   color: #755555 !important;
 }
 
-/deep/ .uni-tag--inverted {
+::v-deep .uni-tag--inverted {
   background-color: #f8f8fa !important;
 }
 
-/deep/ .uni-tag--primary--inverted {
+::v-deep .uni-tag--primary--inverted {
   border-color: #f8f8fa !important;
 }
 
-/deep/ .selectST-tags uni-tag {
+::v-deep .selectST-tags uni-tag {
   width: 32% !important;
   height: 69rpx !important;
 }
 
-/deep/ .uni-tag-text--primary {
+::v-deep .uni-tag-text--primary {
   display: block !important;
   width: 100% !important;
   text-align: center !important;
 }
 
-/deep/ .uni-tag {
+::v-deep .uni-tag {
   padding: 7px !important;
 }
 
@@ -1413,7 +1413,7 @@ $main-color: #06cc9c;
   display: flex;
 }
 
-.tanchuanganniu /deep/ .quxiao {
+.tanchuanganniu ::v-deep .quxiao {
   width: 50% !important;
   background-color: #ffffff;
   color: #878787;
@@ -1421,13 +1421,13 @@ $main-color: #06cc9c;
   border-radius: 10px 0 0 10px;
 }
 
-.tanchuanganniu /deep/ .queding {
+.tanchuanganniu ::v-deep .queding {
   background-color: #00ca99;
   width: 50%;
   border-radius: 0 10px 10px 0;
 }
 
-// .selectST-tags /deep/ .data-v-3db4c624:last-chil{
+// .selectST-tags ::v-deep .data-v-3db4c624:last-chil{
 //   margin-left: 2rpx;
 // }
 .selectST-tags uni-tag:last-child {

@@ -347,19 +347,19 @@
     background-color: #fff;
   }
 
-  /deep/ .u-form-item__body__left {
+  ::v-deep .u-form-item__body__left {
     width: 160rpx !important;
   }
 
-  // /deep/ .u-picker__view__column {
+  // ::v-deep .u-picker__view__column {
   //   height: 280rpx !important;
   // }
 
-  // /deep/ .u-picker__view__column__item {
+  // ::v-deep .u-picker__view__column__item {
   //   line-height: 34px !important;
   // }
 
-  // /deep/ .u-picker {
+  // ::v-deep .u-picker {
   //   height: 500rpx;
   // }
 
@@ -367,7 +367,7 @@
     display: flex;
     justify-content: space-around;
 
-    /deep/ .u-button--square {
+    ::v-deep .u-button--square {
       margin: 20rpx;
     }
   }

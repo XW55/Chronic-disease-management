@@ -542,11 +542,11 @@
     background-color: #fff;
   }
 
-  /deep/ .u-textarea {
+  ::v-deep .u-textarea {
     padding: 0 !important;
   }
 
-  /deep/ .u-textarea__field {
+  ::v-deep .u-textarea__field {
     height: 70px !important;
     background-color: #f2f4f6;
     border-radius: 15rpx;

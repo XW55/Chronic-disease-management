@@ -247,7 +247,7 @@
     white-space: nowrap;
 
 
-    /deep/ checkbox-group {
+    ::v-deep checkbox-group {
       display: flex;
       align-items: center;
     }

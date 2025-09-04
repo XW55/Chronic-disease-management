@@ -1,13 +1,13 @@
 <template>
   <view class="main">
     <view class="container">
-      <image class="fitcard" src="../static/fitcard.png" />
+      <!-- <image class="fitcard" src="../static/fitcard.png" /> -->
       <view class="phone-container">
         <view class="circle1"></view>
         <view class="circle2"></view>
-        <image class="phone" src="../static/phone.png" />
+        <!-- <image class="phone" src="../static/phone.png" /> -->
       </view>
-      <text class="count-down">{{interval + 's'}}</text>
+      <text class="count-down">{{ interval + 's' }}</text>
     </view>
   </view>
 </template>
@@ -22,8 +22,8 @@ export default {
     interval: {
       type: Number,
       default: 9,
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -34,7 +34,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, .20);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 .container {
   position: absolute;
@@ -45,7 +45,7 @@ export default {
   align-items: center;
   width: 654rpx;
   height: 680rpx;
-  background-color: #FFF;
+  background-color: #fff;
   border-radius: 24rpx;
   transform: translate(-50%);
   overflow: hidden;
@@ -85,7 +85,7 @@ export default {
   top: 144rpx;
   width: 718rpx;
   height: 718rpx;
-  background-color: rgba(244, 244, 246, .4);
+  background-color: rgba(244, 244, 246, 0.4);
   border-radius: 100%;
   animation: circleAni 2s ease-out infinite;
 }

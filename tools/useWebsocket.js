@@ -3,12 +3,16 @@ import Store from '@/store/index.js';
 import Socket from '@/tools/socket.js';
 
 export function connectWebSocket(userid) {
+  // console.log('socket', userid);
   const socket = new Socket({
 
     // url: `ws://192.168.1.11:9002/websocket/${userid}`,
-    url: `wss://chronic.mindyard.cn/ws/websocket/${userid}`,
+    url: `wss://chronic.mindyard.cn/chronicChat/${userid}`,
     onOpen: (res) => {
-      console.log('连接成功');
+      // console.log('连接成功');
+      uni.showToast({
+        title: '连接成功'
+      })
     },
     onClose: (res, sk) => {
       console.log('关闭成功');
@@ -35,7 +39,7 @@ export function connectWebSocket(userid) {
       console.log(data);
     },
     onError: (err) => {
-      console.log(`错误${err}`);
+      console.log(`错误${ JSON.stringify(err) }`);
       // uni.showModal({
       //   title: '提示',
       //   content: '连接聊天服务器失败，是否尝试重连？',
