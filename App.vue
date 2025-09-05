@@ -1,8 +1,5 @@
 <script>
 import { getUserInfoByCode } from '@/request/request.js'
-// import {
-//   connectWebSocket
-// } from '@/tools/useWebsocket.js'
 export default {
   onLaunch: function () {},
   onShow: function () {
