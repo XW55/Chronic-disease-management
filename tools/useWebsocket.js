@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Store from '@/store/index.js';
-import Socket from '@/tools/socket.js';
+// import Socket from '@/tools/socket.js';
 
 export function connectWebSocket(userid) {
   // console.log('socket', userid);

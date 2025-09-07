@@ -16,7 +16,7 @@
     <view class="title">验证码登录</view>
     <view class="btn inputBox">
       <text class="iconfont icon-shouji"></text>
-      <input type="number" style="width: 90%" placeholder="请输入手机号" v-model="userPhone" />
+      <input type="number" maxlength="11" style="width: 90%" placeholder="请输入手机号" v-model="userPhone" />
     </view>
     <view class="btn inputBox">
       <text style="font-size: 45rpx" class="iconfont icon-yanzhengma"></text>
@@ -46,9 +46,8 @@
 </template>
 
 <script>
-import { getCode, userLogin } from '@/request/request.js'
-// import { connectWebSocket } from '@/tools/useWebsocket.js'
-import webSocketManager from '@/utils/websocket.js'
+import { getCode, userLogin, getUserInfoByCode } from '@/request/request.js'
+import webSocketManager from '@/tools/webSocket.js'
 export default {
   data() {
     return {
@@ -84,10 +83,17 @@ export default {
         codeText: '获取验证码',
         codeStatus: true,
       },
+      systemInfo: {},
     }
   },
   onLoad() {
     this.show1 = false
+    uni.getSystemInfo({
+      success: (res) => {
+        console.log(res)
+        this.systemInfo = res
+      },
+    })
   },
   methods: {
     tip() {
@@ -127,17 +133,13 @@ export default {
 
     // 获取验证码
     async getPhonecode() {
-      console.log('确实点击了')
       if (!this.codeBtn.codeStatus) return
       // 判断验证码按钮是否可点击
       this.codeBtn.codeStatus = false
       const res = await getCode({
-        username: this.userPhone,
+        mobile: this.userPhone,
       })
-      console.log(res)
-      if (res.code === 200) {
-        this.uuid = res.uuid
-      }
+      this.uuid = res.uuid
       let timerId = setInterval(() => {
         let codetime = this.codeBtn.codeTime
         codetime--
@@ -162,57 +164,35 @@ export default {
           })
           return
         }
+        const { deviceId, deviceModel, deviceBrand, system, platform } = this.systemInfo
         const res = await userLogin({
-          username: this.userPhone,
-          code: this.userPwdPhone,
+          mobile: this.userPhone,
+          smsCode: this.userPwdPhone,
           uuid: this.uuid,
+          deviceId,
+          deviceModel: deviceBrand ? deviceBrand + deviceModel : deviceModel,
+          systemType: platform,
+          systemVersions: system,
         })
-        if (res.code === 200) {
-          console.log(res)
-          uni.setStorageSync('token', res.token)
-          uni.setStorageSync('phone', this.userPhone)
-          uni.setStorageSync('userid', res.patientId)
-          if (res.patientCode) {
-            uni.setStorageSync('idCard', res.patientCode)
-          }
-          // connectWebSocket(res.patientId)
-          // 登录成功后初始化连接
-          webSocketManager
-            .init({
-              url: 'ws://your-websocket-server-url',
-              // header: {},
-              // protocols: []
-            })
-            .then(() => {
-              console.log('连接成功')
-            })
-            .catch((err) => {
-              console.error('连接失败', err)
-            })
+        console.log('用户信息', res)
+        uni.setStorageSync('token', res.token)
+        uni.setStorageSync('phone', this.userPhone)
 
-          if (res.BindingState) {
-            this.$refs.uToast.show({
-              message: '登录成功',
-              type: 'success',
-              position: 'top',
-              duration: 1000,
-              complete() {
-                uni.switchTab({
-                  url: '/pages/index/index',
-                })
-              },
-            })
-          } else {
-            uni.navigateTo({
-              url: '/modif/signIn/signIn',
-            })
-          }
-        } else {
+        if (res.BindingState) {
           this.$refs.uToast.show({
-            message: res.msg,
-            type: 'warning',
+            message: '登录成功',
+            type: 'success',
             position: 'top',
             duration: 1000,
+            complete() {
+              uni.switchTab({
+                url: '/pages/index/index',
+              })
+            },
+          })
+        } else {
+          uni.navigateTo({
+            url: '/modif/signIn/signIn',
           })
         }
       }

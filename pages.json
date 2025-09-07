@@ -200,10 +200,23 @@
           }
         },
         {
+          "path": "newChat/newChat",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
           "path": "chatList/chatList",
           "style": {
             "navigationBarTitleText": "医生列表",
             "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "newChat/newChat",
+          "style": {
+            "navigationBarTitleText": ""
           }
         }
       ]

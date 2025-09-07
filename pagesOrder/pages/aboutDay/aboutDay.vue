@@ -100,7 +100,7 @@
         }
       },
       async getUser() {
-        const res = await getUserInfoByCode(uni.getStorageSync('idCard'))
+        const res = await getUserInfoByCode()
         console.log('111', res);
         if (res.code !== 200) return uni.$showMsg(res.msg)
         this.userObj.patientName = res.data.patientName

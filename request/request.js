@@ -2,7 +2,7 @@ import request from './index.js';
 // 获取验证码
 export const getCode = (data) => {
   return request({
-    url: '/sms/code',
+    url: '/patientApp/sms',
     method: 'POST',
     data,
   });
@@ -10,7 +10,7 @@ export const getCode = (data) => {
 // 携带 uuid 和 验证码登录
 export const userLogin = (data) => {
   return request({
-    url: '/patientLogin',
+    url: '/patientApp/login',
     method: 'POST',
     data,
   });
@@ -18,15 +18,15 @@ export const userLogin = (data) => {
 // 用户提交表单
 export const initUserInfo = (data) => {
   return request({
-    url: '/patient_app/patient/addPatient',
+    url: '/patientApp/patient/saveInfo',
     method: 'POST',
     data,
   });
 };
-// 用户通过身份证查询个人信息
+// 用户通过手机号查询个人信息
 export const getUserInfoByCode = (data) => {
   return request({
-    url: `/patient_app/patient/getPatientByCode?code=${data}`,
+    url: `/patientApp/patient/queryInfo`,
     method: 'GET',
   });
 };
@@ -289,14 +289,14 @@ export const getMedicineHisDetail = (data) => {
 
 export const getDoctorListChat = (data) => {
   return request({
-    url: `/appPatient/doctor/getDocList?patientCode=${data}`,
+    url: `/patientApp/group/getGroupList`,
     method: 'GET',
   });
 };
 // 获取聊天历史
 export const getChatHis = (data) => {
   return request({
-    url: `/appPatient/doctor/getMsgHistory`,
+    url: `/chatting/getChattingList`,
     method: 'GET',
     data,
   });

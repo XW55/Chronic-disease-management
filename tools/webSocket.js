@@ -2,7 +2,7 @@
 import {
   MyWebSocket,
   Message
-} from '@/uni_modules/x-web-socket/js_sdk/index.js'
+} from './socket.js'
 
 class WebSocketManager {
   constructor() {
@@ -30,35 +30,15 @@ class WebSocketManager {
 
       this.instance.init(options)
         .then(res => {
-          console.log('WebSocket 连接成功', res)
           this.isConnected = true
           this.reconnectAttempts = 0
           resolve(res)
 
-          // 设置事件监听
-          this.setupEventListeners()
         })
         .catch(err => {
-          console.error('WebSocket 连接失败', err)
           this.tryReconnect(options)
           reject(err)
         })
-    })
-  }
-
-  // 设置事件监听
-  setupEventListeners() {
-    // 监听连接关闭
-    this.instance.onClose(() => {
-      console.log('WebSocket连接关闭')
-      this.isConnected = false
-      this.tryReconnect(this.instance.options)
-    })
-
-    // 监听错误
-    this.instance.onError((error) => {
-      console.error('WebSocket错误:', error)
-      this.isConnected = false
     })
   }
 

@@ -1,7 +1,12 @@
 <script>
 import { getUserInfoByCode } from '@/request/request.js'
 export default {
-  onLaunch: function () {},
+  async onLaunch() {
+    const res = await getUserInfoByCode()
+    if (res && Object.keys(res).length) {
+      this.$store.commit('user/SET_USERINFO', res)
+    }
+  },
   onShow: function () {
     // console.log('App Show')
   },

@@ -4,20 +4,45 @@ import Vuex from 'vuex';
 // 血压蓝牙
 import blood from './blood.js';
 import chatStore from './chat.js';
+import user from './user.js';
 // 将 vuex 安装为 Vue 的插件
 Vue.use(Vuex);
+
+// const modulesFiles = require.context('./modules', true, /\.js$/);
+
+// const modules = modulesFiles.keys().reduce((modules, modulePath) => {
+//   const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1');
+//   const value = modulesFiles(modulePath);
+//   modules[moduleName] = value.default;
+//   return modules;
+// }, {});
+
+// const store = new Vuex.Store({
+//   modules,
+// });
+
 // 创建 store 的实例对象并向外共享
 export default new Vuex.Store({
   // 挂载 store 模块
   modules: {
     blood,
     chatStore,
+    user
   },
   state: {
     deviceName: '',
     deviceSN: '',
     deviceVersion: '',
     bleConnectState: false,
+
+    // 
+    // 文字大小
+    page_font_size: uni.getStorageSync('page_font_size') || 'page_font_size',
+    // 导航栏高度
+    StatusBar: {
+      statusBar: 0,
+      customBar: 0,
+    },
   },
   // 相当于computed
   getters: {
@@ -59,5 +84,19 @@ export default new Vuex.Store({
     changeBleConnectStatus: (state, bleConnectState) => {
       state.bleConnectState = bleConnectState;
     },
+
+
+    // 设置导航栏高度
+    SET_STATUSBAR(state, value) {
+      state.StatusBar = value
+    },
+    SET_page_font_size(state, value) {
+      state.page_font_size = value
+      uni.setStorage({
+        key: 'page_font_size',
+        data: value,
+        success: function() {}
+      });
+    }
   },
 });

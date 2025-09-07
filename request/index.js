@@ -1,64 +1,82 @@
-// 记录异步请求的次数
-let num = 0;
-// 统一的请求根路径
-const baseUrl = 'https://chronic.mindyard.cn/prod-api';
-// const baseUrl = 'http://192.168.1.11:9002';
-const request = (params) => {
-  console.log('请求参数是', params);
-  const header = {
-    ...params.header,
-  };
-  // 默认添加token
-  header.Authorization = uni.getStorageSync('token');
-  // 判断 url 需要额外的请求头
-  if (params.method === 'POST' || params.method === 'PUT') {
-    console.log('这是post请求');
-    header['Content-Type'] = 'application/json';
-  }
-  // 每次调用该函数就先 ++
-  num++;
-  // 加载中提示消息
-  if (num === 1) {
+const API_BASE_URL = {
+  development: {
+    // base: 'https://ecg.mindyard.cn/prod-api',
+    base: 'http://172.28.80.29:6039',
+    // algorithm: 'https://screen.mindyard.cn:84',
+    // algorithmUpload: 'https://server.mindyard.cn:84',
+    // algorithmUpload: 'https://screen.mindyard.cn/test',
+  },
+  production: {
+    base: 'https://ecg.mindyard.cn/prod-api',
+    algorithm: 'https://screen.mindyard.cn:84',
+    algorithmUpload: 'https://server.mindyard.cn:84',
+  },
+}
+
+const request = (option, header = {}) => {
+  const base_url = API_BASE_URL[process.env.NODE_ENV][option.urlType || 'base'];
+
+  if (!option.hideLoading) {
     uni.showLoading({
-      title: '加载中',
-      mask: true,
+      mask: true
     });
   }
-  // 返回出去一个 promise
+  header = {
+    'Content-Type': 'application/json',
+    dataType: 'json',
+    ...header,
+  }
+  if (option.auth !== false) header.Authorization = 'Bearer ' + uni.getStorageSync('token') || ''
   return new Promise((resolve, reject) => {
-    // 网络请求
     uni.request({
-      // 对参数使用展开运算符进行展开
-      ...params,
-      // 根路径拼接上传递过来的路径
-      url: baseUrl + params.url,
+      url: base_url + option.url,
+      method: option.method || 'GET',
+      // withCredentials: true,
       header,
-      dataType: params.dataType || 'json',
-      success: (result) => {
-        console.log("拦截器中的值");
-        // 判断是否是401错误
-        if (result.data.code === 401) {
-          // 如果返回 401，跳转到登录页面
-          uni.removeStorageSync('token'); // 清除存储的 token
-          uni.navigateTo({
-            url: '/modif/login/login' // 跳转到登录页面
-          });
-          reject(new Error('未授权，请登录'));
-        } else {
-          resolve(result.data);
+      data: option.data,
+      success: (res) => {
+        const {
+          data
+        } = res
+        if (data.code === 401) {
+          uni.removeStorageSync('token')
+          uni.reLaunch({
+            url: '/modif/login/login'
+          })
+          setTimeout(() => {
+            uni.showToast({
+              icon: 'none',
+              title: data.msg
+            })
+          }, 0)
+          return reject(res.data)
         }
+
+        if (res.statusCode !== 200) return reject(data)
+        if (data.code === 200 || data.code === '200') return resolve(data.data || data)
+        // uni.showModal({
+        //   title: '提示',
+        //   showCancel: false,
+        //   confirmColor: '#3371FF',
+        //   content: data.message,
+        //   success: () => {
+        //     uni.hideLoading();
+        //   },
+        // });
+        return reject(data)
       },
       fail: (err) => {
-        reject(err);
+        uni.showToast({
+          icon: 'none',
+          title: '服务器请求失败'
+        })
+        reject(err)
       },
-      complete: () => {
-        // 在所有的请求完毕后关闭消息提示
-        num--;
-        if (num === 0) {
-          uni.hideLoading();
-        }
+      complete: (err) => {
+        uni.hideLoading()
       },
-    });
-  });
-};
-export default request;
+    })
+  })
+}
+
+export default request
