@@ -1,7 +1,7 @@
 const API_BASE_URL = {
   development: {
     // base: 'https://ecg.mindyard.cn/prod-api',
-    base: 'http://172.28.80.29:6039',
+    base: 'http://172.28.80.29:9101',
     // algorithm: 'https://screen.mindyard.cn:84',
     // algorithmUpload: 'https://server.mindyard.cn:84',
     // algorithmUpload: 'https://screen.mindyard.cn/test',

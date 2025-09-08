@@ -1,49 +1,50 @@
 <template>
   <view class="chat-container">
     <!-- 聊天内容区域 -->
-    <scroll-view @click="showExtra = false" class="messages-box" scroll-y :scroll-into-view="scrollToView" :scroll-with-animation="true">
+    <scroll-view @click="closeExtra" class="messages-box" scroll-y :scroll-into-view="scrollToView" :scroll-with-animation="true" :style="{ height: scrollViewHeight + 'px' }">
       <view v-for="(msg, index) in messageList" :key="index" :id="'msg-' + index">
         <!-- 时间提示 -->
-        <view class="time-tip">{{ msg.time }}</view>
+        <view v-if="msg.showTime" class="time-tip">{{ msg.time }}</view>
 
         <!-- 我的消息（右） -->
         <view v-if="msg.type === 'my'" class="message-item my">
-          <view class="bubble bubble-my">{{ msg.content }}</view>
+          <view class="bubble bubble-my">
+            <text v-if="msg.contentType === 'text'">{{ msg.content }}</text>
+            <image v-else-if="msg.contentType === 'image'" :src="msg.content" mode="widthFix" class="msg-image"></image>
+          </view>
           <view class="avatar">
-            <image src="https://cdn.uviewui.com/uview/album/1.jpg" mode="aspectFill"></image>
+            <image src="/static/my-active.png" mode="aspectFill"></image>
           </view>
         </view>
 
         <!-- 对方消息（左） -->
         <view v-else class="message-item other">
           <view class="avatar">
-            <image src="https://cdn.uviewui.com/uview/album/1.jpg" mode="aspectFill"></image>
+            <image src="/static/my-active.png" mode="aspectFill"></image>
           </view>
-          <view class="bubble bubble-other">{{ msg.content }}</view>
+          <view class="bubble bubble-other">
+            <text v-if="msg.contentType === 'text'">{{ msg.content }}</text>
+            <image v-else-if="msg.contentType === 'image'" :src="msg.content" mode="widthFix" class="msg-image"></image>
+          </view>
         </view>
       </view>
-      <!-- 空白占位，用于滚动到底部 -->
-      <!-- <view style="height: 50px"></view> -->
     </scroll-view>
 
     <!-- 底部输入区域 -->
-    <view class="input-area">
+    <view class="input-area" :style="{ bottom: keyboardHeight + 'px' }">
       <!-- 输入框 + 按钮 -->
       <view class="input-box">
-        <!--        <view class="btn-plus" >
-          <text>+</text>
-        </view> -->
-        <!-- <u-input class="input-field" v-model="inputMessage" @confirm="sendMessage" placeholder="请输入消息" @focus="onFocus" /> -->
-        <u--textarea autoHeight v-model="inputMessage" :cursorSpacing="50" @confirm="sendMessage" @focus="onFocus" placeholder="请输入消息"></u--textarea>
-        <u-transition :show="inputMessage != ''">
-          <view class="btn-send" v-show="inputMessage != ''">
-            <u-button type="primary" @click="sendMessage">发送</u-button>
-          </view>
-        </u-transition>
-        <u-transition :show="inputMessage == ''">
-          <u-icon v-show="inputMessage == ''" @click="toggleExtra" style="margin-left: 20rpx" name="plus-circle"></u-icon>
-        </u-transition>
+        <u--textarea v-model="inputMessage" :cursorSpacing="50" :autoHeight="true" @confirm="sendMessage" @focus="onFocus" placeholder="请输入消息" :adjustPosition="false"></u--textarea>
+
+        <view class="btn-send" v-if="inputMessage">
+          <u-button type="primary" @click="sendMessage">发送</u-button>
+        </view>
+
+        <view class="btn-plus" v-else>
+          <u-icon @click="toggleExtra" name="plus-circle" size="26"></u-icon>
+        </view>
       </view>
+
       <!-- 功能扩展区 -->
       <u-transition :show="showExtra" mode="fade-up">
         <view v-show="showExtra" class="extra-box">
@@ -59,6 +60,10 @@
             <image src="/static/video-call.png"></image>
             <text>视频</text>
           </view>
+          <view class="extra-item" @click="sendFile">
+            <image src="/static/file.png"></image>
+            <text>文件</text>
+          </view>
         </view>
       </u-transition>
     </view>
@@ -71,12 +76,27 @@ export default {
     return {
       inputMessage: '', // 输入框内容
       showExtra: false, // 是否显示功能扩展
+      keyboardHeight: 0, // 键盘高度
+      scrollViewHeight: 0, // 滚动区域高度
       messageList: [
-        { time: '今天', type: 'other', content: '你好，今天过得怎么样？', time: '18:30' },
-        { type: 'my', content: '挺好的，谢谢！你在忙吗？' },
-        { type: 'other', content: '刚开完会，有点累 😩' },
+        {
+          time: '18:30',
+          showTime: true,
+          type: 'other',
+          contentType: 'text',
+          content: '你好，今天过得怎么样？',
+        },
+        {
+          type: 'my',
+          contentType: 'text',
+          content: '挺好的，谢谢！你在忙吗？',
+        },
+        {
+          type: 'other',
+          contentType: 'text',
+          content: '刚开完会，有点累 😩',
+        },
       ],
-      nextId: 3, // 消息 ID 计数器（用于 scroll-into-view）
     }
   },
   computed: {
@@ -85,54 +105,118 @@ export default {
       return 'msg-' + (this.messageList.length - 1)
     },
   },
+  onLoad() {
+    this.calculateScrollViewHeight()
+
+    // 监听键盘高度变化
+    uni.onKeyboardHeightChange((res) => {
+      this.keyboardHeight = res.height
+      if (res.height > 0) {
+        // 键盘弹出时调整滚动区域高度
+        const systemInfo = uni.getSystemInfoSync()
+        this.scrollViewHeight = systemInfo.windowHeight - res.height - 120
+        this.showExtra = false
+      } else {
+        // 键盘收起时恢复滚动区域高度
+        this.calculateScrollViewHeight()
+      }
+      // 确保滚动到底部
+      this.$nextTick(() => {
+        this.scrollToBottom()
+      })
+    })
+  },
   methods: {
+    calculateScrollViewHeight() {
+      const systemInfo = uni.getSystemInfoSync()
+      // 计算滚动区域高度（窗口高度 - 输入区域高度 - 状态栏高度等）
+      this.scrollViewHeight = systemInfo.windowHeight - 120
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        this.scrollToView = 'msg-' + (this.messageList.length - 1)
+      })
+    },
+    closeExtra() {
+      this.showExtra = false
+    },
     onFocus() {
       this.showExtra = false // 输入框聚焦时隐藏扩展
     },
     toggleExtra() {
       this.showExtra = !this.showExtra
+      if (this.showExtra) {
+        // 展开扩展区域时隐藏键盘
+        uni.hideKeyboard()
+      }
     },
     sendMessage() {
       if (!this.inputMessage.trim()) return
 
       this.messageList.push({
         type: 'my',
+        contentType: 'text',
         content: this.inputMessage,
       })
 
       this.inputMessage = ''
       this.showExtra = false
+      this.scrollToBottom()
 
       // 模拟对方回复（可选）
       setTimeout(() => {
         this.messageList.push({
           type: 'other',
+          contentType: 'text',
           content: '收到，稍后回复你~',
         })
+        this.scrollToBottom()
       }, 1000)
     },
-    // 以下为扩展功能（仅演示）
+    // 发送图片
     sendImage() {
       uni.chooseImage({
         count: 1,
         success: (res) => {
           this.messageList.push({
             type: 'my',
-            content: '[图片]',
+            contentType: 'image',
+            content: res.tempFilePaths[0],
           })
+          this.showExtra = false
+          this.scrollToBottom()
         },
       })
     },
     sendVoice() {
       uni.showToast({ title: '语音发送', icon: 'none' })
+      this.showExtra = false
     },
     sendLocation() {
       uni.getLocation({
         success: () => {
           this.messageList.push({
             type: 'my',
+            contentType: 'text',
             content: '[位置]',
           })
+          this.showExtra = false
+          this.scrollToBottom()
+        },
+      })
+    },
+    sendFile() {
+      uni.chooseMessageFile({
+        count: 1,
+        type: 'all',
+        success: (res) => {
+          this.messageList.push({
+            type: 'my',
+            contentType: 'text',
+            content: '[文件]',
+          })
+          this.showExtra = false
+          this.scrollToBottom()
         },
       })
     },
@@ -149,12 +233,14 @@ export default {
   flex-direction: column;
   height: 100vh;
   background-color: #ededed;
+  position: relative;
 }
 
 /* 消息列表 */
 .messages-box {
-  flex: 1;
   padding: 20rpx 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
 }
 
 .time-tip {
@@ -175,7 +261,7 @@ export default {
   height: 80rpx;
   border-radius: 10rpx;
   overflow: hidden;
-  margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
 .message-item .avatar image {
@@ -185,10 +271,16 @@ export default {
 
 .bubble {
   max-width: 70%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  word-break: break-all;
   line-height: 1.5;
+}
+
+.msg-image {
+  max-width: 300rpx;
+  border-radius: 8rpx;
 }
 
 .bubble-my {
@@ -196,35 +288,36 @@ export default {
   color: white;
   margin-right: 20rpx;
   position: relative;
-  &::before {
+  &::after {
     content: '';
     position: absolute;
     top: 50%;
-    right: -10rpx;
+    right: -16rpx;
     transform: translateY(-50%);
     width: 0;
     height: 0;
-    border-top: 15rpx solid transparent;
-    border-left: 15rpx solid #07c160;
-    border-bottom: 15rpx solid transparent;
+    border-top: 16rpx solid transparent;
+    border-left: 16rpx solid #07c160;
+    border-bottom: 16rpx solid transparent;
   }
 }
 
 .bubble-other {
   background-color: white;
   color: #333;
+  margin-left: 20rpx;
   position: relative;
   &::before {
     content: '';
     position: absolute;
     top: 50%;
-    left: -10rpx;
+    left: -16rpx;
     transform: translateY(-50%);
     width: 0;
     height: 0;
-    border-top: 15rpx solid transparent;
-    border-right: 15rpx solid #fff;
-    border-bottom: 15rpx solid transparent;
+    border-top: 16rpx solid transparent;
+    border-right: 16rpx solid #fff;
+    border-bottom: 16rpx solid transparent;
   }
 }
 
@@ -233,36 +326,32 @@ export default {
   justify-content: flex-end;
 }
 
-.my .bubble {
-  margin-left: 20rpx;
-}
-
 /* 对方消息靠左 */
 .other {
   justify-content: flex-start;
-}
-
-.other .bubble {
-  margin-right: 20rpx;
 }
 
 /* 底部输入区 */
 .input-area {
   background-color: #f7f7f7;
   border-top: 1rpx solid #d5d5d5;
-  padding-bottom: env(safe-area-inset-bottom);
-  // padding-bottom: 40rpx;
-  // position: fixed;
-  // bottom: 0;
+  padding: 20rpx;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: bottom 0.3s ease;
+  z-index: 10;
 }
 
 /* 功能扩展区 */
 .extra-box {
   display: flex;
   flex-wrap: wrap;
-  padding: 10px;
-  background-color: #efefef;
-  border-top: 1px solid #ddd;
+  padding: 20rpx 0;
+  background-color: #fff;
+  border-top: 1rpx solid #ddd;
+  margin-top: 20rpx;
 }
 
 .extra-item {
@@ -274,13 +363,16 @@ export default {
 }
 
 .extra-item image {
-  width: 60rpx;
-  height: 60rpx;
+  background-color: #f2f4f6;
+  padding: 20rpx;
+  border-radius: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
   margin-bottom: 10rpx;
 }
 
 .extra-item text {
-  font-size: 14px;
+  font-size: 24rpx;
   color: #333;
 }
 
@@ -288,19 +380,10 @@ export default {
 .input-box {
   display: flex;
   align-items: center;
-  padding: 20rpx;
-  background-color: #f5f5f5;
 }
 
 .btn-plus {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #666;
-  margin-right: 10px;
+  margin-left: 20rpx;
 }
 
 .btn-send {

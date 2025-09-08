@@ -1,0 +1,32 @@
+{
+  "ecg_card": {
+    "serviceId": "974CBE30-3E83-465E-ACDE-6F92FE712134",
+    "characteristicId": {
+      "write": "974CBE32-3E83-465E-ACDE-6F92FE712134",
+      "notify": "974CBE31-3E83-465E-ACDE-6F92FE712134"
+    }
+  },
+  "ecg_belt": {
+    "serviceId": "DE5BF728-D711-4E47-AF26-65E3012A5DC7",
+    "characteristicId": {
+      "write": "DE5BF72A-D711-4E47-AF26-65E3012A5DC7",
+      "notify": "DE5BF729-D711-4E47-AF26-65E3012A5DC7"
+    }
+  },
+  "smart_watch": {
+    "blood": {
+      "serviceId": "6E40FFF0-B5A3-F393-E0A9-E50E24DCCA9E",
+      "characteristicId": {
+        "write": "6E400002-B5A3-F393-E0A9-E50E24DCCA9E",
+        "notify": "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+      }
+    },
+    "ppg": {
+      "serviceId": "DE5BF728-D711-4E47-AF26-65E3012A5DC7",
+      "characteristicId": {
+        "write": "DE5BF72A-D711-4E47-AF26-65E3012A5DC7",
+        "notify": "DE5BF729-D711-4E47-AF26-65E3012A5DC7"
+      }
+    }
+  }
+}

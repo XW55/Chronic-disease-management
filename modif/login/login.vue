@@ -177,6 +177,18 @@ export default {
         console.log('用户信息', res)
         uni.setStorageSync('token', res.token)
         uni.setStorageSync('phone', this.userPhone)
+        // 连接webSocket
+
+        // 登录成功后初始化连接
+        // webSocketManager.init({
+        //   url: 'http://172.28.80.29:9111',
+        //   // header: {},
+        //   // protocols: []
+        // }).then(() => {
+        //   console.log('连接成功')
+        // }).catch(err => {
+        //   console.error('连接失败', err)
+        // })
 
         if (res.BindingState) {
           this.$refs.uToast.show({
