@@ -1,6 +1,7 @@
 <template>
   <view>
-    <u-list @scrolltolower="scrolltolower">
+    <!-- @scrolltolower="scrolltolower" -->
+    <u-list>
       <u-list-item v-for="(item, index) in list" :key="index" style="position: relative">
         <u-badge :absolute="true" style="z-index: 999" :offset="offset" :value="item.unReadCount" type="error"></u-badge>
         <u-cell :title="item.doctorName" :isLink="true" :label="item.msg || ''" @click="gotoDetail(item.doctorName, item.doctorId, item.unReadCount)">

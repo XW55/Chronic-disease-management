@@ -1,11 +1,69 @@
 <script>
 import { getUserInfoByCode } from '@/request/request.js'
+import TIM from '@tencentcloud/chat'
+import { genTestUserSig } from './debug/GenerateTestUserSig.js'
+
+// 首先需要通过 uni.requireNativePlugin("ModuleName") 获取 module
+const TUICallKit = uni.requireNativePlugin('TencentCloud-TUICallKit')
+console.error(TUICallKit, 'TencentCloud-TUICallKit ｜ ok')
+const TUICallKitEvent = uni.requireNativePlugin('globalEvent')
+const TUICallEngine = uni.requireNativePlugin('TencentCloud-TUICallKit-TUICallEngine')
 export default {
+  globalData: {
+    SDKAppID: genTestUserSig('').sdkAppID,
+    userID: '',
+    userSig: '',
+  },
   async onLaunch() {
-    const res = await getUserInfoByCode()
-    if (res && Object.keys(res).length) {
-      this.$store.commit('user/SET_USERINFO', res)
-    }
+    uni.$TUIKit = TIM.create({
+      SDKAppID: this.globalData.SDKAppID,
+    })
+    // 将原生插件挂载在 uni 上
+    uni.$TUICallKit = TUICallKit
+    uni.$TUICallKitEvent = TUICallKitEvent
+    uni.$TUICallEngine = TUICallEngine
+    // const res = await getUserInfoByCode()
+    // if (res && Object.keys(res).length) {
+    //   this.$store.commit('user/SET_USERINFO', res)
+    // }
+    this.loginHandler()
+  },
+  methods: {
+    loginHandler(res) {
+      const userID = 'xw555'
+      const userSig = genTestUserSig(userID).userSig
+      const sdkAppId = genTestUserSig('').sdkAppID
+
+      uni.$TUICallKit.login(
+        {
+          SDKAppID: sdkAppId,
+          userID: userID,
+          userSig: userSig,
+        },
+        (res) => {
+          if (res.code === 0) {
+            // 开启悬浮窗
+            uni.$TUICallKit.enableFloatWindow(true)
+            // 开启虚拟背景
+            uni.$TUICallKit.enableVirtualBackground(true)
+            // 屏幕旋转 0-Portrait, 1-LandScape, 2-Auto;   default value: 0
+            uni.$TUICallKit.setScreenOrientation(2)
+            console.log('---------------聊天登录成功-----------------')
+            uni.showToast({
+              title: 'login success',
+              icon: 'none',
+            })
+          } else {
+            console.error('login failed, failed message = ', res.msg)
+          }
+        }
+      )
+
+      uni.$TUIKit.login({ userID, userSig })
+
+      this.globalData.userID = userID
+      this.globalData.userSig = userSig
+    },
   },
   onShow: function () {
     // console.log('App Show')

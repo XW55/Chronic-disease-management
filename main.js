@@ -3,6 +3,17 @@ import Vue from 'vue';
 import urlApi from '@/common/request_url.js';
 import store from './store/index.js'; // 引入
 import '@/tools/useWebsocket.js'
+import VueI18n from 'vue-i18n';
+import messages from './locale/index.js';
+// main.js，注意要在use方法之后执行
+import uView from 'uview-ui';
+Vue.use(uView);
+Vue.use(VueI18n);
+const i18nConfig = {
+  locale: uni.getLocale(),
+  messages
+};
+const i18n = new VueI18n(i18nConfig);
 // #ifndef VUE3
 Vue.config.productionTip = false;
 App.mpType = 'app';
@@ -37,13 +48,11 @@ try {
 
 const app = new Vue({
   ...App,
+  i18n,
 });
 app.$mount();
 // #endif
 
-// main.js，注意要在use方法之后执行
-import uView from 'uview-ui';
-Vue.use(uView);
 // 如此配置即可
 // 封装弹框通用提示方法
 uni.$showMsg = (title = '数据请求失败！', icon = 'none', duration = 1000) => {
@@ -67,6 +76,7 @@ export function createApp() {
   const app = createSSRApp(App);
   return {
     app,
+
   };
 }
 // #endif

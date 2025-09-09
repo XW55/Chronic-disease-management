@@ -1,6 +1,6 @@
 {
     "name" : "心中医AI",
-    "appid" : "__UNI__E8C1EF9",
+    "appid" : "__UNI__02C9B5A",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -41,9 +41,27 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "dSYMs" : false
+            },
             /* SDK配置 */
             "sdkConfigs" : {}
+        },
+        "nativePlugins" : {
+            "TencentCloud-TUICallKit" : {
+                "__plugin_info__" : {
+                    "name" : "【官方】腾讯云音视频通话插件TencentCloud-TUICallKit",
+                    "description" : "TUICallKit 是腾讯云官方推出的音视频通话插件，支持 1v1 通话和群组通话，并提供“类微信\"的 UI 交互，开发者仅需三个 API 就可实现。",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=9035",
+                    "android_package_name" : "uni.app.UNI02C9B5A",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 1,
+                    "pid" : "9035",
+                    "parameters" : {}
+                }
+            }
         }
     },
     /* 快应用特有相关 */

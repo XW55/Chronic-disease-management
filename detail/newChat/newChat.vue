@@ -97,6 +97,17 @@ export default {
           content: '刚开完会，有点累 😩',
         },
       ],
+      userIDToSearch: '',
+      searchResultShow: false,
+      invitee: {
+        userID: '',
+      },
+      config: {
+        sdkAppID: '',
+        userID: '',
+        userSig: '',
+        type: 1, // 语音通话(callMediaType = 1)、视频通话(callMediaType = 2)
+      },
     }
   },
   computed: {
@@ -106,8 +117,8 @@ export default {
     },
   },
   onLoad() {
+    this.initCallKit()
     this.calculateScrollViewHeight()
-
     // 监听键盘高度变化
     uni.onKeyboardHeightChange((res) => {
       this.keyboardHeight = res.height
@@ -127,6 +138,14 @@ export default {
     })
   },
   methods: {
+    initCallKit() {
+      this.config = {
+        sdkAppID: getApp().globalData.SDKAppID,
+        userID: getApp().globalData.userID,
+        userSig: getApp().globalData.userSig,
+      }
+      console.log(this.config)
+    },
     calculateScrollViewHeight() {
       const systemInfo = uni.getSystemInfoSync()
       // 计算滚动区域高度（窗口高度 - 输入区域高度 - 状态栏高度等）
@@ -218,6 +237,60 @@ export default {
           this.showExtra = false
           this.scrollToBottom()
         },
+      })
+    },
+    call() {
+      try {
+        // type：通话的媒体类型，比如：语音通话(callMediaType = 1)、视频通话(callMediaType = 2)
+        const callParams = {
+          userIDList: [this.invitee.userID],
+          callMediaType: this.config.type,
+          // callParams: {
+          // 	roomID: 0,
+          // 	timeout:30,
+          // 	offlinePushInfo: {
+          // 		title: "test-title",
+          // 		description: "you have a call",
+          // 		androidSound: "rain",
+          // 		iOSSound: "rain.mp3",
+          // 	},
+          // 	userData:'testuserData'
+          // },
+        }
+        console.log('--> ', JSON.stringify(callParams))
+        uni.$TUICallKit.calls(callParams, (res) => {
+          console.log(JSON.stringify(res))
+        })
+      } catch (error) {
+        uni.showToast({
+          title: this.$t('call failure'),
+          icon: 'none',
+        })
+      }
+    },
+    // 手动挂断
+    handleHangup() {
+      uni.$TUICallEngine.hangup()
+    },
+    // 设置渲染模式参数
+    handleSetVideoRenderParams() {
+      const params = {
+        userID: this.config.userID,
+        fillMode: 0, // 0-填充模式，1一适应模式
+        rotation: 1, // 0~3分别对应值：Rotation_0, Rotation_90, Rotation_180, Rotation_270;
+      }
+      uni.$TUICallEngine.setVideoRenderParams(params, (res) => {
+        console.warn('渲染设置回调 = ', JSON.stringify(res))
+      })
+    },
+    // 设置采集参数
+    handleSetVideoEncoderParams() {
+      const params = {
+        resolution: 110,
+        resolutionMode: 0, // 0-Landscape(横屏)，1一Portrait(竖屏)
+      }
+      uni.$TUICallEngine.setVideoEncoderParams(params, (res) => {
+        console.warn('采集参数回调 = ', JSON.stringify(res))
       })
     },
   },
