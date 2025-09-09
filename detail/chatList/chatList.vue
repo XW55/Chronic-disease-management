@@ -4,7 +4,7 @@
     <u-list>
       <u-list-item v-for="(item, index) in list" :key="index" style="position: relative">
         <u-badge :absolute="true" style="z-index: 999" :offset="offset" :value="item.unReadCount" type="error"></u-badge>
-        <u-cell :title="item.doctorName" :isLink="true" :label="item.msg || ''" @click="gotoDetail(item.doctorName, item.doctorId, item.unReadCount)">
+        <u-cell :title="item.doctorName" :isLink="true" :label="item.msg || ''" @click="gotoDetail(item)">
           <u-avatar slot="icon" shape="square" size="95" :src="item.doctorImg || 'https://cdn.uviewui.com/uview/album/1.jpg'" style="margin-right: 20rpx"></u-avatar>
         </u-cell>
       </u-list-item>
@@ -53,12 +53,12 @@ export default {
       console.log(res)
       this.list = res
     },
-    gotoDetail(name, id, status) {
+    gotoDetail(item) {
       // uni.navigateTo({
       //   url: '/detail/chat/chat?name=' + name + '&id=' + id + '&status=' + status,
       // })
       uni.navigateTo({
-        url: '/detail/newChat/newChat',
+        url: '/detail/newChat/newChat?doctorInfo=' + JSON.stringify(item),
       })
     },
   },

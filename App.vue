@@ -22,15 +22,15 @@ export default {
     uni.$TUICallKit = TUICallKit
     uni.$TUICallKitEvent = TUICallKitEvent
     uni.$TUICallEngine = TUICallEngine
-    // const res = await getUserInfoByCode()
-    // if (res && Object.keys(res).length) {
-    //   this.$store.commit('user/SET_USERINFO', res)
-    // }
-    this.loginHandler()
+    const res = await getUserInfoByCode()
+    if (res && Object.keys(res).length) {
+      this.$store.commit('user/SET_USERINFO', res)
+      this.loginHandler(res)
+    }
   },
   methods: {
     loginHandler(res) {
-      const userID = 'xw555'
+      const userID = res.patientId + ''
       const userSig = genTestUserSig(userID).userSig
       const sdkAppId = genTestUserSig('').sdkAppID
 
